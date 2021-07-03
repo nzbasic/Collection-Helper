@@ -5,7 +5,7 @@ import * as fs from 'fs'
 /**
  * Read and write collection files
  */
-export class SettingsParser {
+export class CollectionHandler {
 
   /**
    * Reads a binary collections file to memory
