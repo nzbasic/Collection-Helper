@@ -4,6 +4,9 @@ import * as fs from 'fs';
 import * as url from 'url';
 import * as express from 'express';
 import * as cors from 'cors'
+import { loadFiles } from './util/load'
+
+loadFiles()
 
 const rest = express();
 
