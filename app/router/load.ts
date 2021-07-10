@@ -1,7 +1,6 @@
 import * as express from "express";
-import { serve } from "../main";
 import { loadFiles } from "../util/load";
-import * as path from 'path'
+import { shell } from 'electron'
 import { getOsuPath, setOsuPath, verifyOsuPath } from "../util/database/settings";
 
 const router = express.Router();
@@ -22,6 +21,10 @@ router.route("/setPath").post(async (req, res) => {
 router.route("/verifyPath").post(async (req, res) => {
   let body: { path: string } = req.body
   res.json(await verifyOsuPath(body.path))
+})
+
+router.route("/openUrl").post((req, res) => {
+  shell.openExternal("https://github.com/nzbasic/Collection-Helper#custom-filters")
 })
 
 export default router

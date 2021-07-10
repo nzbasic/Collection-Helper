@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BehaviorSubject } from 'rxjs';
 import { Beatmap } from '../../../models/cache';
 import { CustomFilter } from '../../../models/filters';
+import { ComponentService, Display } from './component.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,11 @@ export class FilterService {
 
   public evaluationErrorSource = new BehaviorSubject<string>("")
   evaluationError = this.evaluationErrorSource.asObservable()
+
+  public editSource = new BehaviorSubject<CustomFilter>({ name: "", filter: "", description: "", isCached: false, getHitObjects: false, numberCached: 0 })
+  editCurrent = this.editSource.asObservable()
+
+  constructor(private componentService: ComponentService) {}
 
   setFilters(filters: CustomFilter[]) {
     this.filters = filters
@@ -68,5 +74,15 @@ export class FilterService {
     clearInterval(progressInterval)
     this.filters = res.data
     return
+  }
+
+  edit(row: CustomFilter) {
+    this.editSource.next(row)
+    this.componentService.changeComponent(Display.CUSTOM_FILTERS)
+  }
+
+  async saveFilter(oldName: string, filter: CustomFilter) {
+    let res = await axios.post("http://127.0.0.1:7373/filters/save", { oldName: oldName, filter: filter })
+    this.filters = res.data
   }
 }

@@ -1,4 +1,4 @@
-import { readFilters, removeFilters, setCache, writeFilter } from './../util/database/filters';
+import { readFilters, removeFilters, setCache, updateFilter, writeFilter } from './../util/database/filters';
 import * as express from "express";
 import { CustomFilter } from '../../models/filters';
 import { generateCache, progress, testFilter } from '../util/evaluation';
@@ -48,6 +48,13 @@ router.route("/progress").get((req, res) => {
 
 router.route("/remove").post(async (req, res) => {
   await removeFilters(req.body)
+  let filters = await readFilters()
+  res.json(filters)
+})
+
+router.route("/save").post(async (req, res) => {
+  let body: { oldName: string, filter: CustomFilter } = req.body
+  await updateFilter(body.oldName, body.filter)
   let filters = await readFilters()
   res.json(filters)
 })

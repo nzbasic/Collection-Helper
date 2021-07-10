@@ -149,7 +149,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   }
 
   edit(row: CustomFilter): void {
-
+    this.filterService.edit(row)
   }
 
 

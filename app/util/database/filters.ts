@@ -16,6 +16,21 @@ export const writeFilter = async (filter: CustomFilter) => {
   });
 }
 
+export const updateFilter = async (oldName: string, filter: CustomFilter) => {
+  const database = await getDb();
+
+  await database.run("UPDATE filters SET name=$1, description=$2, filter=$3, gethitobjects=$4, iscached=$5, cache=$6 WHERE name=$7", {
+    $1: filter.name,
+    $2: filter.description,
+    $3: filter.filter,
+    $4: filter.getHitObjects,
+    $5: false,
+    $6: Buffer.from(JSON.stringify([])),
+    $7: oldName
+  })
+
+}
+
 export const setCache = async (name: string, cache: string[]) => {
 
   const database = await getDb();
