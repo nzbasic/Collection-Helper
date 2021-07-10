@@ -54,3 +54,5 @@ Thumbs.db
 *.db
 
 e2e
+.eslintrc.json
+.editorconfig
