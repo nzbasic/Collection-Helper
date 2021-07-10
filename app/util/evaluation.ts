@@ -73,7 +73,7 @@ export const generateCache = async (names: string[]) => {
   const beatmaps = Array.from(beatmapMap.values())
   const pages = beatmaps.length / 1000
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < pages; i++) {
     progress = ((i+1)/pages) * 100
 
     const lowerBound = i*1000

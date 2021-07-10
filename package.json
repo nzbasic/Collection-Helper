@@ -20,6 +20,7 @@
   ],
   "build": {
     "directories": {
+      "buildResources": "resources",
       "output": "release/"
     },
     "extraResources": [
