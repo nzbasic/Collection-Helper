@@ -51,3 +51,5 @@ Thumbs.db
 *.js
 !angular.webpack.js
 *.db
+
+e2e
