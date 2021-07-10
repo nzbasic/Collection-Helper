@@ -16,14 +16,20 @@
 <br />
 
 [![license](https://img.shields.io/github/license/nzbasic/Collection-Helper?style=flat-square)](LICENSE)
-
-
-[![stars](https://img.shields.io/github/stars/nzbasic/Collection-Helper?style=flat-square)]()
-[![release](https://img.shields.io/github/v/release/nzbasic/Collection-Helper?style=flat-square)]()
-[![downloads](https://img.shields.io/github/downloads/nzbasic/Collection-Helper/total?style=flat-square)]()
-[![lastcommit](https://img.shields.io/github/last-commit/nzbasic/Collection-Helper?style=flat-square)]()
- 
+[![stars](https://img.shields.io/github/stars/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
+[![release](https://img.shields.io/github/v/release/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
+[![downloads](https://img.shields.io/github/downloads/nzbasic/Collection-Helper/total?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
+[![lastcommit](https://img.shields.io/github/last-commit/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
   
+
+[![electron](https://img.shields.io/badge/Electron-2B2E3A?style=for-the-badge&logo=electron&logoColor=9FEAF9)](https://github.com/electron/electron)
+[![angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://github.com/angular/angular)
+[![typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://github.com/microsoft/TypeScript)
+[![sqlite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)](https://github.com/sqlite/sqlite)
+[![tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://github.com/tailwindlabs/tailwindcss)
+
+  
+[![coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/nzbasic)
   
 </div>
 
@@ -77,6 +83,7 @@ The key features of **Collection Helper**:
 - [Typescript](https://github.com/microsoft/TypeScript)
 - [Node.js](https://github.com/nodejs/node)
 - [SQLite](https://github.com/sqlite/sqlite)
+- [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
 
 ## Getting Started
 
