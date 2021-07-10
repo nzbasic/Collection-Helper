@@ -40,6 +40,7 @@
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Support](#support)
+- [Donate](#donate)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 
