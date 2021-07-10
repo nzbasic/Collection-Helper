@@ -22,9 +22,9 @@ export class LoadingService {
 
   async loadData() {
     this.componentService.changeComponent(Display.LOADING);
-    await axios.post("http://localhost:7373/loadFiles")
-    this.collectionsService.setCollections((await axios.get<Collections>("http://localhost:7373/collections")).data)
-    this.filterService.setFilters((await axios.get<CustomFilter[]>("http://localhost:7373/filters")).data)
+    await axios.post("http://127.0.0.1:7373/loadFiles")
+    this.collectionsService.setCollections((await axios.get<Collections>("http://127.0.0.1:7373/collections")).data)
+    this.filterService.setFilters((await axios.get<CustomFilter[]>("http://127.0.0.1:7373/filters")).data)
     this.componentService.changeComponent(Display.COLLECTIONS);
   }
 

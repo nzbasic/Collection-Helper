@@ -64,7 +64,7 @@ export class FilterService {
       this.progressSource.next(progress.data)
     }, 200)
 
-    let res = await axios.post("http://localhost:7373/filters/generateCache", names)
+    let res = await axios.post("http://127.0.0.1:7373/filters/generateCache", names)
     clearInterval(progressInterval)
     this.filters = res.data
     return

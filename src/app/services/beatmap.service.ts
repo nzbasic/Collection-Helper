@@ -16,7 +16,7 @@ export class BeatmapService {
       req.customFilters = customFilters
     }
 
-    let res = await axios.post("http://localhost:7373/beatmaps/", req)
+    let res = await axios.post("http://127.0.0.1:7373/beatmaps/", req)
     return res.data
   }
 
@@ -28,7 +28,7 @@ export class BeatmapService {
       req.customFilters = customFilters
     }
 
-    let res = await axios.post("http://localhost:7373/beatmaps/selectedList", req)
+    let res = await axios.post("http://127.0.0.1:7373/beatmaps/selectedList", req)
     return res.data
   }
 
