@@ -14,7 +14,9 @@
 
 <div align="center">
 <br />
-
+  
+ 
+[![codefactor](https://img.shields.io/codefactor/grade/github/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
 [![license](https://img.shields.io/github/license/nzbasic/Collection-Helper?style=flat-square)](LICENSE)
 [![stars](https://img.shields.io/github/stars/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
 [![release](https://img.shields.io/github/v/release/nzbasic/Collection-Helper?style=flat-square)](https://github.com/nzbasic/Collection-Helper)
