@@ -1,0 +1,69 @@
+<div class="flex flex-col align-center bg-white shadow-md">
+
+  <div class="m-4 flex justify-between">
+    <span>{{isCollectionShown ? 'Maps in Your Collection' : 'All (Your) Maps'}}</span>
+  </div>
+
+  <div class="w-full bg-white top-bar z-10 h-16">
+    <div class="flex flex-row items-center h-full text-xl pl-4 pt-2">
+      <button (click)="changeView()" class="button button-green-enabled">{{isCollectionShown ? 'Swap to All Maps View': 'Swap to Collection Maps View'}}</button>
+      <button *ngIf="!isCollectionShown" (click)="addMaps()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-blue-disabled' : 'button-blue-enabled'" class="ml-4 button">Add To Collection</button>
+      <button *ngIf="isCollectionShown" (click)="showRemoveModal()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-red-disabled' : 'button-red-enabled'" class="ml-4 button">Remove</button>
+      <button *ngIf="!appliedFilters.length" (click)="applyCustomFilters()" class="ml-4 button text-lg" [disabled]="!selectedFilters().length" [ngClass]="!selectedFilters().length ? 'button-blue-disabled' : 'button-blue-enabled'">Apply Custom Filter(s)</button>
+      <button *ngIf="appliedFilters.length" (click)="clearCustomFilters()" class="ml-4 button text-lg" [ngClass]="!appliedFilters.length ? 'button-red-disabled' : 'button-red-enabled'">Clear Custom Filter(s)</button>
+      <ngx-dropdown-list *ngIf="!appliedFilters.length" class="ml-4 w-40 text-sm z-10" [items]="filters" [multiSelection]="true" placeHolder="Filters"></ngx-dropdown-list>
+      <span class="ml-4 text-lg">{{selected.size}} Maps Selected</span>
+    </div>
+  </div>
+
+  <div>
+    <input class="z-0 pl-4 mt-2 mb-m4 search w-full rounded-sm h-8 focus:outline-none" (input)="onChange($event)" placeholder="Search using regular osu! filters... e.g. stars>5 bpm<200 length<120"/>
+  </div>
+
+  <ngx-table
+    #table class="z-0"
+    [id]="'beatmaps'"
+    [configuration]="configuration"
+    [data]="shownMaps"
+    [columns]="beatmapColumns"
+    [loadingTemplate]="loadingTemplate"
+    (event)="eventEmitted($event)"
+  >
+      <ng-template let-row let-index="index">
+        <td class="">
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox" class="ml-3" [checked]="isChecked(row)" (click)="checkBoxSelect(row)"/>
+              <i class="form-icon"></i>
+            </label>
+          </div>
+        </td>
+        <td>{{limitTextLength(row.song, 20)}}</td>
+        <td>{{limitTextLength(row.artist, 10)}}</td>
+        <td>{{limitTextLength(row.creator, 10)}}</td>
+        <td>{{limitTextLength(row.difficulty, 10)}}</td>
+        <td>{{row.sr.toFixed(3)}}</td>
+        <td>{{row.bpm}}</td>
+        <td>{{row.hp.toFixed(1)}}</td>
+        <td>{{row.od.toFixed(1)}}</td>
+        <td>{{row.ar.toFixed(1)}}</td>
+        <td>{{row.cs.toFixed(1)}}</td>
+        <td>{{row.drain}}</td>
+    </ng-template>
+
+  </ngx-table>
+
+  <app-pagination [pageNumber]="pageNumber" (emitter)="pageUpdate($event)" [showNumberResults]="true" [numberResults]="numberResults" [rowsPerPage]="15"></app-pagination>
+
+</div>
+
+<ng-template #loadingTemplate>
+  <td [attr.colspan]="beatmapColumns.length">
+    <div class="my-4 text-center">{{isCollectionShown ? "Loading collection maps..." : "Loading all cached maps..."}}</div>
+  </td>
+</ng-template>
+
+<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Map(s)" text="Are you sure you want to remove the map(s) from the collection(s)? This action CAN be undone if you restore your backup." confirmText="Remove"></app-confirm-modal>
+<app-loading-bar *ngIf="isChangingCollection" text="Writing Collection..." mode="indeterminate"></app-loading-bar>
+
+

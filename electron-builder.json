@@ -22,11 +22,12 @@
   "win": {
     "icon": "dist/assets/icons",
     "target": [
-      "portable"
+      "portable",
+      "nsis"
     ]
   },
   "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
+    "splashImage": "dist/assets/icons/splash.png"
   },
   "mac": {
     "icon": "dist/assets/icons",

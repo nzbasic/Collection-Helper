@@ -1,0 +1,16 @@
+<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+
+  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+    <div class="mx-8 mt-8 text-xl">{{title}}</div>
+    <div class="mx-8 mt-4 flex flex-row text-center items-center">
+      <span>Name:</span>
+      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="value" (keyup)="textChange($event)"/>
+      <span *ngIf="list.has(inputValue)" class="text-red-600">Already exists!</span>
+    </div>
+    <div class="my-4 mt-8 flex flex-row justify-center w-full">
+      <button (click)="cancel()" class="bg-red-600 hover-bg-red-700 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">Cancel</button>
+      <button [disabled]="list.has(inputValue) || inputValue == ''" [ngClass]="list.has(inputValue) || inputValue == '' ? 'bg-blue-400 cursor-default' : 'bg-blue-600 hover:bg-blue-700'" (click)="confirm()" class="ml-8 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">{{action}}</button>
+    </div>
+  </div>
+
+</div>

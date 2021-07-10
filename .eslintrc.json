@@ -45,6 +45,8 @@
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true,
       }
     }
   ]

@@ -1,0 +1,14 @@
+<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+
+  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+    <div class="mx-8 mt-8 text-xl">Enter the path to your osu! installation</div>
+    <div class="mx-8 mt-4 flex flex-row text-center items-center">
+      <span>Path:</span>
+      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="value" (keyup)="textChange($event)"/>
+      <span class="text-red-600" *ngIf="invalid">Invalid Path</span>
+    </div>
+    <div class="my-4 mt-4 flex flex-row justify-center w-full">
+      <button [disabled]="!value.length" [ngClass]="!value.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
+    </div>
+  </div>
+</div>

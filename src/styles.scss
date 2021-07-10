@@ -1,50 +1,101 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "~@fontsource/open-sans";
+@import "~ngx-toastr/toastr";
+
+
+html,
+body {
   margin: 0;
   padding: 0;
-
+  font-size: small;
   height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans"
 }
 
-/* CAN (MUST) BE REMOVED ! Sample Global style */
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  background: url(./assets/background.jpg) no-repeat center fixed;
-  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
-  background-size: cover; /* version standardisée */
-
-  .title {
-    color: white;
-    margin: 0;
-    padding: 50px 20px;
-  }
-
-  a {
-    color: #fff !important;
-    text-transform: uppercase;
-    text-decoration: none;
-    background: #ed3330;
-    padding: 20px;
-    border-radius: 5px;
-    display: inline-block;
-    border: none;
-    transition: all 0.4s ease 0s;
-
-    &:hover {
-      background: #fff;
-      color: #ed3330 !important;
-      letter-spacing: 1px;
-      -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
-      -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
-      box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
-      transition: all 0.4s ease 0s;
-    }
-  }
+.ngx-form-checkbox {
+  padding: .2rem .4rem .4rem 0rem !important;
 }
 
+#selectAllCheckbox {
+  height: 1.25rem !important;
+  width: 1.25rem !important;
+}
+
+
+.modal {
+  margin-left: -14rem;
+}
+
+th {
+  text-align: left;
+}
+
+.search {
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  border-right: none;
+  border-left: none;
+}
+
+#selectAllCheckbox {
+  margin-left: 0.75rem;
+}
+
+.top-bar {
+  border-top: 1px solid lightgrey;
+}
+
+.button {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  border-width: 1px;
+  border-color: transparent;
+  color: white;
+  border-radius: 0.125rem;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.button-blue-enabled {
+  cursor: pointer;
+  background-color: rgb(59, 130, 246);
+}
+
+.button-blue-enabled:hover {
+  background-color: rgb(29, 78, 216);
+}
+
+.button-blue-disabled {
+  cursor: default;
+  background-color: rgb(96, 165, 250);
+}
+
+.button-red-enabled {
+  cursor: pointer;
+  background-color: rgb(239, 68, 68);
+}
+
+.button-red-enabled:hover {
+  background-color: rgb(185, 28, 28);
+}
+
+.button-red-disabled {
+  cursor: default;
+  background-color: rgb(248, 113, 113);
+}
+
+.button-green-enabled {
+  cursor: pointer;
+  background-color: rgb(16, 185, 129);
+}
+
+.button-green-enabled:hover {
+  background-color: rgb(5, 150, 105);
+}

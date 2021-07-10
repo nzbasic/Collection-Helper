@@ -1,0 +1,56 @@
+<div class="flex flex-col">
+
+  <div class="w-full bg-white z-10 h-16">
+    <div class="flex flex-row items-center h-full text-xl pl-4 pt-2 ">
+      <button (click)="generateCache(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">Generate Cache</button>
+      <button (click)="showRemoveModal(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button" >Remove</button>
+      <button value="add" class="button button-blue-enabled" (click)="addFilter()">+ New filter</button>
+      <span class="ml-4 text-lg">{{selected.size + " Selected"}}</span>
+    </div>
+  </div>
+
+  <div>
+    <input class="pl-2 mt-2 mb-m4 search w-full rounded-sm h-8 focus:outline-none" (input)="onChange($event)" placeholder="Search..."/>
+  </div>
+
+  <ngx-table
+    #table class=""
+    [configuration]="configuration"
+    [data]="filters"
+    [columns]="columns"
+    (event)="eventEmitted($event)"
+  >
+    <ng-template let-row let-index="index">
+      <td>
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" class="ml-3" [checked]="isChecked(row)" (click)="checkBoxSelect(row)"/>
+            <i class="form-icon"></i>
+          </label>
+        </div>
+      </td>
+      <td>
+        {{row.name}}
+      </td>
+      <td>
+        {{row.isCached ? "Yes" : "No"}}
+      </td>
+      <td>
+        {{row.description}}
+      </td>
+      <td>
+        <div class="flex flex-row">
+          <button class="button button-blue-enabled" (click)="edit(row)">Edit</button>
+          <button class="button button-blue-enabled ml-4" (click)="generateCache(row)">Generate Cache</button>
+          <button class="button button-red-enabled mx-4 text-sm" (click)="showRemoveModal(row)">Remove</button>
+        </div>
+      </td>
+    </ng-template>
+  </ngx-table>
+
+  <app-pagination (emitter)="pageUpdate($event)" [pageNumber]="pageNumber" [rowsPerPage]="10" [showNumberResults]="true" [numberResults]="numberResults()"></app-pagination>
+
+</div>
+
+<app-loading-bar *ngIf="generatingModal" text="Generating Cache..." mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Filter" text="Are you sure you want to remove the filter(s)?" confirmText="Remove"></app-confirm-modal>

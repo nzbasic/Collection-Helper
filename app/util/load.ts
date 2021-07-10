@@ -1,14 +1,9 @@
-import { CacheHandler } from './CacheHandler';
-import { CollectionHandler } from './CollectionHandler'
+import { readCollections } from "./parsing/collections";
+import { getOsuPath } from "./database/settings";
+import { readCache } from "./parsing/cache";
 
-export const loadFiles = () => {
-
-  const collectionParser = new CollectionHandler()
-  const collections = collectionParser.read("D:/osu/collection.db")
-  collectionParser.write(collections, "D:/osu/collection.db")
-
-  const cacheParser = new CacheHandler()
-  cacheParser.read("D:/osu/osu!.db")
-
+export const loadFiles = async () => {
+  let path = await getOsuPath();
+  await readCollections(path);
+  await readCache(path);
 };
-

@@ -1,0 +1,58 @@
+<div class="flex flex-col">
+
+  <div class="w-full bg-white z-10 h-16">
+    <div class="flex flex-row items-center h-full text-xl pl-4 pt-2 ">
+      <button (click)="showMergeModal()" [disabled]="selected.size < 2" [ngClass]="selected.size < 2 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">Merge</button>
+      <button [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button" (click)="showRemoveModal('Mass')">Remove</button>
+      <button value="add" class="button button-blue-enabled" (click)="showAddModal()">+ Add new collection</button>
+      <span class="ml-4 text-lg">{{selected.size + " Selected"}}</span>
+    </div>
+  </div>
+
+  <div>
+    <input class="pl-4 mt-2 mb-m4 search w-full rounded-sm h-8 focus:outline-none" (input)="onChange($event)" placeholder="Search..."/>
+  </div>
+
+  <ngx-table #table class=""
+  [configuration]="configuration"
+  [data]="collections"
+  [columns]="columns"
+  (event)="eventEmitted($event)"
+  >
+
+    <ng-template let-row let-index="index">
+      <td class="">
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" class="ml-3" [checked]="isChecked(row)" (click)="checkBoxSelect(row)"/>
+            <i class="form-icon"></i>
+          </label>
+        </div>
+      </td>
+      <td class="">
+        <a (click)="select(row)" class="text-blue-400 cursor-pointer hover-underline">
+          {{row.name}}
+        </a>
+      </td>
+      <td class="">
+        {{row.numberMaps}}
+      </td>
+      <td class="">
+        <div class="flex flex-row">
+          <button class="button button-blue-enabled text-sm" (click)="select(row)">Edit</button>
+          <button class="button button-red-enabled mx-4 text-sm" (click)="showRemoveModal('Single')">Remove</button>
+          <button class="button button-blue-enabled text-sm" (click)="showRenameModal()">Rename</button>
+        </div>
+      </td>
+    </ng-template>
+  </ngx-table>
+
+  <app-pagination (emitter)="pageUpdate($event)" [pageNumber]="pageNumber" [rowsPerPage]=10 [showNumberResults]="true" [numberResults]="numberResults()"></app-pagination>
+
+</div>
+
+<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Collection" text="Are you sure you want to remove the collection(s)? All of the data will be removed. This action CAN be undone if you restore your backup." confirmText="Remove"></app-confirm-modal>
+<app-confirm-modal *ngIf="mergeModal" (response)="mergeResponse($event)" title="Merge Collections" text="Are you sure you want to merge these collections? All of their maps will be combined. This action CAN be undone if you restore your backup." confirmText="Merge"></app-confirm-modal>
+<app-rename-modal *ngIf="renameModal" (response)="renameResponse($event)" title="Rename Collection" action="Rename" [list]="names" [value]="singleSelected.name"></app-rename-modal>
+<app-rename-modal *ngIf="addModal" (response)="addResponse($event)" title="Add a Collection" action="Add" [list]="names" value=""></app-rename-modal>
+

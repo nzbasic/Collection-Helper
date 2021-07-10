@@ -1,25 +1,57 @@
 {
-  "name": "angular-electron",
-  "version": "10.0.2",
-  "description": "Angular 12 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "collection-helper",
+  "version": "1.0.0",
+  "description": "Multi-platform, beautiful, feature rich collection manager for osu!",
+  "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "James Coppard",
+    "email": "jamescoppard024@gmail.com"
   },
   "keywords": [
+    "osu",
+    "osu!",
+    "collection",
     "angular",
-    "angular 12",
     "electron",
-    "nodejs",
     "typescript",
-    "spectron",
-    "eslint",
-    "sass",
     "windows",
     "mac",
     "linux"
   ],
+  "build": {
+    "directories": {
+      "output": "release/"
+    },
+    "extraResources": [
+      "./prod-files/database.db",
+      {
+        "from": "dist",
+        "to": "app",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "productName": "Collection Helper",
+    "nsis": {
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    },
+    "win": {
+      "requestedExecutionLevel": "requireAdministrator",
+      "publish": [
+        "github"
+      ]
+    },
+    "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.map",
+      "!package.json",
+      "!package-lock.json"
+    ]
+  },
   "main": "app/main.js",
   "private": true,
   "scripts": {
@@ -41,20 +73,48 @@
     "lint": "ng lint"
   },
   "dependencies": {
+    "@angular/animations": "12.1.1",
+    "@angular/cdk": "12.1.1",
     "@angular/common": "12.0.5",
     "@angular/compiler": "12.0.5",
     "@angular/core": "12.0.5",
     "@angular/forms": "12.0.5",
     "@angular/language-service": "12.0.5",
+    "@angular/material": "12.1.1",
     "@angular/platform-browser": "12.0.5",
     "@angular/platform-browser-dynamic": "12.0.5",
     "@angular/router": "12.0.5",
+    "@ctrl/ngx-codemirror": "5.0.0",
     "@electron/remote": "1.0.4",
+    "@fontsource/inter": "4.5.0",
+    "@fontsource/open-sans": "4.5.0",
+    "@materia-ui/ngx-monaco-editor": "5.1.0",
+    "@supercharge/promise-pool": "1.7.0",
     "@trodi/electron-splashscreen": "1.0.0",
+    "@types/graceful-fs": "4.1.5",
+    "@types/sqlite3": "3.1.7",
+    "autoprefixer": "10.2.6",
+    "axios": "0.21.1",
+    "codemirror": "5.62.0",
     "express": "4.17.1",
     "find-free-ports": "2.0.3",
     "get-port-electron": "5.0.0",
+    "graceful-fs": "4.2.6",
+    "monaco-editor": "0.25.2",
+    "ngx-codemirror": "1.0.0",
+    "ngx-dropdown-list": "1.1.2",
+    "ngx-easy-table": "15.0.0",
+    "ngx-monaco-editor": "12.0.0",
+    "ngx-select-dropdown": "2.1.0",
+    "ngx-toastr": "14.0.0",
+    "postcss": "8.3.5",
+    "reverse-line-reader": "0.2.6",
     "rxjs": "6.6.6",
+    "sqlite": "4.0.23",
+    "sqlite3": "5.0.2",
+    "tailwindcss": "2.2.4",
+    "tiny-async-pool": "1.2.0",
+    "ts-debounce": "3.0.0",
     "tslib": "2.1.0",
     "zone.js": "~0.11.4"
   },

@@ -1,0 +1,12 @@
+<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+
+  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+    <div class="mx-8 mt-8 text-xl">{{title}}</div>
+    <div class="mx-8">{{text}}</div>
+    <div class="my-4 mt-8 flex flex-row justify-center w-full">
+      <button (click)="hide()" class="bg-blue-600 hover-bg-blue-700 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">Cancel</button>
+      <button (click)="confirmAction()" class="ml-8 bg-red-600 hover-bg-red-700 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">{{confirmText}}</button>
+    </div>
+  </div>
+
+</div>

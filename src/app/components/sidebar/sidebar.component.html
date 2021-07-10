@@ -1,0 +1,27 @@
+<div class="flex flex-col h-full bg-one w-52 text-two items-left justify-between">
+
+  <div class="flex flex-col ">
+    <!-- title -->
+    <div class="my-5 text-xl self-center text-white">Collection Helper</div>
+
+    <!-- home -->
+    <app-sidebar-button text="Collections"  [type]="Display.COLLECTIONS"></app-sidebar-button>
+    <app-sidebar-button text="Filters"  [type]="Display.FILTERS" ></app-sidebar-button>
+    <app-sidebar-button style="text-indent: 15px" text="Custom Filter" *ngIf="buttonSelected == Display.FILTERS || buttonSelected == Display.CUSTOM_FILTERS" [type]="Display.CUSTOM_FILTERS"></app-sidebar-button>
+    <app-sidebar-button text="Import/Export"  [type]="Display.IMPORT_EXPORT"></app-sidebar-button>
+
+    <!-- buttons -->
+    <app-sidebar-button *ngIf="collectionSelected" [text]="limitTextLength(collectionSelected, 15)" [type]="Display.EDIT" ></app-sidebar-button>
+
+    <!-- settings -->
+    <app-sidebar-button text="Settings" [type]="Display.SETTINGS"></app-sidebar-button>
+  </div>
+
+  <div class="flex flex-col">
+    <span class="text-white ml-2 pb-2">osu!: YEP</span>
+    <span class="text-white ml-2 pb-2">Github: nzbasic</span>
+    <span class="text-white ml-2 pb-2">Twitter: @nzbasic</span>
+    <span class="text-white ml-2 pb-2">Discord: basic#7373</span>
+  </div>
+
+</div>

@@ -1,0 +1,42 @@
+<div class="flex flex-col p-4">
+
+  <div class="flex flex-col">
+    <div class="flex flex-row items-center w-full">
+      <span>Name: </span>
+      <input class="ml-4 border border-gray-400 focus:outline-none" type="text" (keyup)="nameChange($event)">
+      <span class="ml-4">Description: </span>
+      <input class="ml-4 w-full border border-gray-400 focus:outline-none" type="text" (keyup)="descriptionChange($event)">
+    </div>
+    <div class="flex mt-2 flex-row items-center">
+      <span class="mr-2">Get Hit Objects?</span>
+      <input (click)="toggleGetHitObjects()" type="checkbox">
+    </div>
+
+    <span class="text-sm">
+      Write a JavaScript function to filter your beatmaps. See <span class="text-blue-400">documentation</span> or the <span class="text-blue-400">video guide</span>
+      <br />
+      After you have created a filter, you should generate its cache in the filters menu to use it.
+    </span>
+
+  </div>
+
+  <div class="h-96 border border-gray-200">
+    <ngx-monaco-editor [options]="editorOptions" style="height: 100%" [(ngModel)]="content"></ngx-monaco-editor>
+  </div>
+
+  <div class="flex flex-row mt-4 items-center text-sm">
+    <button [disabled]="alreadyExists" class="bg-green-500 hover-bg-green-700 cursor-pointer border border-transparent shadow-sm text-white rounded-sm px-2 py-1" (click)="save()">Save filter</button>
+    <button class="bg-blue-600 hover-bg-blue-700 cursor-pointer ml-4 border border-transparent shadow-sm text-white rounded-sm px-2 py-1" (click)="test()">Test filter</button>
+    <span *ngIf="alreadyExists" class="ml-4 text-red">Name Already Exists!</span>
+  </div>
+
+  <div *ngIf="filteredText.length || rawError.length " class="flex flex-col mt-4">
+    <span class="text-sm">Test Result: {{rawError.length ? "Failed" : numberResult + "/1000"}}</span>
+    <div class="h-52 border border-gray-200">
+      <ngx-monaco-editor [options]="editorOptions" style="height: 100%" [(ngModel)]="rawError.length ? errorText : filteredText"></ngx-monaco-editor>
+    </div>
+  </div>
+</div>
+
+<app-loading-bar *ngIf="gettingData" text="Getting Beatmap Data..." mode="indeterminate"></app-loading-bar>
+
