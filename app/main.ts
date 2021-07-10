@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import * as fs from "fs";
 import * as url from "url";
@@ -8,6 +8,7 @@ import collectionRouter from './router/collections'
 import loadRouter from './router/load'
 import beatmapRouter from './router/beatmaps'
 import filterRouter from './router/filters'
+import { AddressInfo } from "net";
 
 const rest = express();
 
@@ -28,14 +29,15 @@ rest.use("/", loadRouter);
 rest.use("/beatmaps", beatmapRouter)
 rest.use("/filters", filterRouter)
 
-rest.listen(7373, '127.0.0.1');
-
 // Initialize remote module
 //require("@electron/remote/main").initialize();
 
 let win: BrowserWindow = null
 const args = process.argv.slice(1)
 export const serve = args.some((val) => val === "--serve");
+
+const port = serve ? 7373 : 0
+const server = rest.listen(port, '127.0.0.1');
 
 const mainOpts: Electron.BrowserWindowConstructorOptions = {
   x: 0,
@@ -83,7 +85,7 @@ function createWindow(): BrowserWindow {
       })
     );
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
@@ -102,7 +104,7 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  if (!serve) {
+  if (serve) {
     app.on("ready", () => setTimeout(createWindow, 400));
   }
 
@@ -123,6 +125,11 @@ try {
       createWindow();
     }
   });
+
+  ipcMain.handle('app_details', (event) => {
+    return { version: app.getVersion(), port: (server.address() as AddressInfo).port }
+  })
+
 } catch (e) {
   // Catch Error
   // throw e;

@@ -4,6 +4,7 @@ import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { Beatmap } from "../../../../models/cache";
 import { CustomFilter } from "../../../../models/filters";
+import { fullIp } from "../../app.component";
 import { ComponentService, Display } from "../../services/component.service";
 import { FilterService } from "../../services/filter.service";
 import { TitleService } from "../../services/title.service";
@@ -77,7 +78,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   }
 
   openDoc(): void {
-    axios.post("http://127.0.0.1:7373/openUrl", { url: "https://github.com/nzbasic/Collection-Helper#custom-filters" })
+    axios.post(fullIp + "/openUrl", { url: "https://github.com/nzbasic/Collection-Helper#custom-filters" })
   }
 
   async test() {

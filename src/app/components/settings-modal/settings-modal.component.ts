@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import axios from "axios";
 import { LoadingService } from "../../services/loading.service";
+import { fullIp } from '../../app.component'
 
 @Component({
   selector: "app-settings-modal",
@@ -15,7 +16,7 @@ export class SettingsModalComponent {
 
   async confirm() {
 
-    let verify: boolean = (await axios.post("http://127.0.0.1:7373/verifyPath", { path: this.value })).data
+    let verify: boolean = (await axios.post(fullIp + "/verifyPath", { path: this.value })).data
 
     if (verify) {
       this.invalid = false

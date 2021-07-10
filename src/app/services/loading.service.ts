@@ -3,6 +3,7 @@ import axios from "axios";
 import { BehaviorSubject } from "rxjs";
 import { Collections } from "../../../models/collection";
 import { CustomFilter } from "../../../models/filters";
+import { fullIp } from "../app.component";
 import { CollectionsService } from "./collections.service";
 import { ComponentService, Display } from "./component.service";
 import { FilterService } from "./filter.service";
@@ -22,16 +23,16 @@ export class LoadingService {
 
   async loadData() {
     this.componentService.changeComponent(Display.LOADING);
-    await axios.post("http://127.0.0.1:7373/loadFiles")
-    this.collectionsService.setCollections((await axios.get<Collections>("http://127.0.0.1:7373/collections")).data)
-    this.filterService.setFilters((await axios.get<CustomFilter[]>("http://127.0.0.1:7373/filters")).data)
+    await axios.post(fullIp + "/loadFiles")
+    this.collectionsService.setCollections((await axios.get<Collections>(fullIp + "/collections")).data)
+    this.filterService.setFilters((await axios.get<CustomFilter[]>(fullIp + "/filters")).data)
     this.componentService.changeComponent(Display.COLLECTIONS);
   }
 
   async loadSettings() {
 
     this.componentService.changeComponent(Display.LOADING);
-    let path = (await axios.get("http://127.0.0.1:7373/loadSettings")).data
+    let path = (await axios.get(fullIp + "/loadSettings")).data
 
     if (path) {
       this.loadData()

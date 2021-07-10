@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BehaviorSubject } from 'rxjs';
 import { Beatmap } from '../../../models/cache';
 import { CustomFilter } from '../../../models/filters';
+import { fullIp } from '../app.component';
 import { ComponentService, Display } from './component.service';
 
 @Injectable({
@@ -46,19 +47,19 @@ export class FilterService {
   }
 
   async addFilter(filter: CustomFilter) {
-    let res = await axios.post("http://127.0.0.1:7373/filters/add", filter)
+    let res = await axios.post(fullIp + "/filters/add", filter)
     this.filters = res.data
   }
 
   async removeFilters(names: string[]) {
 
-    let res = await axios.post("http://127.0.0.1:7373/filters/remove", names)
+    let res = await axios.post(fullIp + "/filters/remove", names)
     this.filters = res.data
 
   }
 
   async testFilter(filter: string, getHitObjects: boolean): Promise<string> {
-    let res = await axios.post("http://127.0.0.1:7373/filters/testFilter", { filter: filter, getHitObjects: getHitObjects })
+    let res = await axios.post(fullIp + "/filters/testFilter", { filter: filter, getHitObjects: getHitObjects })
     let data: string = res.data
     return data
   }
@@ -66,11 +67,11 @@ export class FilterService {
   async generateCache(names: string[]) {
 
     let progressInterval = setInterval(async () => {
-      let progress = await axios.get("http://127.0.0.1:7373/filters/progress")
+      let progress = await axios.get(fullIp + "/filters/progress")
       this.progressSource.next(progress.data)
     }, 200)
 
-    let res = await axios.post("http://127.0.0.1:7373/filters/generateCache", names)
+    let res = await axios.post(fullIp + "/filters/generateCache", names)
     clearInterval(progressInterval)
     this.filters = res.data
     return
@@ -82,7 +83,7 @@ export class FilterService {
   }
 
   async saveFilter(oldName: string, filter: CustomFilter) {
-    let res = await axios.post("http://127.0.0.1:7373/filters/save", { oldName: oldName, filter: filter })
+    let res = await axios.post(fullIp + "/filters/save", { oldName: oldName, filter: filter })
     this.filters = res.data
   }
 }

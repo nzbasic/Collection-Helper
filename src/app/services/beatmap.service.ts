@@ -2,6 +2,7 @@ import { FilterDetail, GetBeatmapsReq, GetSelectedReq, PageResponse, Sorting } f
 import { Injectable } from '@angular/core';
 import { Filter } from '../../../models/beatmaps';
 import axios from 'axios';
+import { fullIp } from '../app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class BeatmapService {
       req.customFilters = customFilters
     }
 
-    let res = await axios.post("http://127.0.0.1:7373/beatmaps/", req)
+    let res = await axios.post(fullIp + "/beatmaps/", req)
     return res.data
   }
 
@@ -28,7 +29,7 @@ export class BeatmapService {
       req.customFilters = customFilters
     }
 
-    let res = await axios.post("http://127.0.0.1:7373/beatmaps/selectedList", req)
+    let res = await axios.post(fullIp + "/beatmaps/selectedList", req)
     return res.data
   }
 
