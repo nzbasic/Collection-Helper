@@ -25,7 +25,8 @@ export const testFilter = async (filter: string, getHitObjects: boolean): Promis
   }
 
   if (!randomBeatmaps) {
-    randomBeatmaps = Array.from(beatmapMap.values()).sort(() => 0.5-Math.random()).slice(0,1000)
+    randomBeatmaps = Array.from(beatmapMap.values()).sort(() => 0.5-Math.random())
+    randomBeatmaps = randomBeatmaps.slice(0,1000)
   }
 
   if (!toTest) {
