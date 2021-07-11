@@ -24,7 +24,6 @@
       "output": "release/"
     },
     "extraResources": [
-      "./prod-files/database.db",
       {
         "from": "dist",
         "to": "app",
