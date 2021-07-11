@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   public version = "1.0.0"
   public update = false
   public downloaded = false
-  public launch = true
+  public launch = false
 
   public lines = [
     "I have included some help text for each component of Collection Helper, if you are confused please use the help button on the top right.",
@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
     });
 
     await this.loadingService.loadSettings()
+    this.launch = true
   }
 
   hideUpdate(status: boolean) {
