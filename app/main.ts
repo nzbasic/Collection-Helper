@@ -10,6 +10,7 @@ import beatmapRouter from './router/beatmaps'
 import filterRouter from './router/filters'
 import { AddressInfo } from "net";
 import { autoUpdater } from 'electron-updater'
+import * as log from 'electron-log'
 
 const rest = express();
 
@@ -87,12 +88,30 @@ function createWindow(): BrowserWindow {
     );
 
     autoUpdater.on('update-available', () => {
+      log.info("Update available.");
       win.webContents.send('update_available')
     })
 
     autoUpdater.on('update-downloaded', () => {
+      log.info("Update downloaded");
       win.webContents.send('update_downloaded')
     })
+
+    autoUpdater.on("checking-for-update", function (_arg1) {
+      log.info("Checking for update...");
+    });
+
+    autoUpdater.on("update-not-available", function (_arg3) {
+      log.info("Update not available.");
+    });
+
+    autoUpdater.on("error", function (err) {
+      log.info("Error in auto-updater. " + err);
+    });
+
+    autoUpdater.on("download-progress", function (progressObj) {
+      log.info("downloading update");
+    });
 
     ipcMain.on('restart_app', () => {
       autoUpdater.quitAndInstall()
