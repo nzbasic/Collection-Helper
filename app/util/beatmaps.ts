@@ -4,6 +4,7 @@ import { CustomFilter } from "../../models/filters";
 import { readFilters } from "./database/filters";
 import { beatmapMap } from "./parsing/cache";
 import { collections } from "./parsing/collections";
+import * as log from 'electron-log'
 
 let cacheInitialized: boolean = false
 let beatmapCache: Beatmap[] = []
@@ -141,14 +142,22 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
     for (const typeFilter of filter.filters) {
       if (typeFilter.type == "Numeric") {
         const toTest = map[typeFilter.filtering.toLowerCase()]
-        return applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, toTest)
+        if (!applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, toTest)) {
+          return false
+        }
       } else if (typeFilter.type == "Text") {
         const toTest = map[typeFilter.filtering.toLowerCase()]
-        return applyStringFilter(typeFilter.operator, typeFilter.valueString, toTest)
+        if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, toTest)) {
+          return false
+        }
       } else if (typeFilter.type == "Unplayed") {
-        return applyUnplayedFilter(typeFilter.operator, map.unplayed)
+        if (!applyUnplayedFilter(typeFilter.operator, map.unplayed)) {
+          return false
+        }
       } else if (typeFilter.type == "Status") {
-        return applyStatusFilter(typeFilter.operator, typeFilter.valueString, map.status)
+        if (!applyStatusFilter(typeFilter.operator, typeFilter.valueString, map.status)) {
+          return false
+        }
       }
     }
 
