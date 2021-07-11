@@ -87,6 +87,12 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     this.filterService.evaluationErrorSource.next("")
     this.gettingData = true
 
+    // check if resolve exists
+    if (!this.content.match(/resolve\(*.+\)/g)) {
+      this.filterService.evaluationErrorSource.next("No resolve found")
+      this.toastr.error('Test failed, resolve was not found in your script', 'Error')
+    }
+
     if (this.content.trim() == "") {
       this.filterService.evaluationErrorSource.next("Empty!")
       this.toastr.error('Test failed, the content field is empty', 'Error')
