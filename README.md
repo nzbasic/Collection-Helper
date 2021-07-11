@@ -7,6 +7,8 @@
 </h1>
 
 <div align="center">
+  <a href="https://github.com/nzbasic/Collection-Helper/releases/latest">Latest Release</a>
+  .
   <a href="https://github.com/nzbasic/Collection-Helper/issues/new?assignees=&labels=&template=bug_report.md&title=Bug%3A+">Report a Bug</a>
   ·
   <a href="https://github.com/nzbasic/Collection-Helper/issues/new?assignees=&labels=&template=feature_request.md&title=%3A+">Request a Feature</a>
