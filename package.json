@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multi-platform, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -13,11 +13,12 @@
     "collection",
     "angular",
     "electron",
-    "typescript",
-    "windows",
-    "mac",
-    "linux"
+    "typescript"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nzbasic/Collection-Helper.git"
+  },
   "build": {
     "directories": {
       "buildResources": "resources",
@@ -65,6 +66,7 @@
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build": "npm run build:prod && electron-builder build --publish=never",
+    "electron:deploy": "npm run build:prod && electron-builder build --win --publish=always",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",

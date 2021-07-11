@@ -36,6 +36,7 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { SidebarButtonComponent } from "./components/sidebar-button/sidebar-button.component";
 import { LoadingComponent } from "./pages/loading/loading.component";
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { UpdateComponent } from './components/update/update.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -60,6 +61,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     SidebarComponent,
     SidebarButtonComponent,
     PaginationComponent,
+    UpdateComponent,
   ],
   imports: [
     BrowserModule,

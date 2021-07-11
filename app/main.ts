@@ -9,6 +9,7 @@ import loadRouter from './router/load'
 import beatmapRouter from './router/beatmaps'
 import filterRouter from './router/filters'
 import { AddressInfo } from "net";
+import { autoUpdater } from 'electron-updater'
 
 const rest = express();
 
@@ -84,6 +85,22 @@ function createWindow(): BrowserWindow {
         slashes: true,
       })
     );
+
+    autoUpdater.on('update-available', () => {
+      win.webContents.send('update_available')
+    })
+
+    autoUpdater.on('update-downloaded', () => {
+      win.webContents.send('update_downloaded')
+    })
+
+    win.once('ready-to-show', () => {
+      autoUpdater.checkForUpdatesAndNotify()
+    })
+
+    ipcMain.on('restart_app', () => {
+      autoUpdater.quitAndInstall()
+    })
 
     //win.webContents.openDevTools();
   }

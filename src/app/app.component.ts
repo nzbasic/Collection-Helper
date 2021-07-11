@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   public display: Display;
   public allTypes = Display;
   public version = "1.0.0"
+  public update = false
 
   constructor(
     private electronService: ElectronService,
@@ -36,10 +37,20 @@ export class AppComponent implements OnInit {
       fullIp = baseIp + 7373
     }
 
+    this.ipcService.on('update_available', () => {
+      this.update = true
+    })
+
     this.componentService.componentSelected.subscribe((display: Display) => {
       this.display = display;
     });
 
     await this.loadingService.loadSettings()
+  }
+
+  hideUpdate(status: boolean) {
+    if (!status) {
+      this.update = false
+    }
   }
 }
