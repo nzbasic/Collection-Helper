@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ElectronService } from "./core/services";
 import { TranslateService } from "@ngx-translate/core";
 import { ComponentService, Display } from "./services/component.service";
@@ -15,13 +15,15 @@ export class AppComponent implements OnInit {
   public allTypes = Display;
   public version = "1.0.0"
   public update = false
+  public downloaded = false
 
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService,
     private componentService: ComponentService,
     private loadingService: LoadingService,
-    private readonly ipcService: IpcService
+    private readonly ipcService: IpcService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.translate.setDefaultLang("en");
   }
@@ -39,7 +41,13 @@ export class AppComponent implements OnInit {
 
     this.ipcService.on('update_available', () => {
       this.update = true
+      this.changeDetector.detectChanges()
     })
+
+    this.ipcService.on('update_downloaded', () => {
+      this.downloaded = true
+      this.changeDetector.detectChanges()
+    });
 
     this.componentService.componentSelected.subscribe((display: Display) => {
       this.display = display;

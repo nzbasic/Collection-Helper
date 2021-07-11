@@ -94,15 +94,11 @@ function createWindow(): BrowserWindow {
       win.webContents.send('update_downloaded')
     })
 
-    win.once('ready-to-show', () => {
-      autoUpdater.checkForUpdatesAndNotify()
-    })
-
     ipcMain.on('restart_app', () => {
       autoUpdater.quitAndInstall()
     })
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
@@ -144,6 +140,7 @@ try {
   });
 
   ipcMain.handle('app_details', (event) => {
+    autoUpdater.checkForUpdatesAndNotify()
     return { version: app.getVersion(), port: (server.address() as AddressInfo).port }
   })
 

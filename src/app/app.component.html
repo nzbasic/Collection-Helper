@@ -17,4 +17,4 @@
   </div>
 </div>
 
-<app-update *ngIf="update" (emitter)="hideUpdate($event)"></app-update>
+<app-update *ngIf="update" (emitter)="hideUpdate($event)" [downloaded]="downloaded"></app-update>

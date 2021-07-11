@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Multi-platform, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -34,6 +34,7 @@
       }
     ],
     "productName": "Collection Helper",
+    "buildVersion": "1.0.1",
     "nsis": {
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,

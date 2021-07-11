@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IpcService } from '../../services/ipc.service';
 
 @Component({
@@ -7,15 +7,13 @@ import { IpcService } from '../../services/ipc.service';
 })
 export class UpdateComponent implements OnInit {
 
-  public downloaded = false
+  @Input() downloaded!: boolean
   @Output() emitter = new EventEmitter<boolean>()
 
   constructor(private ipcService: IpcService) { }
 
   ngOnInit(): void {
-    this.ipcService.on('update_downloaded', () => {
-      this.downloaded = true
-    });
+
   }
 
   yes(): void {
