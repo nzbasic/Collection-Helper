@@ -90,6 +90,11 @@ The key features of **Collection Helper**:
 - [SQLite](https://github.com/sqlite/sqlite)
 - [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
 
+### Demo
+
+Example making a collection with the farm filter 
+![ezgif-2-4e4cb569259a](https://user-images.githubusercontent.com/54062686/125193748-3b282c80-e2a2-11eb-9578-ec205ea8fb51.gif)
+
 ### Screenshots
 
 Collections
