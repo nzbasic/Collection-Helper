@@ -214,21 +214,21 @@ const applyUnplayedFilter = (operator: string, mapValue: boolean): boolean => {
 
 const applyStatusFilter = (operator: string, filterValue: string, mapValue: number): boolean => {
 
-  if ((status == "unknown") && statusComparator(operator, 0x00, mapValue)) {
+  if ((filterValue == "unknown") && statusComparator(operator, 0x00, mapValue)) {
     return true
-  } else if (((status == "notsubmitted") || (status == "n")) && statusComparator(operator, 0x01, mapValue)) {
+  } else if (((filterValue == "notsubmitted") || (filterValue == "n")) && statusComparator(operator, 0x01, mapValue)) {
     return true
-  } else if (((status == "pending") || (status == "wip") || (status == "graveyard") || (status == "p")) && statusComparator(operator, 0x02, mapValue)) {
+  } else if (((filterValue == "pending") || (filterValue == "wip") || (filterValue == "graveyard") || (filterValue == "p")) && statusComparator(operator, 0x02, mapValue)) {
 		return true
-	} else if (((status == "unused") || (status == "u")) && statusComparator(operator, 0x03, mapValue)) {
+	} else if (((filterValue == "unused") || (filterValue == "u")) && statusComparator(operator, 0x03, mapValue)) {
 		return true
-	} else if (((status == "ranked") || (status == "r")) && statusComparator(operator, 0x04, mapValue)) {
+	} else if (((filterValue == "ranked") || (filterValue == "r")) && statusComparator(operator, 0x04, mapValue)) {
 		return true
-	} else if (((status == "approved") || (status == "a")) && statusComparator(operator, 0x05, mapValue)) {
+	} else if (((filterValue == "approved") || (filterValue == "a")) && statusComparator(operator, 0x05, mapValue)) {
 		return true
-	} else if (((status == "qualified") || (status == "q")) && statusComparator(operator, 0x06, mapValue)) {
+	} else if (((filterValue == "qualified") || (filterValue == "q")) && statusComparator(operator, 0x06, mapValue)) {
 		return true
-	} else if (((status == "loved") || (status == "l")) && statusComparator(operator, 0x07, mapValue)) {
+	} else if (((filterValue == "loved") || (filterValue == "l")) && statusComparator(operator, 0x07, mapValue)) {
 		return true
 	}
 
