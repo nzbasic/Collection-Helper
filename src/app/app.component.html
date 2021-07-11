@@ -4,6 +4,7 @@
     <app-header class="bg-one"></app-header>
     <div class="h-full w-full bg-gray-200">
       <div class="bg-white m-4 rounded-sm">
+        <app-help *ngIf="launch" title="Welcome to the Collection Helper Beta!" [lines]="lines" (emitter)="hideLaunch()"></app-help>
         <app-home class="shadow-md" *ngIf="display==allTypes.COLLECTIONS" class="rounded-sm"></app-home>
         <app-loading *ngIf="display==allTypes.LOADING" class="rounded-sm"></app-loading>
         <app-edit *ngIf="display==allTypes.EDIT" class="rounded-sm"></app-edit>

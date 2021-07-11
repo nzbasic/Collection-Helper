@@ -98,7 +98,7 @@ function createWindow(): BrowserWindow {
       autoUpdater.quitAndInstall()
     })
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
