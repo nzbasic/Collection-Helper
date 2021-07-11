@@ -97,7 +97,7 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
     toSearch = beatmapArray.filter(map => !collectionHashSet.has(map.md5))
   }
 
-  let filterIntersection: string[] = []
+  let filterIntersection = new Set<string>()
 
   if (customFilters.length) {
 
@@ -106,7 +106,7 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
     const allHashes = allFilters.map(filter => filter.cache)
 
     if (allFilters.length) {
-      filterIntersection = allHashes.reduce((a,b) => a.filter(c => b.includes(c)))
+      filterIntersection = new Set(allHashes.reduce((a,b) => a.filter(c => b.includes(c))))
     }
 
   }
@@ -117,8 +117,8 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
       return false
     }
 
-    if (filterIntersection.length) {
-      if (!filterIntersection.includes(map.md5)) {
+    if (filterIntersection.size) {
+      if (!filterIntersection.has(map.md5)) {
         return false
       }
     }
