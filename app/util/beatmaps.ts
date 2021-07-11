@@ -158,6 +158,22 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
         if (!applyStatusFilter(typeFilter.operator, typeFilter.valueString, map.status)) {
           return false
         }
+      } else if (typeFilter.type == "Mode") {
+
+        let mapValue: string
+        if (map.mode == 0) {
+          mapValue = "o"
+        } else if (map.mode == 1) {
+          mapValue = "t"
+        } else if (map.mode == 2) {
+          mapValue = "c"
+        } else if (map.mode == 3) {
+          mapValue = "m"
+        }
+
+        if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, mapValue)) {
+          return false
+        }
       }
     }
 

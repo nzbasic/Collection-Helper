@@ -62,6 +62,10 @@ export class BeatmapService {
 
         let filterDetail: FilterDetail = {type: "Text", filtering: type, valueString: term, operator: operator}
 
+        if (type == "mode" ) {
+          filterDetail = { type: "Mode", filtering: "mode", valueString: term, operator: operator }
+        }
+
         if (type == "status") {
           filterDetail.type = "Status"
         }
