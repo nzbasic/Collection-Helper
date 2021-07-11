@@ -35,7 +35,7 @@ export class LoadingService {
     let path = (await axios.get(fullIp + "/loadSettings")).data
 
     if (path) {
-      this.loadData()
+      await this.loadData()
     } else {
       this.componentService.changeComponent(Display.SETUP);
     }
