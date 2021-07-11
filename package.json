@@ -39,7 +39,6 @@
       "oneClick": false
     },
     "win": {
-      "requestedExecutionLevel": "requireAdministrator",
       "publish": [
         "github"
       ]
