@@ -38,15 +38,12 @@ export const readCollections = async (path: string) => {
  * Writes the given collections to disk
  * @param collections Collections to write
  */
-export const writeCollections = async () => {
+export const writeCollections = async (backup?: boolean) => {
 
   const osuPath = await getOsuPath()
-  const path = osuPath + "/collection.db"
   const length = calculateLength();
   const arrayBuffer = new ArrayBuffer(length);
   const writer = new OsuWriter(arrayBuffer);
-
-  console.log(collections)
 
   writer.writeInt32(collections.version);
   writer.writeInt32(collections.numberCollections);
@@ -61,7 +58,19 @@ export const writeCollections = async () => {
   });
 
   const buffer = Buffer.from(writer.buff);
-  await fs.promises.writeFile(path, buffer);
+
+  let path = ""
+  if (backup) {
+    path = osuPath + "/collectionBackup.db"
+    try {
+      await fs.promises.stat(path)
+    } catch {
+      await fs.promises.writeFile(path, buffer);
+    }
+  } else {
+    path = osuPath + "/collection.db"
+    await fs.promises.writeFile(path, buffer);
+  }
 };
 
 /**
