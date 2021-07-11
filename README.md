@@ -93,8 +93,6 @@ The key features of **Collection Helper**:
 
 [osu!](https://osu.ppy.sh)
 
-Currently, port 7373 must be available, this will not be a requirement in the future. You can ignore this if you are not a developer.
-
 You must have run your osu! client at least once.
 
 ### Usage
