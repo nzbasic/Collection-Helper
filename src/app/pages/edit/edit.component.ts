@@ -154,7 +154,6 @@ export class EditComponent implements OnInit, OnDestroy {
   public debouncedSearch = debounce(this.search, 300)
 
   search(): void {
-    console.log("here")
     if (this.searchTerm != this.lastSearchTerm) {
       this.updateCurrentlyShown(false)
       if (this.selectAll) {
@@ -183,7 +182,6 @@ export class EditComponent implements OnInit, OnDestroy {
   updateCurrentlyShown(force: boolean) {
     this.configuration.isLoading = true
     let collectionName = this.selectedCollection.name
-    console.log(collectionName)
     this.beatmapService.getBeatmaps(this.pageNumber, this.searchTerm, collectionName, force, this.ordering, this.isCollectionShown, this.selectedFilters()).then(res => {
       this.shownMaps = res.beatmaps
       this.numberResults = res.numberResults
