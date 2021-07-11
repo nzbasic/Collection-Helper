@@ -48,7 +48,14 @@ export const testFilter = async (filter: string, getHitObjects: boolean): Promis
     return filtered
   }
 
-  let filteredText = JSON.stringify(filtered.map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
+  let filteredText: string
+
+  try {
+    filteredText = JSON.stringify(filtered.map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
+  } catch(error) {
+    return error.message
+  }
+
   return filteredText
 }
 
