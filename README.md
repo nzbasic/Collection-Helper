@@ -92,7 +92,7 @@ The key features of **Collection Helper**:
 
 ### Demo
 
-Example making a collection with the farm filter 
+Example making a collection with the farm filter. Note: you only have to generate cache for a filter once ever.
 ![ezgif-2-4e4cb569259a](https://user-images.githubusercontent.com/54062686/125193748-3b282c80-e2a2-11eb-9578-ec205ea8fb51.gif)
 
 ### Screenshots
