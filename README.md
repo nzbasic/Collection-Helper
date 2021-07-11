@@ -42,6 +42,7 @@
 
 - [About](#about)
   - [Built With](#built-with)
+  - [Screenshots](#screenshots)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Usage](#usage)
@@ -88,6 +89,17 @@ The key features of **Collection Helper**:
 - [Node.js](https://github.com/nodejs/node)
 - [SQLite](https://github.com/sqlite/sqlite)
 - [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
+
+### Screenshots
+
+Collections
+![image](https://user-images.githubusercontent.com/54062686/125189725-aa475600-e28d-11eb-883e-29c967157b29.png)
+
+Running custom filter
+![image](https://user-images.githubusercontent.com/54062686/125189778-f1354b80-e28d-11eb-966f-c34f496322de.png)
+
+Collection editing with custom filter applied (Farm)
+![image](https://user-images.githubusercontent.com/54062686/125189812-1d50cc80-e28e-11eb-8a9e-ae700ca479f8.png)
 
 ## Getting Started
 
