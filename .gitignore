@@ -56,3 +56,4 @@ Thumbs.db
 e2e
 .eslintrc.json
 .editorconfig
+electron-builder.yml
