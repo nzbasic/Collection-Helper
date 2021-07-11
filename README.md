@@ -8,7 +8,7 @@
 
 <div align="center">
   <a href="https://github.com/nzbasic/Collection-Helper/releases/latest">Latest Release</a>
-  .
+  ·
   <a href="https://github.com/nzbasic/Collection-Helper/issues/new?assignees=&labels=&template=bug_report.md&title=Bug%3A+">Report a Bug</a>
   ·
   <a href="https://github.com/nzbasic/Collection-Helper/issues/new?assignees=&labels=&template=feature_request.md&title=%3A+">Request a Feature</a>
@@ -42,6 +42,7 @@
 
 - [About](#about)
   - [Built With](#built-with)
+  - [Screenshots](#screenshots)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Usage](#usage)
@@ -88,6 +89,22 @@ The key features of **Collection Helper**:
 - [Node.js](https://github.com/nodejs/node)
 - [SQLite](https://github.com/sqlite/sqlite)
 - [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
+
+### Demo
+
+Example making a collection with the farm filter. Note: you only have to generate cache for a filter once ever.
+![ezgif-2-4e4cb569259a](https://user-images.githubusercontent.com/54062686/125193748-3b282c80-e2a2-11eb-9578-ec205ea8fb51.gif)
+
+### Screenshots
+
+Collections
+![image](https://user-images.githubusercontent.com/54062686/125189725-aa475600-e28d-11eb-883e-29c967157b29.png)
+
+Running custom filter
+![image](https://user-images.githubusercontent.com/54062686/125189778-f1354b80-e28d-11eb-966f-c34f496322de.png)
+
+Collection editing with custom filter applied (Farm)
+![image](https://user-images.githubusercontent.com/54062686/125189812-1d50cc80-e28e-11eb-8a9e-ae700ca479f8.png)
 
 ## Getting Started
 
