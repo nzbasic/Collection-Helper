@@ -13,6 +13,7 @@ export let fullIp: string
 export class AppComponent implements OnInit {
   public display: Display;
   public allTypes = Display;
+  public version = "1.0.0"
 
   constructor(
     private electronService: ElectronService,
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit {
 
     if (res) {
       fullIp = baseIp + res.port
+      this.version = res.version
     } else {
       fullIp = baseIp + 7373
     }

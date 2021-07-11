@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Collection } from "../../../../models/collection";
 import { ComponentService, Display } from "../../services/component.service";
 import { SelectedService } from "../../services/selected.service";
@@ -9,6 +9,8 @@ import { limitTextLength } from "../../util/processing";
   templateUrl: "./sidebar.component.html",
 })
 export class SidebarComponent implements OnInit {
+  @Input() version!: string
+
   public limitTextLength = limitTextLength;
   public buttonSelected: Display = Display.COLLECTIONS;
   public Display = Display;
