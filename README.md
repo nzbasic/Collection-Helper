@@ -218,7 +218,7 @@ Reach out to the maintainer at one of the following places:
 
 ## Donate
 
-If you would like to support me I would greatly appreicate it. 
+If you would like to support me I would greatly appreciate it. 
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/nzbasic)
 
