@@ -66,7 +66,12 @@ export const getSelected = async (request: GetSelectedReq): Promise<string[]> =>
     customFilters = request.customFilters
   }
 
-  const matchedLast = (JSON.stringify(request.filter) == JSON.stringify(previousFilter)) && cacheInitialized
+  let matchedLast = (JSON.stringify(request.filter) == JSON.stringify(previousFilter)) && cacheInitialized
+
+  if (request.force) {
+    matchedLast = false
+  }
+
   const getCollection = !!request.name.length
   const beatmapList = await filterBeatmaps(request.filter, request.name, getCollection, matchedLast, customFilters)
   return beatmapList.map(map => map.md5)
@@ -110,6 +115,8 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
     const filters = await readFilters()
     const allFilters = customFilters.map(name => filters.find(filter => filter.name == name))
     const allHashes = allFilters.map(filter => filter.cache)
+
+    console.log(allFilters)
 
     if (allFilters.length) {
       filterIntersection = new Set(allHashes.reduce((a,b) => a.filter(c => b.includes(c))))

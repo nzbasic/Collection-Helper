@@ -43,4 +43,5 @@ export interface GetSelectedReq {
   name: string
   filter: Filter
   customFilters?: string[]
+  force: boolean
 }

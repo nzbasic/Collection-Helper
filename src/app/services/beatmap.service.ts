@@ -21,9 +21,9 @@ export class BeatmapService {
     return res.data
   }
 
-  async getSelectedList(search: string, name: string, customFilters?: string[]): Promise<string[]> {
+  async getSelectedList(search: string, name: string, force: boolean, customFilters?: string[]): Promise<string[]> {
     let filter = this.parseFilter(search)
-    let req: GetSelectedReq = { filter: filter, name: name }
+    let req: GetSelectedReq = { filter: filter, name: name, force: force }
 
     if (customFilters.length) {
       req.customFilters = customFilters

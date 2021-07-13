@@ -5,7 +5,7 @@
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Name:</span>
       <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" (keyup)="textChange($event)"/>
-      <span *ngIf="list.has(inputValue)" class="text-red-600">Already exists!</span>
+      <span *ngIf="list.has(res.name)" class="text-red-600">Already exists!</span>
     </div>
     <div class="flex items-center mt-4">
       <div class="flex-grow bg bg-gray-300 h-0.5"></div>
@@ -17,7 +17,7 @@
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
       <span class="mr-3">Search: </span>
-      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none" (input)="searchChange($event)" placeholder="Search using regular osu! filters... e.g. stars>5 bpm<200 length<120"/>
+      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none" (keyup)="searchChange($event)" placeholder="Search using regular osu! filters... e.g. stars>5 bpm<200 length<120"/>
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
       <span class="mr-6">Filter: </span>
@@ -27,7 +27,7 @@
 
     <div class="my-4 mt-8 flex flex-row justify-center w-full">
       <button (click)="cancel()" class="button button-red-enabled">Cancel</button>
-      <button [disabled]="list.has(inputValue) || inputValue == ''" [ngClass]="list.has(inputValue) || inputValue == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">Add</button>
+      <button [disabled]="list.has(res.name) || res.name == ''" [ngClass]="list.has(res.name) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">Add</button>
     </div>
   </div>
 

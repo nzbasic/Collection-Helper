@@ -44,19 +44,25 @@ export class AddModalComponent {
   }
 
   async search() {
+    this.getSelectedList()
+  }
+
+  async getSelectedList() {
     this.result = "..."
-    let res = await this.beatmapService.getSelectedList(this.searchValue, "", this.selectedFilters)
-    this.res.hashes = res
-    this.result = res.length.toString()
+    console.log(this.selectedFilters)
+    if (this.searchValue || this.selectedFilters.length) {
+      let res = await this.beatmapService.getSelectedList(this.searchValue, "", true, this.selectedFilters)
+      this.res.hashes = res
+      this.result = res.length.toString()
+    } else {
+      this.res.hashes = []
+      this.result = "0"
+    }
   }
 
   changeSelected(selected: string[]) {
     this.selectedFilters = selected
-    if (selected.length) {
-      this.debouncedSearch()
-    } else {
-      this.result = "0"
-    }
+    this.getSelectedList()
   }
 
 }

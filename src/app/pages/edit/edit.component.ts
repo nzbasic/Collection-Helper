@@ -113,7 +113,7 @@ export class EditComponent implements OnInit, OnDestroy {
     if ($event.event == "onSelectAll") {
       if ($event.value) {
         this.selectAll = true
-        this.beatmapService.getSelectedList(this.searchTerm, this.isCollectionShown?this.selectedCollection.name:"", this.selectedFilters).then((res: string[]) => {
+        this.beatmapService.getSelectedList(this.searchTerm, this.isCollectionShown?this.selectedCollection.name:"", false, this.selectedFilters).then((res: string[]) => {
           res.forEach(hash => {
             if (!this.selected.has(hash)) {
               this.selected.add(hash);
