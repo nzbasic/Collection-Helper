@@ -116,7 +116,9 @@ You must have run your osu! client at least once.
 
 ### Usage
 
-#### Build instructions
+<a href="https://github.com/nzbasic/Collection-Helper/releases/latest">Download the latest release here</a>
+
+#### Building yourself (for devs)
 
 Please follow these steps to build the project yourself:
 
