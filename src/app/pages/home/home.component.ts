@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
     this.configuration.orderEnabled = false
     this.collections = this.collectionsService.getCollections("", 1);
     this.configuration.isLoading = false;
-    this.names = new Set(this.collections.map((collection) => collection.name));
+    this.names = new Set(this.collections.map((collection) => collection.name.toLowerCase()));
   }
 
   onChange(event: Event): void {

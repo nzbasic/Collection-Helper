@@ -27,7 +27,7 @@
 
     <div class="my-4 mt-8 flex flex-row justify-center w-full">
       <button (click)="cancel()" class="button button-red-enabled">Cancel</button>
-      <button [disabled]="list.has(res.name) || res.name == ''" [ngClass]="list.has(res.name) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">Add</button>
+      <button [disabled]="list.has(res.name.toLowerCase()) || res.name == ''" [ngClass]="list.has(res.name.toLowerCase()) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">Add</button>
     </div>
   </div>
 
