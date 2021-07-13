@@ -133,14 +133,16 @@ const readIntDoublePairs = (reader: OsuReader): IntDoublePair[] => {
  */
 const parseSr = (beatmap: Beatmap): number => {
   let output: number;
+
+  // cannot assume difficulty calculation has happened on every map, so use ??0
   if (beatmap.mode == 0x00) {
-    output = beatmap.standardDiffs[0].stars;
+    output = beatmap.standardDiffs[0]?.stars??0;
   } else if (beatmap.mode == 0x01) {
-    output = beatmap.taikoDiffs[0].stars;
+    output = beatmap.taikoDiffs[0]?.stars??0;
   } else if (beatmap.mode == 0x02) {
-    output = beatmap.catchDiffs[0].stars;
+    output = beatmap.catchDiffs[0]?.stars??0;
   } else if (beatmap.mode == 0x03) {
-    output = beatmap.maniaDiffs[0].stars;
+    output = beatmap.maniaDiffs[0]?.stars??0;
   }
   return output;
 };
