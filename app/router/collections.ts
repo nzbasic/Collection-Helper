@@ -9,7 +9,7 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/add").post(async (req, res) => {
-  await addCollection(req.body.name)
+  await addCollection(req.body.name, req.body.hashes)
   res.json(collections)
 })
 

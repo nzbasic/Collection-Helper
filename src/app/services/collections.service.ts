@@ -36,8 +36,8 @@ export class CollectionsService {
     this.collections = (await axios.post(fullIp + "/collections/remove", names)).data
   }
 
-  async addCollection(name: string): Promise<void> {
-    this.collections = (await axios.post(fullIp + "/collections/add", {name: name})).data
+  async addCollection(name: string, hashes: string[]): Promise<void> {
+    this.collections = (await axios.post(fullIp + "/collections/add", {name: name, hashes: hashes})).data
   }
 
   async mergeCollections(names: string[]): Promise<void> {

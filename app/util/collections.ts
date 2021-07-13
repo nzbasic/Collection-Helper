@@ -48,8 +48,8 @@ export const mergeCollections = async (names: string[]) => {
   removeCollections(toMerge.map(a => a.name))
 }
 
-export const addCollection = async (name: string) => {
-  const newCollection: Collection = {name: name, numberMaps: 0, hashes: []}
+export const addCollection = async (name: string, hashes: string[]) => {
+  const newCollection: Collection = {name: name, numberMaps: hashes.length, hashes: hashes}
   collections.collections.push(newCollection)
   collections.numberCollections++
   await writeCollections()

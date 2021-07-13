@@ -25,6 +25,9 @@ body {
   width: 1.25rem !important;
 }
 
+.w-add {
+  width: 42rem;
+}
 
 .modal {
   margin-left: -14rem;
@@ -43,6 +46,11 @@ th {
   border-bottom: 1px solid lightgray;
   border-right: none;
   border-left: none;
+}
+
+.search-add {
+  border-right: 1px solid lightgray;
+  border-left: 1px solid lightgray
 }
 
 #selectAllCheckbox {

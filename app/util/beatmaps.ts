@@ -75,6 +75,8 @@ export const getSelected = async (request: GetSelectedReq): Promise<string[]> =>
 
 const filterBeatmaps = async (filter: Filter, name: string, getCollection: boolean, matchedLast: boolean, customFilters: string[]): Promise<Beatmap[]> => {
 
+  let noCollection = false
+
   if (matchedLast) {
     return beatmapCache
   }
@@ -82,20 +84,23 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
   const matchedCollection = collections.collections.filter(collection => collection.name == name)
 
   if (!matchedCollection.length) {
-    console.log(name)
-    return null
+    noCollection = true
   }
 
-  const collection = matchedCollection[0]
   let toSearch: Beatmap[]
+  if (!noCollection) {
+    const collection = matchedCollection[0]
 
-  if (getCollection) {
-    toSearch = collection.hashes.map(hash => beatmapMap.get(hash))
+    if (getCollection) {
+      toSearch = collection.hashes.map(hash => beatmapMap.get(hash))
+    } else {
+      let beatmapArray = Array.from(beatmapMap.values())
+      let collectionHashSet = new Set<string>()
+      collection.hashes.map(hash => collectionHashSet.add(hash))
+      toSearch = beatmapArray.filter(map => !collectionHashSet.has(map.md5))
+    }
   } else {
-    let beatmapArray = Array.from(beatmapMap.values())
-    let collectionHashSet = new Set<string>()
-    collection.hashes.map(hash => collectionHashSet.add(hash))
-    toSearch = beatmapArray.filter(map => !collectionHashSet.has(map.md5))
+    toSearch = Array.from(beatmapMap.values())
   }
 
   let filterIntersection = new Set<string>()

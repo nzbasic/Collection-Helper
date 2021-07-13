@@ -1,3 +1,4 @@
+import { AddResponse } from './../../components/add-modal/add-modal.component';
 import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Collection } from "../../../../models/collection";
 import { TitleService } from "../../services/title.service";
@@ -7,6 +8,7 @@ import baseConfig from "../../util/baseConfig";
 import { SelectedService } from "../../services/selected.service";
 import { ComponentService, Display } from "../../services/component.service";
 import { ToastrService } from 'ngx-toastr';
+import { BeatmapService } from "../../services/beatmap.service";
 
 @Component({
   selector: "app-home",
@@ -122,10 +124,10 @@ export class HomeComponent implements OnInit {
     this.removeType = type;
   }
 
-  async addResponse(name: string) {
-    if (name) {
+  async addResponse(res: AddResponse) {
+    if (res.name) {
       this.configuration.isLoading = true;
-      await this.collectionsService.addCollection(name)
+      await this.collectionsService.addCollection(res.name, res.hashes)
       this.toastr.success('The new collection has been written', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.configuration.isLoading = false;
