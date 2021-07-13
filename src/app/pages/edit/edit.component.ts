@@ -13,11 +13,7 @@ import { debounce } from 'ts-debounce'
 import { CollectionsService } from "../../services/collections.service";
 import { FilterService } from "../../services/filter.service";
 import { ToastrService } from 'ngx-toastr';
-
-interface SelectFilter {
-  text: string;
-  selected: boolean;
-}
+import { FilterSelectComponent, SelectFilter } from "../../components/filter-select/filter-select.component";
 
 @Component({
   selector: "app-edit",
@@ -32,7 +28,12 @@ export class EditComponent implements OnInit, OnDestroy {
   public beatmapColumns: Columns[]
   public shownMaps: Beatmap[] = []
   public selected: Set<string> = new Set<string>()
+  private selectedSubscription: Subscription
+  private selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
+  public appliedFilters: string[] = []
+  public selectedFilters: string[] = []
 
+  public filterNumber = 0
   public isCollectionShown = true
   public selectAll = false
   public noResetSelected = false
@@ -42,24 +43,14 @@ export class EditComponent implements OnInit, OnDestroy {
   public numberResults = 0
   public searchTerm = ""
   public isChangingCollection = false
-
-  private lastSearchTerm = ""
-  private selectedSubscription: Subscription
-  private selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
-
-  public filters: SelectFilter[] = []
   public customApplied = false
-  public appliedFilters: SelectFilter[] = []
+  private lastSearchTerm = ""
 
   constructor(private toastr: ToastrService, private filterService: FilterService, private titleService: TitleService, private selectedService: SelectedService, private beatmapService: BeatmapService, private collectionsService: CollectionsService) {
     this.titleService.changeTitle({
       title: "Edit",
       subtitle: "Edit maps in your collection",
     });
-  }
-
-  selectedFilters() {
-    return this.filters.filter(item => item.selected).map(filter => filter.text)
   }
 
   ngOnDestroy(): void {
@@ -71,8 +62,8 @@ export class EditComponent implements OnInit, OnDestroy {
       this.selectedCollection = collection
     })
 
-    this.filters = this.filterService.getFilters().filter(filter => filter.isCached).map((filter): SelectFilter => {
-      return {text: filter.name, selected: false}
+    this.filterService.filterNumber.subscribe((filterNumber: number) => {
+      this.filterNumber = filterNumber
     })
 
     this.beatmapColumns = [
@@ -92,17 +83,12 @@ export class EditComponent implements OnInit, OnDestroy {
     this.updateCurrentlyShown(true)
   }
 
-  applyCustomFilters() {
-    this.appliedFilters = this.filters.filter(item => item.selected);
-    this.pageNumber = 1
-    this.updateCurrentlyShown(true)
+  changeSelected(selected: string[]) {
+    this.selectedFilters = selected
   }
 
-  clearCustomFilters() {
-    this.appliedFilters = []
-    this.filters.forEach(filter => {
-      filter.selected = false
-    })
+  applyCustomFilters() {
+    this.appliedFilters = this.selectedFilters
     this.pageNumber = 1
     this.updateCurrentlyShown(true)
   }
@@ -127,7 +113,7 @@ export class EditComponent implements OnInit, OnDestroy {
     if ($event.event == "onSelectAll") {
       if ($event.value) {
         this.selectAll = true
-        this.beatmapService.getSelectedList(this.searchTerm, this.isCollectionShown?this.selectedCollection.name:"", this.selectedFilters()).then((res: string[]) => {
+        this.beatmapService.getSelectedList(this.searchTerm, this.isCollectionShown?this.selectedCollection.name:"", this.selectedFilters).then((res: string[]) => {
           res.forEach(hash => {
             if (!this.selected.has(hash)) {
               this.selected.add(hash);
@@ -182,7 +168,7 @@ export class EditComponent implements OnInit, OnDestroy {
   updateCurrentlyShown(force: boolean) {
     this.configuration.isLoading = true
     let collectionName = this.selectedCollection.name
-    this.beatmapService.getBeatmaps(this.pageNumber, this.searchTerm, collectionName, force, this.ordering, this.isCollectionShown, this.selectedFilters()).then(res => {
+    this.beatmapService.getBeatmaps(this.pageNumber, this.searchTerm, collectionName, force, this.ordering, this.isCollectionShown, this.selectedFilters).then(res => {
       this.shownMaps = res.beatmaps
       this.numberResults = res.numberResults
       this.configuration.isLoading = false

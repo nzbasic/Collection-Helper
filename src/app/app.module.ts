@@ -27,7 +27,6 @@ import { FiltersComponent } from "./pages/filters/filters.component";
 import { ImportexportComponent } from "./pages/importexport/importexport.component";
 import { SettingsComponent } from "./pages/settings/settings.component";
 import { ConfirmModalComponent } from "./components/confirm-modal/confirm-modal.component";
-import { GeneratingCacheComponent } from "./components/generating-cache/generating-cache.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { LoadingBarComponent } from "./components/loading-bar/loading-bar.component";
 import { RenameModalComponent } from "./components/rename-modal/rename-modal.component";
@@ -38,6 +37,8 @@ import { LoadingComponent } from "./pages/loading/loading.component";
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { UpdateComponent } from './components/update/update.component';
 import { HelpComponent } from './components/help/help.component';
+import { AddModalComponent } from './components/add-modal/add-modal.component';
+import { FilterSelectComponent } from './components/filter-select/filter-select.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -53,7 +54,6 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     ImportexportComponent,
     SettingsComponent,
     ConfirmModalComponent,
-    GeneratingCacheComponent,
     HeaderComponent,
     LoadingComponent,
     LoadingBarComponent,
@@ -64,6 +64,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     PaginationComponent,
     UpdateComponent,
     HelpComponent,
+    AddModalComponent,
+    FilterSelectComponent,
   ],
   imports: [
     BrowserModule,

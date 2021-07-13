@@ -9,9 +9,8 @@
       <button (click)="changeView()" class="button button-green-enabled">{{isCollectionShown ? 'Swap to All Maps View': 'Swap to Collection Maps View'}}</button>
       <button *ngIf="!isCollectionShown" (click)="addMaps()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-blue-disabled' : 'button-blue-enabled'" class="ml-4 button">Add To Collection</button>
       <button *ngIf="isCollectionShown" (click)="showRemoveModal()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-red-disabled' : 'button-red-enabled'" class="ml-4 button">Remove</button>
-      <button *ngIf="!appliedFilters.length" (click)="applyCustomFilters()" class="ml-4 button text-lg" [disabled]="!selectedFilters().length" [ngClass]="!selectedFilters().length ? 'button-blue-disabled' : 'button-blue-enabled'">Apply Custom Filter(s)</button>
-      <button *ngIf="appliedFilters.length" (click)="clearCustomFilters()" class="ml-4 button text-lg" [ngClass]="!appliedFilters.length ? 'button-red-disabled' : 'button-red-enabled'">Clear Custom Filter(s)</button>
-      <ngx-dropdown-list *ngIf="!appliedFilters.length" class="ml-4 w-40 text-sm z-10" [items]="filters" [multiSelection]="true" placeHolder="Filters"></ngx-dropdown-list>
+      <button *ngIf="filterNumber" (click)="applyCustomFilters()" class="ml-4 button text-lg" [disabled]="!selectedFilters.length" [ngClass]="!selectedFilters.length ? 'button-blue-disabled' : 'button-blue-enabled'">Apply Custom Filter(s)</button>
+      <app-filter-select *ngIf="filterNumber" class="ml-4 w-40 text-sm z-10" (emitter)="changeSelected($event)"></app-filter-select>
       <span class="ml-4 text-lg">{{selected.size}} Maps Selected</span>
     </div>
   </div>

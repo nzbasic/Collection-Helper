@@ -13,6 +13,9 @@ export class FilterService {
 
   private filters: CustomFilter[]
 
+  private filterNumberSource = new BehaviorSubject<number>(0)
+  filterNumber = this.filterNumberSource.asObservable()
+
   private progressSource = new BehaviorSubject<number>(0)
   progressCurrent = this.progressSource.asObservable()
 
@@ -26,10 +29,10 @@ export class FilterService {
 
   setFilters(filters: CustomFilter[]) {
     this.filters = filters
+    this.filterNumberSource.next(filters.filter(filter => filter.isCached).length)
   }
 
   getFilters(filterString?: string, pageNumber?: number): CustomFilter[] {
-
     let output = this.filters
 
     if (filterString) {
@@ -43,19 +46,16 @@ export class FilterService {
     }
 
     return output
-
   }
 
   async addFilter(filter: CustomFilter) {
     let res = await axios.post(fullIp + "/filters/add", filter)
-    this.filters = res.data
+    this.setFilters(res.data)
   }
 
   async removeFilters(names: string[]) {
-
     let res = await axios.post(fullIp + "/filters/remove", names)
-    this.filters = res.data
-
+    this.setFilters(res.data)
   }
 
   async testFilter(filter: string, getHitObjects: boolean): Promise<string> {
@@ -73,7 +73,7 @@ export class FilterService {
 
     let res = await axios.post(fullIp + "/filters/generateCache", names)
     clearInterval(progressInterval)
-    this.filters = res.data
+    this.setFilters(res.data)
     return
   }
 
@@ -84,6 +84,6 @@ export class FilterService {
 
   async saveFilter(oldName: string, filter: CustomFilter) {
     let res = await axios.post(fullIp + "/filters/save", { oldName: oldName, filter: filter })
-    this.filters = res.data
+    this.setFilters(res.data)
   }
 }
