@@ -26,6 +26,7 @@
     [data]="shownMaps"
     [columns]="beatmapColumns"
     [loadingTemplate]="loadingTemplate"
+    [noResultsTemplate]="noResultsTemplate"
     (event)="eventEmitted($event)"
   >
       <ng-template let-row let-index="index">
@@ -59,6 +60,12 @@
 <ng-template #loadingTemplate>
   <td [attr.colspan]="beatmapColumns.length">
     <div class="my-4 text-center">{{isCollectionShown ? "Loading collection maps..." : "Loading all cached maps..."}}</div>
+  </td>
+</ng-template>
+
+<ng-template #noResultsTemplate>
+  <td [attr.colspan]="beatmapColumns.length">
+    {{(isCollectionShown && !selectedCollection.numberMaps) ? "No maps in this collection! Swap to all maps view to add maps" : "No results"}}
   </td>
 </ng-template>
 

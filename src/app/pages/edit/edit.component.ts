@@ -29,7 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
   public shownMaps: Beatmap[] = []
   public selected: Set<string> = new Set<string>()
   private selectedSubscription: Subscription
-  private selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
+  public selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
   public appliedFilters: string[] = []
   public selectedFilters: string[] = []
 
