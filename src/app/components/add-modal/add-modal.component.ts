@@ -33,7 +33,7 @@ export class AddModalComponent {
   }
 
   textChange(event: KeyboardEvent): void {
-    this.res.name = (event.target as HTMLTextAreaElement).value
+    this.res.name = (event.target as HTMLTextAreaElement).value.trim()
   }
 
   public debouncedSearch = debounce(this.search, 300)
@@ -49,7 +49,6 @@ export class AddModalComponent {
 
   async getSelectedList() {
     this.result = "..."
-    console.log(this.selectedFilters)
     if (this.searchValue || this.selectedFilters.length) {
       let res = await this.beatmapService.getSelectedList(this.searchValue, "", true, this.selectedFilters)
       this.res.hashes = res
