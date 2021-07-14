@@ -19,8 +19,8 @@ router.route("/setPath").post(async (req, res) => {
 })
 
 router.route("/verifyPath").post(async (req, res) => {
-  let body: { path: string } = req.body
-  res.json(await verifyOsuPath(body.path))
+  let body: { path: string, mode: string } = req.body
+  res.json(await verifyOsuPath(body.path, body.mode))
 })
 
 router.route("/openUrl").post((req, res) => {

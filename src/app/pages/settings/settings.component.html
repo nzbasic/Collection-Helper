@@ -1,1 +1,6 @@
-<p>Settings not implemented</p>
+<div class="py-4 items-center mx-4 flex flex-row">
+  <span>Path: {{osuPath}}</span>
+  <button (click)="changePath()" class="button button-blue-enabled ml-4">Change Path</button>
+</div>
+
+<app-settings-modal *ngIf="isChange" [path]="osuPath" mode="edit"></app-settings-modal>

@@ -8,7 +8,7 @@
         <app-home class="shadow-md" *ngIf="display==allTypes.COLLECTIONS" class="rounded-sm"></app-home>
         <app-loading *ngIf="display==allTypes.LOADING" class="rounded-sm"></app-loading>
         <app-edit *ngIf="display==allTypes.EDIT" class="rounded-sm"></app-edit>
-        <app-settings-modal *ngIf="display==allTypes.SETUP" [path]="installationPath"></app-settings-modal>
+        <app-settings-modal *ngIf="display==allTypes.SETUP" [path]="installationPath" mode="new"></app-settings-modal>
         <app-settings *ngIf="display==allTypes.SETTINGS"></app-settings>
         <app-filters *ngIf="display==allTypes.FILTERS"></app-filters>
         <app-customfilter *ngIf="display==allTypes.CUSTOM_FILTERS"></app-customfilter>

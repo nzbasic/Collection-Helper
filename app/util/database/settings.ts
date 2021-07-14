@@ -14,9 +14,20 @@ export const setOsuPath = async (path: string): Promise<void> => {
   });
 };
 
-export const verifyOsuPath = async (path: string): Promise<boolean> => {
+const changeOsuPath = async (path: string): Promise<void> => {
+  const database = await getDb();
+  await database.run("UPDATE osupath SET path = :path", {
+    ":path": path,
+  });
+}
+
+export const verifyOsuPath = async (path: string, mode: string): Promise<boolean> => {
   if (fs.existsSync(path + "/osu!.db")) {
-    await setOsuPath(path)
+    if (mode == "new") {
+      await setOsuPath(path)
+    } else if (mode == "edit") {
+      await changeOsuPath(path)
+    }
     return true
   } else {
     return false

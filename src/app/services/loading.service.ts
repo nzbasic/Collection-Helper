@@ -21,6 +21,9 @@ export class LoadingService {
   public loadingSource = new BehaviorSubject<number>(0);
   loadingCurrent = this.loadingSource.asObservable();
 
+  public settingsSource = new BehaviorSubject<string>("")
+  settingsCurrent = this.settingsSource.asObservable();
+
   async loadData() {
     this.componentService.changeComponent(Display.LOADING);
     await axios.post(fullIp + "/loadFiles")
@@ -35,6 +38,7 @@ export class LoadingService {
     let path = (await axios.get(fullIp + "/loadSettings")).data
 
     if (path) {
+      this.settingsSource.next(path);
       await this.loadData()
     } else {
       this.componentService.changeComponent(Display.SETUP);

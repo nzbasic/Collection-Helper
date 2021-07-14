@@ -10,16 +10,18 @@ import { fullIp } from '../../app.component'
 export class SettingsModalComponent {
 
   @Input() path!: string
+  @Input() mode!: string
   public invalid = false
 
   constructor(private loadingService: LoadingService) { }
 
   async confirm() {
 
-    let verify: boolean = (await axios.post(fullIp + "/verifyPath", { path: this.path })).data
+    let verify: boolean = (await axios.post(fullIp + "/verifyPath", { path: this.path, mode: this.mode })).data
 
     if (verify) {
       this.invalid = false
+      this.loadingService.settingsSource.next(this.path)
       this.loadingService.loadData()
     } else {
       this.invalid = true
