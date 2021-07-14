@@ -31,6 +31,7 @@
     "electron-log": "^4.3.5",
     "electron-updater": "^4.3.9",
     "express": "^4.17.1",
+    "fetch-installed-software": "0.0.6",
     "osu-buffer": "^2.0.2",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",

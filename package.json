@@ -100,6 +100,7 @@
     "codemirror": "5.62.0",
     "electron-log": "^4.3.5",
     "express": "4.17.1",
+    "fetch-installed-software": "0.0.6",
     "find-free-ports": "2.0.3",
     "get-port-electron": "5.0.0",
     "graceful-fs": "4.2.6",

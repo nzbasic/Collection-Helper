@@ -4,11 +4,11 @@
     <div class="mx-8 mt-8 text-xl">Enter the path to your osu! installation</div>
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Path:</span>
-      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="value" (keyup)="textChange($event)"/>
+      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="path" (keyup)="textChange($event)"/>
       <span class="text-red-600" *ngIf="invalid">Invalid Path</span>
     </div>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
-      <button [disabled]="!value.length" [ngClass]="!value.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
+      <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
     </div>
   </div>
 </div>

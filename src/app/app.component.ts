@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   public update = false
   public downloaded = false
   public launch = false
+  public installationPath = ""
 
   public lines = [
     "I have included some help text for each component of Collection Helper, if you are confused please use the help button on the top right.",
@@ -37,8 +38,8 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    let res = await this.ipcService.invoke('app_details')
-    let baseIp = "http://127.0.0.1:"
+    const res = await this.ipcService.invoke('app_details')
+    const baseIp = "http://127.0.0.1:"
 
     if (res) {
       fullIp = baseIp + res.port
@@ -46,6 +47,8 @@ export class AppComponent implements OnInit {
     } else {
       fullIp = baseIp + 7373
     }
+
+    this.installationPath = res.path
 
     this.ipcService.on('update_available', () => {
       this.update = true

@@ -11,6 +11,7 @@ import filterRouter from './router/filters'
 import { AddressInfo } from "net";
 import { autoUpdater } from 'electron-updater'
 import * as log from 'electron-log'
+import * as installed from 'fetch-installed-software'
 
 const rest = express();
 
@@ -136,7 +137,7 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  if (!serve) {
+  if (serve) {
     app.on("ready", () => setTimeout(createWindow, 400));
   }
 
@@ -158,9 +159,20 @@ try {
     }
   });
 
-  ipcMain.handle('app_details', (event) => {
+  ipcMain.handle('app_details', async (event) => {
     autoUpdater.checkForUpdatesAndNotify()
-    return { version: app.getVersion(), port: (server.address() as AddressInfo).port }
+
+    // find osu installation
+    let osuPath = ""
+    const softwareAll = await installed.getAllInstalledSoftware();
+    softwareAll.forEach((software: any) => {
+      if (software.DisplayName == "osu!") {
+        // remove osu!.exe from path
+        osuPath = software.DisplayIcon.slice(0, -8);
+      }
+    })
+
+    return { version: app.getVersion(), port: (server.address() as AddressInfo).port, path: osuPath }
   })
 
 } catch (e) {
