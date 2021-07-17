@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.0.9-b",
+  "version": "1.0.10-b",
   "description": "Multi-platform, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -104,6 +104,7 @@
     "find-free-ports": "2.0.3",
     "get-port-electron": "5.0.0",
     "graceful-fs": "4.2.6",
+    "lodash": "^4.17.21",
     "monaco-editor": "0.25.2",
     "ngx-codemirror": "1.0.0",
     "ngx-dropdown-list": "1.1.2",
