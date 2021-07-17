@@ -85,7 +85,13 @@ export class BeatmapService {
         for (let i=1; i<mods.length; i+=2) {
           let mod = mods.slice(i, i+2)
           if (!filter.mods.includes(mod)) {
-            filter.mods.push(mod)
+            if (mod == "nc" || mod == "dt") {
+              if (!filter.mods.includes("nc") && !filter.mods.includes("dt")) {
+                filter.mods.push(mod)
+              }
+            } else {
+              filter.mods.push(mod)
+            }
           }
         }
       } else { // any text that doesn't match a filter template
