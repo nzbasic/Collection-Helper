@@ -83,7 +83,10 @@ export class BeatmapService {
       } else if (word.match(/[+]\w+/g)) { // filter for applying mods to SR
         let mods = word.match(/[+]\w+/g)[0]
         for (let i=1; i<mods.length; i+=2) {
-          filter.mods.push(mods.slice(i, i+2))
+          let mod = mods.slice(i, i+2)
+          if (!filter.mods.includes(mod)) {
+            filter.mods.push(mod)
+          }
         }
       } else { // any text that doesn't match a filter template
         filter.text += word + " "
