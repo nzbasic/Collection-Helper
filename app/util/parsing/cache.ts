@@ -196,7 +196,6 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   // dont need all of those
   delete beatmap.artistUnicode;
   delete beatmap.audioFile;
-  delete beatmap.catchDiffs;
   delete beatmap.catchRank;
   delete beatmap.disableStory;
   delete beatmap.disableVideo;
@@ -205,7 +204,6 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   delete beatmap.ignoreSound;
   delete beatmap.lastModified;
   delete beatmap.localOffset;
-  delete beatmap.maniaDiffs;
   delete beatmap.maniaRank;
   delete beatmap.modified;
   delete beatmap.onlineOffset;
@@ -216,9 +214,7 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   delete beatmap.songSource;
   delete beatmap.songUnicode;
   delete beatmap.stackLeniency;
-  delete beatmap.standardDiffs;
   delete beatmap.standardRank;
-  delete beatmap.taikoDiffs;
   delete beatmap.taikoRank;
   delete beatmap.threadId;
   delete beatmap.time;
