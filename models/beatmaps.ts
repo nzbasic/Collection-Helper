@@ -12,6 +12,7 @@ export interface FilterDetail {
 export interface Filter {
 	text?:    string
 	filters?: FilterDetail[]
+  mods?: string[]
 }
 
 export interface Sorting {

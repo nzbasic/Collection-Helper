@@ -35,7 +35,7 @@ export class BeatmapService {
 
   private parseFilter(search: string): Filter {
     let split = search.split(" ")
-    let filter: Filter = {text: "", filters: []}
+    let filter: Filter = {text: "", filters: [], mods: []}
 
     // warning regex ahead
     split.forEach(word => {
@@ -78,9 +78,13 @@ export class BeatmapService {
         if (word.startsWith("!")) {
           operator = "!"
         }
-
         filter.filters.push({type: "Unplayed", operator: operator})
 
+      } else if (word.match(/[+]\w+/g)) { // filter for applying mods to SR
+        let mods = word.match(/[+]\w+/g)[0]
+        for (let i=1; i<mods.length; i+=2) {
+          filter.mods.push(mods.slice(i, i+2))
+        }
       } else { // any text that doesn't match a filter template
         filter.text += word + " "
       }
