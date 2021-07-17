@@ -82,6 +82,13 @@ export const readCache = async (path: string) => {
     beatmap.bpm = parseBpm(beatmap);
     beatmap = deleteFields(beatmap);
 
+    beatmap.ogAr = beatmap.ar
+    beatmap.ogCs = beatmap.cs
+    beatmap.ogHp = beatmap.hp
+    beatmap.ogOd = beatmap.od
+    beatmap.ogBpm = beatmap.bpm
+    beatmap.ogDrain = beatmap.drain
+
     output.set(beatmap.md5, beatmap);
   }
 

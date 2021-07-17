@@ -117,8 +117,6 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
     const allFilters = customFilters.map(name => filters.find(filter => filter.name == name))
     const allHashes = allFilters.map(filter => filter.cache)
 
-    console.log(allFilters)
-
     if (allFilters.length) {
       filterIntersection = new Set(allHashes.reduce((a,b) => a.filter(c => b.includes(c))))
     }
@@ -162,6 +160,41 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
       diffs = map.catchDiffs
     } else if (map.mode == 3) {
       diffs = map.maniaDiffs
+    }
+
+    // increase difficulty settings according to mods
+    if (filter.mods.includes("hr")) {
+      map.cs = map.ogCs*1.3 > 10 ? 10 : map.ogCs*1.3
+      map.hp = map.ogHp*1.4 > 10 ? 10 : map.ogHp*1.4
+      map.ar = map.ogAr*1.4 > 10 ? 10 : map.ogAr*1.4
+      map.od = map.ogOd*1.4 > 10 ? 10 : map.ogOd*1.4
+    } else if (filter.mods.includes("ez")) {
+      map.cs = map.ogCs*0.5 < 0 ? 0 : map.ogCs*0.5
+      map.hp = map.ogHp*0.5 < 0 ? 0 : map.ogCs*0.5
+      map.ar= map.ogAr*0.5 < 0 ? 0 : map.ogCs*0.5
+      map.od = map.ogOd*0.5 < 0 ? 0 : map.ogCs*0.5
+    } else {
+      map.cs = map.ogCs
+      map.hp = map.ogHp
+      map.ar = map.ogAr
+      map.od = map.ogOd
+    }
+
+    if (filter.mods.includes("dt") || filter.mods.includes("nc")) {
+      map.bpm = map.ogBpm*1.5
+      map.drain = Math.round((map.ogDrain*0.66 + Number.EPSILON) * 100) / 100;
+      map.ar = ((map.ar*2)+13)/3
+      map.od = ((map.od*2)+13)/3
+      map.hp = ((map.hp*2)+13)/3
+    } else if (filter.mods.includes("ht")) {
+      map.bpm = map.ogBpm*0.75
+      map.drain = Math.round((map.ogDrain*1.33 + Number.EPSILON) * 100) / 100;
+      map.ar = ((map.ar*3)-13)/2
+      map.od = ((map.od*3)-13)/2
+      map.hp = ((map.hp*3)-13)/2
+    } else {
+      map.bpm = map.ogBpm
+      map.drain = map.ogDrain
     }
 
     const hashes = new Map(diffs.map(obj => [obj.mods, obj.stars]));
