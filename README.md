@@ -46,7 +46,7 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Usage](#usage)
-    - [Build instructions](#build-instructions)
+    - [Build instructions](#building-yourself-for-devs)
     - [Custom filters](#custom-filters)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
