@@ -1,10 +1,11 @@
 import { Filter, GetBeatmapsReq, GetSelectedReq, PageResponse } from "../../models/beatmaps";
-import { Beatmap } from "../../models/cache";
+import { Beatmap, IntDoublePair } from "../../models/cache";
 import { CustomFilter } from "../../models/filters";
 import { readFilters } from "./database/filters";
 import { beatmapMap } from "./parsing/cache";
 import { collections } from "./parsing/collections";
 import * as log from 'electron-log'
+import { convertMods } from './mods'
 
 let cacheInitialized: boolean = false
 let beatmapCache: Beatmap[] = []
@@ -148,6 +149,23 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
         return false
       }
     }
+
+    // before numeric filters, change the SR of the beatmaps
+    const modInt = convertMods(filter.mods)
+    let diffs: IntDoublePair[]
+
+    if (map.mode == 0) {
+      diffs = map.standardDiffs
+    } else if (map.mode == 1) {
+      diffs = map.taikoDiffs
+    } else if (map.mode == 2) {
+      diffs = map.catchDiffs
+    } else if (map.mode == 3) {
+      diffs = map.maniaDiffs
+    }
+
+    const hashes = new Map(diffs.map(obj => [obj.mods, obj.stars]));
+    map.sr = hashes.get(modInt)??hashes.get(0)??0
 
     // apply each filter in the filter filters list
 
