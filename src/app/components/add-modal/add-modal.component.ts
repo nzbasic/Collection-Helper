@@ -49,7 +49,8 @@ export class AddModalComponent {
 
   async getSelectedList() {
     this.result = "..."
-    if (this.searchValue || this.selectedFilters.length) {
+    const trimmed = this.searchValue.trim()
+    if ((trimmed || this.selectedFilters.length) && !trimmed.match(/^([+]\w+)$/g)) {
       let res = await this.beatmapService.getSelectedList(this.searchValue, "", true, this.selectedFilters)
       this.res.hashes = res
       this.result = res.length.toString()
