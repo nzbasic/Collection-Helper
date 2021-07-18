@@ -5,8 +5,9 @@
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Path:</span>
       <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="path" (keyup)="textChange($event)"/>
-      <span class="text-red-600" *ngIf="invalid">Invalid Path</span>
+      <button (click)="openBrowseDialog()" class="button button-blue-enabled">Browse</button>
     </div>
+    <span class="text-red-600 text-center" *ngIf="invalid">Invalid Path</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
       <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
     </div>

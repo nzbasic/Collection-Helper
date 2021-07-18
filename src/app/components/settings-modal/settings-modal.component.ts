@@ -30,6 +30,16 @@ export class SettingsModalComponent {
 
   textChange(event: KeyboardEvent): void {
     this.path = (event.target as HTMLTextAreaElement).value
+    if (this.invalid) {
+      this.invalid = false
+    }
+  }
+
+  async openBrowseDialog() {
+    let res = await axios.get(fullIp + "/openBrowseDialog")
+    if (!res.data.canceled) {
+      this.path = res.data.filePaths[0]
+    }
   }
 
 }

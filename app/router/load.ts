@@ -1,7 +1,8 @@
 import * as express from "express";
 import { loadFiles } from "../util/load";
-import { shell } from 'electron'
+import { dialog, shell } from 'electron'
 import { getOsuPath, setOsuPath, verifyOsuPath } from "../util/database/settings";
+import { win } from '../main'
 
 const router = express.Router();
 router.route("/loadFiles").post(async (req, res) => {
@@ -25,6 +26,11 @@ router.route("/verifyPath").post(async (req, res) => {
 
 router.route("/openUrl").post((req, res) => {
   shell.openExternal("https://github.com/nzbasic/Collection-Helper#custom-filters")
+})
+
+router.route("/openBrowseDialog").get(async (req, res) => {
+  let dialogResult = await dialog.showOpenDialog(win, { properties: ['openDirectory'] })
+  res.json(dialogResult)
 })
 
 export default router

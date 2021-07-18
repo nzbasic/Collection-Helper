@@ -35,7 +35,7 @@ rest.use("/filters", filterRouter)
 // Initialize remote module
 //require("@electron/remote/main").initialize();
 
-let win: BrowserWindow = null
+export let win: BrowserWindow = null
 const args = process.argv.slice(1)
 export const serve = args.some((val) => val === "--serve");
 
