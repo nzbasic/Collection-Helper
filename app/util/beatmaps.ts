@@ -28,10 +28,13 @@ let previousFilter: Filter;
   }
 
   let matchedLast = (JSON.stringify(request.filter) == JSON.stringify(previousFilter)) && cacheInitialized
-
   let beatmapList = await filterBeatmaps(request.filter, request.name, request.getCollection, matchedLast, customFilters)
 
   beatmapList.sort((first, second) => {
+
+    if (first.missing || second.missing) {
+      return 1
+    }
 
     if (request.order.order != "asc") {
       let temp = first
@@ -75,7 +78,7 @@ export const getSelected = async (request: GetSelectedReq): Promise<string[]> =>
 
   const getCollection = !!request.name.length
   const beatmapList = await filterBeatmaps(request.filter, request.name, getCollection, matchedLast, customFilters)
-  return beatmapList.map(map => map.md5)
+  return beatmapList.filter(map => !map.missing).map(map => map.md5)
 
 }
 
@@ -129,118 +132,122 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
       return false
     }
 
-    if (filterIntersection.size) {
-      if (!filterIntersection.has(map.md5)) {
-        return false
-      }
-    }
-
-    // if there is text in the filter, it must match at least one of these
-    if (filter.text.length) {
-      let artistMatch = map.artist.toLowerCase().includes(filter.text.toLowerCase())
-      let titleMatch = map.song.toLowerCase().includes(filter.text.toLowerCase())
-      let creatorMatch = map.creator.toLowerCase().includes(filter.text.toLowerCase())
-      let tagMatch = map.songTags.toLowerCase().includes(filter.text.toLowerCase())
-      let idMatch = map.id == parseInt(filter.text) || map.setId == parseInt(filter.text)
-      let difficultyMatch = map.difficulty.toLowerCase().includes(filter.text.toLowerCase())
-      if (!(artistMatch || titleMatch || creatorMatch || tagMatch || idMatch || difficultyMatch)) {
-        return false
-      }
-    }
-
-    // before numeric filters, change the SR of the beatmaps
-    const modInt = convertMods(filter.mods)
-    let diffs: IntDoublePair[]
-
-    if (map.mode == 0) {
-      diffs = map.standardDiffs
-    } else if (map.mode == 1) {
-      diffs = map.taikoDiffs
-    } else if (map.mode == 2) {
-      diffs = map.catchDiffs
-    } else if (map.mode == 3) {
-      diffs = map.maniaDiffs
-    }
-
-    // increase difficulty settings according to mods
-    if (filter.mods.includes("hr")) {
-      map.cs = map.ogCs*1.3 > 10 ? 10 : map.ogCs*1.3
-      map.hp = map.ogHp*1.4 > 10 ? 10 : map.ogHp*1.4
-      map.ar = map.ogAr*1.4 > 10 ? 10 : map.ogAr*1.4
-      map.od = map.ogOd*1.4 > 10 ? 10 : map.ogOd*1.4
-    } else if (filter.mods.includes("ez")) {
-      map.cs = map.ogCs*0.5 < 0 ? 0 : map.ogCs*0.5
-      map.hp = map.ogHp*0.5 < 0 ? 0 : map.ogCs*0.5
-      map.ar= map.ogAr*0.5 < 0 ? 0 : map.ogCs*0.5
-      map.od = map.ogOd*0.5 < 0 ? 0 : map.ogCs*0.5
+    if (map.missing) {
+      return true
     } else {
-      map.cs = map.ogCs
-      map.hp = map.ogHp
-      map.ar = map.ogAr
-      map.od = map.ogOd
-    }
-
-    if (filter.mods.includes("dt") || filter.mods.includes("nc")) {
-      map.bpm = map.ogBpm*1.5
-      map.drain = Math.round((map.ogDrain*0.66 + Number.EPSILON) * 100) / 100;
-      map.ar = ((map.ar*2)+13)/3
-      map.od = ((map.od*2)+13)/3
-      map.hp = ((map.hp*2)+13)/3
-    } else if (filter.mods.includes("ht")) {
-      map.bpm = map.ogBpm*0.75
-      map.drain = Math.round((map.ogDrain*1.33 + Number.EPSILON) * 100) / 100;
-      map.ar = ((map.ar*3)-13)/2
-      map.od = ((map.od*3)-13)/2
-      map.hp = ((map.hp*3)-13)/2
-    } else {
-      map.bpm = map.ogBpm
-      map.drain = map.ogDrain
-    }
-
-    const hashes = new Map(diffs.map(obj => [obj.mods, obj.stars]));
-    map.sr = hashes.get(modInt)??hashes.get(0)??0
-
-    // apply each filter in the filter filters list
-
-    for (const typeFilter of filter.filters) {
-      if (typeFilter.type == "Numeric") {
-        const toTest = map[typeFilter.filtering.toLowerCase()]
-        if (!applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, toTest)) {
-          return false
-        }
-      } else if (typeFilter.type == "Text") {
-        const toTest = map[typeFilter.filtering.toLowerCase()]
-        if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, toTest)) {
-          return false
-        }
-      } else if (typeFilter.type == "Unplayed") {
-        if (!applyUnplayedFilter(typeFilter.operator, map.unplayed)) {
-          return false
-        }
-      } else if (typeFilter.type == "Status") {
-        if (!applyStatusFilter(typeFilter.operator, typeFilter.valueString, map.status)) {
-          return false
-        }
-      } else if (typeFilter.type == "Mode") {
-
-        let mapValue: string
-        if (map.mode == 0) {
-          mapValue = "o"
-        } else if (map.mode == 1) {
-          mapValue = "t"
-        } else if (map.mode == 2) {
-          mapValue = "c"
-        } else if (map.mode == 3) {
-          mapValue = "m"
-        }
-
-        if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, mapValue)) {
+      if (filterIntersection.size) {
+        if (!filterIntersection.has(map.md5)) {
           return false
         }
       }
-    }
 
-    return true
+      // if there is text in the filter, it must match at least one of these
+      if (filter.text.length) {
+        let artistMatch = map.artist.toLowerCase().includes(filter.text.toLowerCase())
+        let titleMatch = map.song.toLowerCase().includes(filter.text.toLowerCase())
+        let creatorMatch = map.creator.toLowerCase().includes(filter.text.toLowerCase())
+        let tagMatch = map.songTags.toLowerCase().includes(filter.text.toLowerCase())
+        let idMatch = map.id == parseInt(filter.text) || map.setId == parseInt(filter.text)
+        let difficultyMatch = map.difficulty.toLowerCase().includes(filter.text.toLowerCase())
+        if (!(artistMatch || titleMatch || creatorMatch || tagMatch || idMatch || difficultyMatch)) {
+          return false
+        }
+      }
+
+      // before numeric filters, change the SR of the beatmaps
+      const modInt = convertMods(filter.mods)
+      let diffs: IntDoublePair[]
+
+      if (map.mode == 0) {
+        diffs = map.standardDiffs
+      } else if (map.mode == 1) {
+        diffs = map.taikoDiffs
+      } else if (map.mode == 2) {
+        diffs = map.catchDiffs
+      } else if (map.mode == 3) {
+        diffs = map.maniaDiffs
+      }
+
+      // increase difficulty settings according to mods
+      if (filter.mods.includes("hr")) {
+        map.cs = map.ogCs*1.3 > 10 ? 10 : map.ogCs*1.3
+        map.hp = map.ogHp*1.4 > 10 ? 10 : map.ogHp*1.4
+        map.ar = map.ogAr*1.4 > 10 ? 10 : map.ogAr*1.4
+        map.od = map.ogOd*1.4 > 10 ? 10 : map.ogOd*1.4
+      } else if (filter.mods.includes("ez")) {
+        map.cs = map.ogCs*0.5 < 0 ? 0 : map.ogCs*0.5
+        map.hp = map.ogHp*0.5 < 0 ? 0 : map.ogCs*0.5
+        map.ar= map.ogAr*0.5 < 0 ? 0 : map.ogCs*0.5
+        map.od = map.ogOd*0.5 < 0 ? 0 : map.ogCs*0.5
+      } else {
+        map.cs = map.ogCs
+        map.hp = map.ogHp
+        map.ar = map.ogAr
+        map.od = map.ogOd
+      }
+
+      if (filter.mods.includes("dt") || filter.mods.includes("nc")) {
+        map.bpm = map.ogBpm*1.5
+        map.drain = Math.round((map.ogDrain*0.66 + Number.EPSILON) * 100) / 100;
+        map.ar = ((map.ar*2)+13)/3
+        map.od = ((map.od*2)+13)/3
+        map.hp = ((map.hp*2)+13)/3
+      } else if (filter.mods.includes("ht")) {
+        map.bpm = map.ogBpm*0.75
+        map.drain = Math.round((map.ogDrain*1.33 + Number.EPSILON) * 100) / 100;
+        map.ar = ((map.ar*3)-13)/2
+        map.od = ((map.od*3)-13)/2
+        map.hp = ((map.hp*3)-13)/2
+      } else {
+        map.bpm = map.ogBpm
+        map.drain = map.ogDrain
+      }
+
+      const hashes = new Map(diffs.map(obj => [obj.mods, obj.stars]));
+      map.sr = hashes.get(modInt)??hashes.get(0)??0
+
+      // apply each filter in the filter filters list
+
+      for (const typeFilter of filter.filters) {
+        if (typeFilter.type == "Numeric") {
+          const toTest = map[typeFilter.filtering.toLowerCase()]
+          if (!applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, toTest)) {
+            return false
+          }
+        } else if (typeFilter.type == "Text") {
+          const toTest = map[typeFilter.filtering.toLowerCase()]
+          if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, toTest)) {
+            return false
+          }
+        } else if (typeFilter.type == "Unplayed") {
+          if (!applyUnplayedFilter(typeFilter.operator, map.unplayed)) {
+            return false
+          }
+        } else if (typeFilter.type == "Status") {
+          if (!applyStatusFilter(typeFilter.operator, typeFilter.valueString, map.status)) {
+            return false
+          }
+        } else if (typeFilter.type == "Mode") {
+
+          let mapValue: string
+          if (map.mode == 0) {
+            mapValue = "o"
+          } else if (map.mode == 1) {
+            mapValue = "t"
+          } else if (map.mode == 2) {
+            mapValue = "c"
+          } else if (map.mode == 3) {
+            mapValue = "m"
+          }
+
+          if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, mapValue)) {
+            return false
+          }
+        }
+      }
+
+      return true
+    }
   })
 
   previousFilter = filter
