@@ -14,6 +14,8 @@ import { CollectionsService } from "../../services/collections.service";
 import { FilterService } from "../../services/filter.service";
 import { ToastrService } from 'ngx-toastr';
 import { FilterSelectComponent, SelectFilter } from "../../components/filter-select/filter-select.component";
+import axios from "axios";
+import { fullIp } from "../../app.component";
 
 @Component({
   selector: "app-edit",
@@ -194,5 +196,9 @@ export class EditComponent implements OnInit, OnDestroy {
       this.resetFields()
     }
     this.removeModal = false
+  }
+
+  openUrl(setId: number): void {
+    axios.post(fullIp + "/openUrl", { url: "https://osu.ppy.sh/beatmapsets/" + setId })
   }
 }
