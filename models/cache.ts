@@ -1,25 +1,25 @@
 export interface Beatmap {
-  artist: string;
+  artist?: string;
   artistUnicode?: string;
-  song: string;
+  song?: string;
   songUnicode?: string;
-  creator: string;
-  difficulty: string;
+  creator?: string;
+  difficulty?: string;
   audioFile?: string;
   md5: string;
-  fileName: string;
-  status: number;
-  circleNumber: number;
-  sliderNumber: number;
-  spinnerNumber: number;
+  fileName?: string;
+  status?: number;
+  circleNumber?: number;
+  sliderNumber?: number;
+  spinnerNumber?: number;
   modified?: bigint;
-  ar: number;
+  ar?: number;
   ogAr?: number;
-  cs: number;
+  cs?: number;
   ogCs?: number;
-  hp: number;
+  hp?: number;
   ogHp?: number;
-  od: number;
+  od?: number;
   ogOd?: number;
   sr?: number;
   bpm?: number;
@@ -29,12 +29,12 @@ export interface Beatmap {
   taikoDiffs?: IntDoublePair[];
   catchDiffs?: IntDoublePair[];
   maniaDiffs?: IntDoublePair[];
-  drain: number;
+  drain?: number;
   ogDrain?: number;
   time?: number;
   previewTime?: number;
-  timingPoints: TimingPoint[];
-  id: number;
+  timingPoints?: TimingPoint[];
+  id?: number;
   setId: number;
   threadId?: number;
   standardRank?: number;
@@ -43,15 +43,15 @@ export interface Beatmap {
   maniaRank?: number;
   localOffset?: number;
   stackLeniency?: number;
-  mode: number;
+  mode?: number;
   songSource?: string;
-  songTags: string;
+  songTags?: string;
   onlineOffset?: number;
   font?: string;
-  unplayed: boolean;
+  unplayed?: boolean;
   timeLastPlayed?: bigint;
   osz2?: boolean;
-  folderName: string;
+  folderName?: string;
   timeChecked?: bigint;
   ignoreSound?: boolean;
   ignoreSkin?: boolean;
@@ -61,6 +61,7 @@ export interface Beatmap {
   lastModified?: number;
   scrollSpeed?: number;
   hitObjects?: HitObject[];
+  missing?: boolean;
 }
 
 export interface IntDoublePair {
