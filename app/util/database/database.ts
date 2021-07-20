@@ -35,6 +35,7 @@ const setupDb = async () => {
   database = await open({ filename: pathToDbFile, driver: Sqlite3 });
   await database.run("CREATE TABLE IF NOT EXISTS osupath (path TEXT PRIMARY KEY)");
   await database.run("CREATE TABLE IF NOT EXISTS filters (name TEXT PRIMARY KEY, filter TEXT, description TEXT, gethitobjects INTEGER, iscached INTEGER, cache BLOB)");
+  await database.run("CREATE TABLE IF NOT EXISTS missingmaps (md5 TEXT PRIMARY KEY, setId INTEGER)")
 }
 
 const setupFilters = async () => {
