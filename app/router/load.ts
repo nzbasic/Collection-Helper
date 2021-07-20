@@ -25,7 +25,7 @@ router.route("/verifyPath").post(async (req, res) => {
 })
 
 router.route("/openUrl").post((req, res) => {
-  shell.openExternal("https://github.com/nzbasic/Collection-Helper#custom-filters")
+  shell.openExternal(req.body.url)
 })
 
 router.route("/openBrowseDialog").get(async (req, res) => {
