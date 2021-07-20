@@ -1,9 +1,10 @@
 import { Beatmap, IntDoublePair, TimingPoint } from "../../../models/cache";
 import { OsuReader } from "osu-buffer";
 import * as fs from "fs";
+import { getMissingMaps, removeMissingMaps } from "../database/collection";
 
 export let beatmapMap: Map<string, Beatmap>
-
+export let setIds: Set<number>
 /**
  * Reads a binary osu!.db file to memory
  * @param path Path to osu!.db file
@@ -13,6 +14,7 @@ export const readCache = async (path: string) => {
   const buffer = await fs.promises.readFile(path + "\\osu!.db");
   const reader = new OsuReader(buffer.buffer);
   let output = new Map<string, Beatmap>()
+  setIds = new Set<number>()
 
   reader.readInt32(); // version number
   reader.readInt32(); // folder count
@@ -89,10 +91,20 @@ export const readCache = async (path: string) => {
     beatmap.ogBpm = beatmap.bpm
     beatmap.ogDrain = beatmap.drain
 
+    setIds.add(beatmap.setId)
+
     output.set(beatmap.md5, beatmap);
   }
 
   reader.readInt32(); // permissions
+
+  await removeMissingMaps(setIds)
+  let missingMaps = await getMissingMaps()
+  missingMaps.forEach(item => {
+    let beatmap: Beatmap = { setId: item.setId, md5: item.md5, missing: true }
+    output.set(item.md5, beatmap)
+    console.log("setting missing map " + beatmap.md5)
+  })
 
   beatmapMap = output;
 };
