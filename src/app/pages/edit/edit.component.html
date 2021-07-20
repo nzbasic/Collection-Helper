@@ -38,17 +38,20 @@
             </label>
           </div>
         </td>
-        <td>{{limitTextLength(row.song, 20)}}</td>
-        <td>{{limitTextLength(row.artist, 10)}}</td>
-        <td>{{limitTextLength(row.creator, 10)}}</td>
-        <td>{{limitTextLength(row.difficulty, 10)}}</td>
-        <td>{{row.sr.toFixed(3)}}</td>
-        <td>{{row.bpm}}</td>
-        <td>{{row.hp.toFixed(1)}}</td>
-        <td>{{row.od.toFixed(1)}}</td>
-        <td>{{row.ar.toFixed(1)}}</td>
-        <td>{{row.cs.toFixed(1)}}</td>
-        <td>{{row.drain}}</td>
+        <td>
+          <a *ngIf="!row.song" (click)="openUrl(row.setId)" class="text-blue-400 cursor-pointer hover:underline">Map Missing</a>
+          <span *ngIf="row.song">{{limitTextLength(row.song, 20)}}</span>
+        </td>
+        <td>{{limitTextLength(row?.artist??"", 10)}}</td>
+        <td>{{limitTextLength(row?.creator??"", 10)}}</td>
+        <td>{{limitTextLength(row?.difficulty??"", 10)}}</td>
+        <td>{{(row?.sr??0).toFixed(3)}}</td>
+        <td>{{row?.bpm??0}}</td>
+        <td>{{(row?.hp??0).toFixed(1)}}</td>
+        <td>{{(row?.od??0).toFixed(1)}}</td>
+        <td>{{(row?.ar??0).toFixed(1)}}</td>
+        <td>{{(row?.cs??0).toFixed(1)}}</td>
+        <td>{{row?.drain??0}}</td>
     </ng-template>
 
   </ngx-table>
