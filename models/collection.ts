@@ -9,3 +9,8 @@ export interface Collection {
   numberMaps: number;
   hashes: string[];
 }
+
+export interface MissingMap {
+  setId: number;
+  md5: string
+}
