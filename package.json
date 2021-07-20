@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.0.11-b",
+  "version": "1.1.0-b",
   "description": "Multi-platform, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -93,10 +93,15 @@
     "@materia-ui/ngx-monaco-editor": "5.1.0",
     "@supercharge/promise-pool": "1.7.0",
     "@trodi/electron-splashscreen": "1.0.0",
+    "@types/adm-zip": "^0.4.34",
+    "@types/bytes": "^3.1.1",
     "@types/graceful-fs": "4.1.5",
     "@types/sqlite3": "3.1.7",
+    "adm-zip": "^0.5.5",
     "autoprefixer": "10.2.6",
     "axios": "0.21.1",
+    "byte-size": "^8.0.0",
+    "bytes": "^3.1.0",
     "codemirror": "5.62.0",
     "electron-log": "^4.3.5",
     "express": "4.17.1",
