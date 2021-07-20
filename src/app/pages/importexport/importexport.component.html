@@ -1,1 +1,50 @@
-<p>Import export not implemented</p>
+<div class="flex flex-col">
+
+  <div class="shadow-md flex flex-col z-10">
+    <div class="w-full p-2 text-xl border-b border-gray-400">
+      <span class="">Import</span>
+    </div>
+    <div class="flex flex-col m-4">
+      <div class="flex flex-row w-full items-center">
+        <span>Name for Imported Collection:</span>
+        <input class="ml-4 border border-gray-700 focus:outline-none" type="text" [(ngModel)]="newName">
+        <span *ngIf="exists()" class="text-red-600 ml-4">Already Exists!</span>
+      </div>
+      <div class="flex flex-row w-full items-center mt-2">
+        <span>Open a File: </span>
+        <button [disabled]="!newName.length || exists()" [ngClass]="!newName.length || exists() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="import()" class="ml-4 button">Import</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="h-12 bg-default w-full z-0"></div>
+
+  <div class="shadow-md flex flex-col z-10">
+    <div class="w-full p-2 text-xl border-b border-gray-400">
+      <span class="">Export</span>
+    </div>
+    <div class="flex flex-col z-0 m-4">
+      <div class="flex flex-row w-full items-center">
+        <span>Select a Collection to Export</span>
+        <ngx-dropdown-list class="ml-4 z-10 w-52 h-10" (selectionChange)="onChange()" [items]="collectionItems" [placeHolder]="selected ? selected : 'Select a collection'" [filterBox]="true" ></ngx-dropdown-list>
+      </div>
+      <div class="flex flex-row w-full items-center mt-2">
+        <span>Export with Beatmap Files?</span>
+        <input class="ml-4" type="checkbox" [checked]="exportBeatmaps" (change)="selectExportBeatmaps()">
+      </div>
+      <div class="mt-2 flex flex-row items-center">
+        <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="export()">Export</button>
+        <span class="ml-4" *ngIf="estimatedSize != 0">Estimated output size {{estimatedSize}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-bar *ngIf="exporting" [text]="exportBeatmaps ? 'Packing Beatmaps' : 'Exporting Collection'" [mode]="exportBeatmaps ? 'determinate' : 'indeterminate'" [percentage]="percentage"></app-loading-bar>
+<app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>
+
+
+
+
+
