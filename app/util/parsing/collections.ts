@@ -35,8 +35,7 @@ export const readCollections = async (path: string) => {
 };
 
 /**
- * Writes the given collections to disk
- * @param collections Collections to write
+ * Writes the current collections to disk
  */
 export const writeCollections = async (backup?: boolean) => {
 
