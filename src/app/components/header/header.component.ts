@@ -49,6 +49,11 @@ export class HeaderComponent implements OnInit {
       "I recommend applying any custom filter and writing some in-game filter e.g. (mode=0, status=r stars>5) and then using select all to add all filtered maps to a collection."
     ]})
 
+    this.dict.set(Display.IMPORT_EXPORT, { title: "Import / Export", lines: [
+      "This feature may be unstable currently.",
+      "You need to restart the game and this client for new maps and new collections to load properly."
+    ]})
+
 
   }
 
