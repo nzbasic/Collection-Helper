@@ -39,7 +39,7 @@
           </div>
         </td>
         <td>
-          <a *ngIf="!row.song" (click)="openUrl(row.setId)" class="text-blue-400 cursor-pointer hover:underline">Map Missing</a>
+          <a *ngIf="!row.song" (click)="openUrl(row.setId)" class="text-blue-400 cursor-pointer hover:underline">Map Missing {{row.setId}}</a>
           <span *ngIf="row.song">{{limitTextLength(row.song, 20)}}</span>
         </td>
         <td>{{limitTextLength(row?.artist??"", 10)}}</td>
