@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ComponentService, Display } from "../../services/component.service";
+import { LoadingService } from "../../services/loading.service";
 import { Title, TitleService } from "../../services/title.service";
 
 interface Help {
@@ -18,7 +19,7 @@ export class HeaderComponent implements OnInit {
   public dict = new Map<Display, Help>()
   public helpCurrent: Help
 
-  constructor(private data: TitleService, private componentService: ComponentService) {
+  constructor(private data: TitleService, private componentService: ComponentService, private loadingService: LoadingService) {
 
     this.dict.set(Display.COLLECTIONS, { title: "Collections", lines: [
       "You can select multiple collections to merge/remove by clicking the checkboxes.",
@@ -74,6 +75,10 @@ export class HeaderComponent implements OnInit {
 
   hideHelp(): void {
     this.helpShown = false
+  }
+
+  refresh(): void {
+    this.loadingService.loadData()
   }
 
 }
