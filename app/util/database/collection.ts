@@ -9,7 +9,8 @@ import { Collection, MissingMap } from '../../../models/collection';
 import { getDb } from './database';
 import { addCollection } from '../collections';
 
-export let percentage = 0
+export let exportPercentage = 0
+export let importPercentage = 0
 
 export const exportCollection = async (name: string, exportBeatmaps: boolean, path: string) => {
 
@@ -40,7 +41,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
       const hash = collection.hashes[index]
       const beatmap = beatmapMap.get(hash)
       progress++
-      percentage = progress / collection.hashes.length * 100
+      exportPercentage = progress / collection.hashes.length * 100
 
       if (beatmap) {
         await database.run("INSERT INTO setidmap (md5, setId) VALUES (?, ?)", [beatmap.md5, beatmap.setId])
@@ -80,7 +81,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
   await database.run("INSERT INTO collection (name, beatmaps, hashes) VALUES (?, ?, ?)", [name, exportBeatmaps, buf])
 
   database.close()
-  percentage = 0
+  exportPercentage = 0
 }
 
 export const importCollection = async (path: string, name: string) => {
@@ -101,13 +102,14 @@ export const importCollection = async (path: string, name: string) => {
     for (let i = 0 ; i < pages; i ++) {
       const offset = i*pageSize
       const limit = (i+1)*10 > number ? number-offset : 10
+      importPercentage = i / pages * 100
 
       const beatmaps = await database.all("SELECT * FROM beatmaps LIMIT ? OFFSET ?", [limit, offset])
 
       for (const beatmap of beatmaps) {
         if (!setIds.has(beatmap.setId)) {
           let buffer: Buffer = beatmap.zip
-          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap.md5 + ".osz", buffer)
+          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap.setId + ".osz", buffer)
           missingMaps.add(beatmap.setId)
         }
       }
@@ -116,11 +118,14 @@ export const importCollection = async (path: string, name: string) => {
   } else { // need to report missing sets
     const beatmaps = await database.all("SELECT * FROM setidmap")
     const missingMaps: MissingMap[] = []
+    let i = 0
     for (const beatmap of beatmaps) {
+      importPercentage = i / beatmaps.length * 100
       if (!setIds.has(beatmap.setId)) {
         missingMaps.push({ setId: beatmap.setId, md5: beatmap.md5 })
         beatmapMap.set(beatmap.md5, { setId: beatmap.setId, md5: beatmap.md5, missing: true })
       }
+      i++
     }
 
     await addMissingMaps(missingMaps)
@@ -128,6 +133,7 @@ export const importCollection = async (path: string, name: string) => {
 
   await addCollection(name, hashes)
   database.close()
+  importPercentage = 0
 }
 
 const addMissingMaps = async (missingMaps: MissingMap[]) => {
