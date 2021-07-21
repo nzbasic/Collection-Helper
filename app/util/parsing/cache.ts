@@ -1,7 +1,7 @@
 import { Beatmap, IntDoublePair, TimingPoint } from "../../../models/cache";
 import { OsuReader } from "osu-buffer";
 import * as fs from "fs";
-import { getMissingMaps, removeMissingMaps } from "../database/collection";
+import { fixBrokenHashes, getMissingMaps, removeMissingMaps } from "../database/collection";
 
 export let beatmapMap: Map<string, Beatmap>
 export let setIds: Set<number>
@@ -103,10 +103,10 @@ export const readCache = async (path: string) => {
   missingMaps.forEach(item => {
     let beatmap: Beatmap = { setId: item.setId, md5: item.md5, missing: true }
     output.set(item.md5, beatmap)
-    console.log("setting missing map " + beatmap.md5)
   })
 
   beatmapMap = output;
+  await fixBrokenHashes()
 };
 
 /**
