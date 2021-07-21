@@ -21,7 +21,6 @@ export const readBeatmap = async (beatmap: Beatmap, osuPath: string): Promise<Be
       if (flag && line != "") {
         const contents = line.split(",");
         if (contents.length < 4) {
-          console.log("error reading " + path);
           return;
         }
 

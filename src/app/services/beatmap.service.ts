@@ -99,7 +99,6 @@ export class BeatmapService {
       }
     })
 
-    console.log(filter)
     filter.text = filter.text.trim()
     return filter
   }

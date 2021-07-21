@@ -50,7 +50,6 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
 
     this.editSubscription = this.filterService.editCurrent.subscribe(edit => {
       if (edit.name) {
-        console.log(edit)
         this.oldName = edit.name
         this.editFilter = edit
         this.inputValue = edit.name
