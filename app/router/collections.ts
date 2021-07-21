@@ -5,47 +5,55 @@ import { collections } from "../util/parsing/collections";
 import { win } from '../main'
 import { exportCollection, exportPercentage, importCollection, importPercentage } from "../util/database/collection";
 import { beatmapMap } from "../util/parsing/cache";
+import * as log from 'electron-log'
 
 const router = express.Router();
 
 router.route("/").get((req, res) => {
+  log.info("[API] /collections/ called")
   res.json(collections);
 });
 
 router.route("/add").post(async (req, res) => {
+  log.info("[API] /collections/add called " + JSON.stringify(req.body))
   await addCollection(req.body.name, req.body.hashes)
   res.json(collections)
 })
 
 router.route("/rename").post(async (req, res) => {
+  log.info("[API] /collections/rename called " + JSON.stringify(req.body))
   await renameCollection(req.body.oldName, req.body.newName)
   res.json(collections)
 })
 
 router.route("/merge").post(async (req, res) => {
+  log.info("[API] /collections/merge called " + JSON.stringify(req.body))
   await mergeCollections(req.body)
   res.json(collections)
 })
 
 router.route("/remove").post(async (req, res) => {
+  log.info("[API] /collections/remove called " + JSON.stringify(req.body))
   await removeCollections(req.body)
   res.json(collections)
 })
 
 router.route("/addMaps").post(async (req, res) => {
+  log.info("[API] /collections/addMaps called " + JSON.stringify(req.body))
   const body: { name: string, hashes: string[] } = req.body
   await addMaps(body.name, body.hashes)
   res.json(collections)
 })
 
 router.route("/removeMaps").post(async (req, res) => {
+  log.info("[API] /collections/removeMaps called " + JSON.stringify(req.body))
   const body: { name: string, hashes: string[] } = req.body
   await removeMaps(body.name, body.hashes)
   res.json(collections)
 })
 
 router.route("/export").post(async (req, res) => {
-
+  log.info("[API] /collections/export called " + JSON.stringify(req.body))
   let fileName: string = req.body.name
   fileName = fileName.replace(/[<>:"/\\|?*]/g, '_')
 
@@ -58,6 +66,7 @@ router.route("/export").post(async (req, res) => {
 })
 
 router.route("/import").post(async (req, res) => {
+  log.info("[API] /collections/import called " + JSON.stringify(req.body))
   const dialogRes = await dialog.showOpenDialog(win, {filters: [{ name: 'Collection Database File', extensions: ['db']}]})
   if (!dialogRes.canceled) {
     await importCollection(dialogRes.filePaths[0], req.body.name)
@@ -67,6 +76,7 @@ router.route("/import").post(async (req, res) => {
 })
 
 router.route("/setCount").post((req, res) => {
+  log.info("[API] /collections/setCount called " + JSON.stringify(req.body))
   const body: { hashes: string[] } = req.body
   const setSet = new Set<number>()
 

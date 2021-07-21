@@ -1,6 +1,7 @@
 import { Beatmap, HitObject } from "../../../models/cache";
 import * as fs from "graceful-fs";
 import { promisify } from "util";
+import * as log from 'electron-log'
 
 const readFile = promisify(fs.readFile);
 
@@ -42,6 +43,7 @@ export const readBeatmap = async (beatmap: Beatmap, osuPath: string): Promise<Be
 
     return copy;
   } catch {
+    log.warn("Could not load hitobjects of " + beatmap.setId + " " + beatmap.artist + " - " + beatmap.song + " [" + beatmap.difficulty + "]");
     beatmap.hitObjects = []
     return beatmap;
   }

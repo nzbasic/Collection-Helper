@@ -8,6 +8,7 @@ import { getOsuPath } from './settings';
 import { Collection, MissingMap } from '../../../models/collection';
 import { getDb } from './database';
 import { addCollection } from '../collections';
+import * as log from 'electron-log';
 
 export let exportPercentage = 0
 export let importPercentage = 0
@@ -66,7 +67,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
 
               await database.run("INSERT INTO beatmaps (setId, zip) VALUES (?, ?)", [beatmap.setId, zip.toBuffer()])
             } catch(err) {
-              console.log(err)
+              log.error(err)
             }
           } else {
             await database.run("INSERT INTO beatmaps (setId, zip) VALUES (?, ?)", [beatmap.setId, null])
@@ -137,14 +138,12 @@ export const importCollection = async (path: string, name: string) => {
 }
 
 const addMissingMaps = async (missingMaps: MissingMap[]) => {
-  console.log('called add missing maps')
   const database = await getDb()
   const currentMissing = await database.all("SELECT * FROM missingmaps")
   const currentMissingSet = new Set(currentMissing.map(item => item.setId))
 
   for (const missingMap of missingMaps) {
     if (!currentMissingSet.has(missingMap)) {
-      console.log('inserted ' + missingMap.md5 + ' into missing maps')
       await database.run("INSERT INTO missingmaps (md5, setId) VALUES (?, ?)", [missingMap.md5, missingMap.setId])
     }
   }
@@ -157,7 +156,6 @@ export const removeMissingMaps = async (mapSet: Set<number>) => {
 
   for (const missingMap of currentMissingSet) {
     if (mapSet.has(missingMap)) {
-      console.log('deleting ' + missingMap.setId)
       await database.run("DELETE FROM missingmaps WHERE setId = ?", [missingMap])
     }
   }
