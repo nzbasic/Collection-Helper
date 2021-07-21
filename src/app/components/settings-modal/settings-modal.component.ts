@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import axios from "axios";
 import { LoadingService } from "../../services/loading.service";
 import { fullIp } from '../../app.component'
+import { SelectedService } from "../../services/selected.service";
 
 @Component({
   selector: "app-settings-modal",
@@ -13,7 +14,7 @@ export class SettingsModalComponent {
   @Input() mode!: string
   public invalid = false
 
-  constructor(private loadingService: LoadingService) { }
+  constructor(private loadingService: LoadingService, private selectedService: SelectedService) { }
 
   async confirm() {
 
@@ -22,6 +23,7 @@ export class SettingsModalComponent {
     if (verify) {
       this.invalid = false
       this.loadingService.settingsSource.next(this.path)
+      this.selectedService.clearSelected()
       this.loadingService.loadData()
     } else {
       this.invalid = true

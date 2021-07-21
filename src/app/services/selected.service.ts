@@ -16,4 +16,12 @@ export class SelectedService {
   changeSelected(selected: Collection) {
     this.selectedSource.next(selected);
   }
+
+  clearSelected() {
+    this.selectedSource.next({
+      name: "",
+      numberMaps: 0,
+      hashes: [],
+    })
+  }
 }
