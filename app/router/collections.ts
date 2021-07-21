@@ -76,7 +76,7 @@ router.route("/import").post(async (req, res) => {
 })
 
 router.route("/setCount").post((req, res) => {
-  log.info("[API] /collections/setCount called " + JSON.stringify(req.body))
+  log.info("[API] /collections/setCount called")
   const body: { hashes: string[] } = req.body
   const setSet = new Set<number>()
 
