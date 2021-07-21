@@ -67,7 +67,7 @@ export class CollectionsService {
       this.progressSource.next(progress.data)
     }, 200)
 
-    let dialogRes = (await axios.post(fullIp + "/collections/export", { name: name, exportBeatmaps: exportBeatmaps })).data
+    let dialogRes = (await axios.post(fullIp + "/collections/exportProgress", { name: name, exportBeatmaps: exportBeatmaps })).data
     clearInterval(progressInterval)
     this.progressSource.next(0)
     if (dialogRes.canceled) {
@@ -77,7 +77,15 @@ export class CollectionsService {
   }
 
   async importCollection(name: string) {
+    this.progressSource.next(0)
+    let progressInterval = setInterval(async () => {
+      let progress = await axios.get(fullIp + "/collections/importProgress")
+      this.progressSource.next(progress.data)
+    }, 200)
+
     let collections = (await axios.post(fullIp + "/collections/import", { name: name })).data
+    clearInterval(progressInterval)
+    this.progressSource.next(0)
 
     if (collections.collections.length == this.collections.collections.length) {
       return false

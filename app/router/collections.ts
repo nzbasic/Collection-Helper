@@ -3,7 +3,7 @@ import * as express from "express";
 import { addCollection, addMaps, mergeCollections, removeCollections, removeMaps, renameCollection } from "../util/collections";
 import { collections } from "../util/parsing/collections";
 import { win } from '../main'
-import { exportCollection, importCollection, percentage } from "../util/database/collection";
+import { exportCollection, exportPercentage, importCollection, importPercentage } from "../util/database/collection";
 import { beatmapMap } from "../util/parsing/cache";
 
 const router = express.Router();
@@ -80,8 +80,12 @@ router.route("/setCount").post((req, res) => {
   res.json(setSet.size)
 })
 
-router.route("/progress").get((req, res) => {
-  res.json(percentage)
+router.route("/exportProgress").get((req, res) => {
+  res.json(exportPercentage)
+})
+
+router.route("/importProgress").get((req, res) => {
+  res.json(importPercentage)
 })
 
 export default router

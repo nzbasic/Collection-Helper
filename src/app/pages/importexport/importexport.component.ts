@@ -23,13 +23,14 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   public collectionItems: SelectCollection[]
   public placeHolder = "Select a collection"
   public selected: string
-  public exportBeatmaps = false
+  public exportBeatmaps = true
   public path = ""
   public newName = ""
   public estimatedSize = ""
   public exporting = false
   public percentage = 0
   public warning = false
+  public importing = false
 
   public lines = [
     "You will need to launch/relaunch osu! AND this client for new maps or new collections to load.",
@@ -72,17 +73,18 @@ export class ImportexportComponent implements OnInit, OnDestroy {
         this.toastr.success("Collection exported", "Success")
       }
       this.exporting = false
-      this.warning = true
     })
   }
 
   import(): void {
+    this.importing = true
     this.collectionService.importCollection(this.newName).then((res) => {
       if (res) {
         this.toastr.success("Collection imported", "Success")
         this.newName = ""
         this.warning = true
       }
+      this.importing = false
     })
   }
 
