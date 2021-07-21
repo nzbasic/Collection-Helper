@@ -36,7 +36,7 @@ const setupDb = async () => {
   await database.run("CREATE TABLE IF NOT EXISTS osupath (path TEXT PRIMARY KEY)");
   await database.run("CREATE TABLE IF NOT EXISTS filters (name TEXT PRIMARY KEY, filter TEXT, description TEXT, gethitobjects INTEGER, iscached INTEGER, cache BLOB)");
   await database.run("CREATE TABLE IF NOT EXISTS missingmaps (md5 TEXT PRIMARY KEY, setId INTEGER)")
-  await database.run("CREATE TABLE IF NOT EXISTS newmaps (md5 TEXT PRIMARY KEY, setId INTEGER, id INTEGER)")
+  //await database.run("CREATE TABLE IF NOT EXISTS newmaps (md5 TEXT PRIMARY KEY, setId INTEGER, id INTEGER)")
 }
 
 const setupFilters = async () => {

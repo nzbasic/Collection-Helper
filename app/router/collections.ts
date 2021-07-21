@@ -79,15 +79,25 @@ router.route("/setCount").post((req, res) => {
   log.info("[API] /collections/setCount called")
   const body: { hashes: string[] } = req.body
   const setSet = new Set<number>()
+  let numberInvalid = 0
 
+  let lastFolder = ""
   body.hashes.forEach(hash => {
     const beatmap = beatmapMap.get(hash)
     if (beatmap) {
+      if (beatmap.setId == -1) {
+        if (lastFolder == beatmap.folderName) {
+          return;
+        } else {
+          lastFolder = beatmap.folderName
+          numberInvalid++
+        }
+      }
       setSet.add(beatmap.setId)
     }
   })
 
-  res.json(setSet.size)
+  res.json(setSet.size + numberInvalid)
 })
 
 router.route("/exportProgress").get((req, res) => {
