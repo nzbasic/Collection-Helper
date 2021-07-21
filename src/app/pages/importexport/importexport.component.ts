@@ -33,7 +33,7 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   public importing = false
 
   public lines = [
-    "You will need to launch/relaunch osu! AND this client for new maps or new collections to load.",
+    "You will need to launch/relaunch osu! AND refresh cache in this client for new maps or new collections to load.",
   ];
 
   constructor(private titleService: TitleService, private collectionService: CollectionsService, private toastr: ToastrService) {
