@@ -143,6 +143,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   search(): void {
     if (this.searchTerm != this.lastSearchTerm) {
+      this.pageNumber = 1
       this.updateCurrentlyShown(false)
       if (this.selectAll) {
         this.noResetSelected = true
