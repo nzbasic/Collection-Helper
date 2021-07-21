@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
   public lines = [
     "I have included some help text for each component of Collection Helper, if you are confused please use the help button on the top right.",
     "A backup of your collection.db file will be created when you set your osu! path. To restore it, go to your osu! path, and replace your collection.db file with collectionBackup.db.",
-    "Import and Export is currently being worked on and will be available in the future. Updates will be automatically downloaded when available which will be shown in the bottom right corner.",
     "If you find a bug, please message me on discord: basic#7373. If it is obvious I probably already know about it."
   ]
 
