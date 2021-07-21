@@ -14,7 +14,7 @@ export let exportPercentage = 0
 export let importPercentage = 0
 
 export const exportCollection = async (name: string, exportBeatmaps: boolean, path: string) => {
-
+  exportPercentage = 0.01
   let collection = collections.collections.find(item => item.name === name)
 
   try {
@@ -96,6 +96,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
 }
 
 export const importCollection = async (path: string, name: string) => {
+  importPercentage = 0.01
   //const mainDb = await getDb()
   const database = await open({ filename: path, driver: Sqlite3 });
   const osuPath = await getOsuPath()
