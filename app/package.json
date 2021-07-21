@@ -22,8 +22,6 @@
   "private": true,
   "dependencies": {
     "@electron/remote": "1.0.4",
-    "@supercharge/promise-pool": "^1.7.0",
-    "@trodi/electron-splashscreen": "^1.0.0",
     "@types/adm-zip": "^0.4.34",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
@@ -37,7 +35,6 @@
     "fetch-installed-software": "0.0.6",
     "osu-buffer": "^2.0.2",
     "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2",
-    "tiny-async-pool": "^1.2.0"
+    "sqlite3": "^5.0.2"
   }
 }
