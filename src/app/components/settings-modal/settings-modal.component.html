@@ -9,6 +9,7 @@
     </div>
     <span class="text-red-600 text-center" *ngIf="invalid">Invalid Path</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
+      <button (click)="cancel()" *ngIf="mode=='edit'" class="button button-red-enabled mr-4">Cancel</button>
       <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
     </div>
   </div>

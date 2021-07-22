@@ -34,4 +34,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   changePath() {
     this.isChange = true
   }
+
+  closePath() {
+    this.isChange = false
+  }
 }

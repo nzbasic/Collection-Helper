@@ -8,4 +8,4 @@
   </div>
 </div>
 
-<app-settings-modal *ngIf="isChange" [path]="osuPath" mode="edit"></app-settings-modal>
+<app-settings-modal *ngIf="isChange" [path]="osuPath" mode="edit" (emitter)="closePath()"></app-settings-modal>

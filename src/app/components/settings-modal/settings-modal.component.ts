@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import axios from "axios";
 import { LoadingService } from "../../services/loading.service";
 import { fullIp } from '../../app.component'
@@ -12,6 +12,7 @@ export class SettingsModalComponent {
 
   @Input() path!: string
   @Input() mode!: string
+  @Output() emitter = new EventEmitter<boolean>()
   public invalid = false
 
   constructor(private loadingService: LoadingService, private selectedService: SelectedService) { }
@@ -42,6 +43,10 @@ export class SettingsModalComponent {
     if (!res.data.canceled) {
       this.path = res.data.filePaths[0]
     }
+  }
+
+  cancel(): void {
+    this.emitter.emit(false)
   }
 
 }
