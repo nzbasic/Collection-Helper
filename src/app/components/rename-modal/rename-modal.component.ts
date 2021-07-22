@@ -14,6 +14,10 @@ export class RenameModalComponent {
 
   public inputValue = ""
 
+  ngOnInit() {
+    this.list.delete(this.value)
+  }
+
   confirm(): void {
     this.response.emit(this.inputValue)
   }
@@ -24,5 +28,9 @@ export class RenameModalComponent {
 
   textChange(event: KeyboardEvent): void {
     this.inputValue = (event.target as HTMLTextAreaElement).value
+  }
+
+  disabled(): boolean {
+    return this.list.has(this.inputValue) || this.inputValue == '' || this.inputValue == this.value
   }
 }

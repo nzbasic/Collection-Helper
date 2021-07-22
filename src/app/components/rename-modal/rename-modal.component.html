@@ -9,7 +9,7 @@
     <span *ngIf="list.has(inputValue)" class="text-red-600 mt-2">Already exists!</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
       <button (click)="cancel()" class="button button-red-enabled">Cancel</button>
-      <button [disabled]="list.has(inputValue) || inputValue == ''" [ngClass]="list.has(inputValue) || inputValue == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">{{action}}</button>
+      <button [disabled]="disabled()" [ngClass]="disabled() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">{{action}}</button>
     </div>
   </div>
 
