@@ -119,9 +119,17 @@ export const importCollection = async (path: string, name: string) => {
 
       for (const beatmap of beatmaps) {
         if (!setIds.has(beatmap.setId) && !beatmapMap.has(beatmap.md5)) {
-          let buffer: Buffer = beatmap.zip
-          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap?.folderName??generateHash({length: 16}) + ".osz", buffer)
-          missingMaps.add(beatmap.setId)
+          const buffer: Buffer = beatmap.zip
+          const randomHash = generateHash({length: 16})
+          if (beatmap.folderName == "undefined" || !beatmap.folderName) {
+            beatmap.folderName = randomHash
+          }
+          try {
+            await fs.promises.writeFile(osuPath + "/Songs/" + beatmap.folderName + ".osz", buffer)
+            missingMaps.add(beatmap.setId)
+          } catch(err) {
+            log.error("Error importing beatmap " + beatmap.folderName)
+          }
         }
       }
 
