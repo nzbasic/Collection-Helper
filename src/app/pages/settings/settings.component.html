@@ -1,6 +1,11 @@
-<div class="p-4 items-center flex flex-row shadow-md">
-  <span>Path: {{osuPath}}</span>
-  <button (click)="changePath()" class="button button-blue-enabled ml-4">Change Path</button>
+<div class="flex flex-col shadow-md">
+  <div class="w-full p-4 text-xl border-b border-gray-300">
+    <span class="">Settings</span>
+  </div>
+  <div class="p-4 flex flex-row items-center">
+    <span>Path: {{osuPath}}</span>
+    <button (click)="changePath()" class="button button-blue-enabled ml-4">Change Path</button>
+  </div>
 </div>
 
 <app-settings-modal *ngIf="isChange" [path]="osuPath" mode="edit"></app-settings-modal>
