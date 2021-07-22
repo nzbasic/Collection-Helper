@@ -9,6 +9,7 @@ import { MissingMap } from '../../../models/collection';
 import { getDb } from './database';
 import { addCollection } from '../collections';
 import * as log from 'electron-log';
+import { generateHash } from 'random-hash'
 
 export let exportPercentage = 0
 export let importPercentage = 0
@@ -29,7 +30,6 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
 
   const osuPath = await getOsuPath()
   const setSet = new Set<number>()
-  const md5Set = new Set<string>()
   let lastInvalid = ""
   let progress = 0
 
@@ -97,7 +97,6 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
 
 export const importCollection = async (path: string, name: string) => {
   importPercentage = 0.01
-  //const mainDb = await getDb()
   const database = await open({ filename: path, driver: Sqlite3 });
   const osuPath = await getOsuPath()
 
@@ -108,12 +107,6 @@ export const importCollection = async (path: string, name: string) => {
   const number = numberBeatmaps.number
   const exportBeatmaps = collection.beatmaps == 1
   const hashes = JSON.parse(collection.hashes.toString())
-
-  // await mainDb.run("BEGIN TRANSACTION")
-  // for (const set of allSets) {
-  //   await mainDb.run("INSERT INTO newmaps (md5, setId, id) VALUES (?, ?, ?)", [set.md5, set.setId, set.id])
-  // }
-  // await mainDb.run("COMMIT")
 
   if (exportBeatmaps) {
     const missingMaps = new Set<number>()
@@ -127,12 +120,14 @@ export const importCollection = async (path: string, name: string) => {
       for (const beatmap of beatmaps) {
         if (!setIds.has(beatmap.setId) && !beatmapMap.has(beatmap.md5)) {
           let buffer: Buffer = beatmap.zip
-          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap.folderName + ".osz", buffer)
+          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap?.folderName??generateHash({length: 16}) + ".osz", buffer)
           missingMaps.add(beatmap.setId)
         }
       }
 
-      importPercentage = i / pages * 100
+      if (i !== 0) {
+        importPercentage = i / pages * 100
+      }
     }
     await removeMissingMaps(missingMaps)
   } else { // need to report missing sets
@@ -190,46 +185,3 @@ export const getMissingMaps = async (): Promise<MissingMap[]> => {
     return missingMap
   })
 }
-
-// export const fixBrokenHashes = async () => {
-//   const database = await getDb()
-//   const allSets = await database.all("SELECT * FROM newmaps")
-
-//   const foundMaps = [];
-//   const badMaps = [];
-
-//   for (const set of allSets) {
-//     if (beatmapMap.get(set.md5)) {
-//       foundMaps.push(set)
-//     } else {
-//       badMaps.push(set)
-//     }
-//   }
-
-//   await database.run("BEGIN TRANSACTION");
-//   for (const found of foundMaps) {
-//     await database.run("DELETE FROM newmaps WHERE md5 = ?", [found.md5])
-//   }
-//   await database.run("COMMIT")
-
-//   const idMap = new Map<number, Beatmap>()
-//   beatmapMap.forEach((beatmap) => {
-//     idMap.set(beatmap.setId, beatmap)
-//   })
-
-//   for (const collection of collections.collections) {
-//     for (const badMap of badMaps) {
-//       if (badMap) {
-//         const index = collection.hashes.find(item => item == badMap.md5)
-//         if (index) {
-//           const beatmap = idMap.get(badMap.id)
-//           if (beatmap) {
-//             collection.hashes[index] = beatmap.md5
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   await writeCollections()
-// }

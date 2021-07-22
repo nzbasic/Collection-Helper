@@ -113,6 +113,7 @@
     "ngx-select-dropdown": "2.1.0",
     "ngx-toastr": "14.0.0",
     "postcss": "8.3.5",
+    "random-hash": "^4.0.1",
     "reverse-line-reader": "0.2.6",
     "rxjs": "6.6.6",
     "sqlite": "4.0.23",
