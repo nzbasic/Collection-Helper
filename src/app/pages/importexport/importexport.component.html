@@ -10,7 +10,7 @@
         <input class="ml-4 border border-gray-700 focus:outline-none" type="text" [(ngModel)]="newName">
         <span *ngIf="exists()" class="text-red-600 ml-4">Already Exists!</span>
       </div>
-      <div class="flex flex-row w-full items-center mt-2">
+      <div class="flex flex-row w-full items-center mt-4">
         <span>Open a File: </span>
         <button [disabled]="!newName.length || exists()" [ngClass]="!newName.length || exists() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="import()" class="ml-4 button">Import</button>
       </div>
@@ -27,13 +27,13 @@
     <div class="flex flex-col z-0 m-4">
       <div class="flex flex-row w-full items-center">
         <span>Select a Collection to Export</span>
-        <ngx-dropdown-list class="ml-4 z-10 w-52 h-10" (selectionChange)="onChange()" [items]="collectionItems" [placeHolder]="selected ? selected : 'Select a collection'" [filterBox]="true" ></ngx-dropdown-list>
+        <ngx-dropdown-list class="ml-4 z-10 w-72 h-10" (selectionChange)="onChange()" [items]="collectionItems" [placeHolder]="selected ? selected : 'Select a collection'" [filterBox]="true" ></ngx-dropdown-list>
       </div>
-      <div class="flex flex-row w-full items-center mt-2">
+      <div class="flex flex-row w-full items-center mt-4">
         <span>Export with Beatmap Files?</span>
         <input class="ml-4" type="checkbox" [checked]="exportBeatmaps" (change)="selectExportBeatmaps()">
       </div>
-      <div class="mt-2 flex flex-row items-center">
+      <div class="mt-4 flex flex-row items-center">
         <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="export()">Export</button>
         <span class="ml-4" *ngIf="estimatedSize">Estimated output size {{estimatedSize}}</span>
       </div>
