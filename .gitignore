@@ -57,3 +57,5 @@ e2e
 .eslintrc.json
 .editorconfig
 electron-builder.yml
+
+!tailwind.config.js
