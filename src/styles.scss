@@ -31,10 +31,20 @@ body {
 
 .modal {
   margin-left: -14rem;
+  animation: fadeIn .5s;
 }
 
 .modal-help {
   margin-left: -13rem;
+  animation: fadeIn .5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  } to {
+    opacity: 1;
+  }
 }
 
 th {
