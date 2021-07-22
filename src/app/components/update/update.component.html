@@ -1,6 +1,6 @@
 <div class="fixed bottom-10 right-10 z-10 bg-transparent inline-flex flex-row items-center justify-center">
 
-  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-md">
     <div class="mx-8 mt-8 text-xl">Update Available!</div>
     <div class="mx-8" [ngClass]="{'mb-8': !downloaded ? true : false}">{{downloaded ? "Would you like to update now?" : "Downloading..."}}</div>
     <div *ngIf="downloaded" class="my-4 px-12 mt-8 flex flex-row justify-between w-full">
