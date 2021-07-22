@@ -1,6 +1,6 @@
 <div class="flex flex-col align-center bg-white shadow-md">
 
-  <div class="m-4 flex justify-between">
+  <div class="m-4 flex justify-between text-lg">
     <span>{{isCollectionShown ? 'Maps in Your Collection' : 'All (Your) Maps'}}</span>
   </div>
 
@@ -68,7 +68,7 @@
 
 <ng-template #noResultsTemplate>
   <td [attr.colspan]="beatmapColumns.length">
-    {{(isCollectionShown && !selectedCollection.numberMaps) ? "No maps in this collection! Swap to all maps view to add maps" : "No results"}}
+    <span class="p-2">{{(isCollectionShown && !selectedCollection.numberMaps) ? "No maps in this collection! Swap to all maps view to add maps" : "No results"}}</span>
   </td>
 </ng-template>
 
