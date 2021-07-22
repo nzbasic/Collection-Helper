@@ -9,7 +9,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TableModule } from 'ngx-easy-table'
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -84,7 +83,6 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MatProgressBarModule,
     TableModule,
     MatTooltipModule,
-    CodemirrorModule,
     MonacoEditorModule,
     DropdownListModule,
     ToastrModule.forRoot(),

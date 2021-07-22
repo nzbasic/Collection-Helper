@@ -4,8 +4,6 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { APP_CONFIG } from './environments/environment';
 
-import 'codemirror/mode/javascript/javascript'
-
 if (APP_CONFIG.production) {
   enableProdMode();
 }
