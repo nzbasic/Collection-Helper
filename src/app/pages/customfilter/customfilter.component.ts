@@ -102,7 +102,6 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     }
 
     this.filterService.testFilter(this.content, this.getHitObjects, this.selected?.name??"").then(res => {
-      console.log(res)
       try {
         this.numberResult = JSON.parse(res.filteredText).length
         this.totalTested = res.numberTested
