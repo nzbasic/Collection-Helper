@@ -3,13 +3,9 @@ import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { runInThisContext } from "vm";
 import { Collection } from "../../../../models/collection";
+import { SelectCollection } from "../../components/collection-dropdown/collection-dropdown.component";
 import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
-
-export interface SelectCollection {
-  text: string;
-  selected: boolean;
-}
 
 @Component({
   selector: "app-importexport",
@@ -17,12 +13,9 @@ export interface SelectCollection {
 })
 export class ImportexportComponent implements OnInit, OnDestroy {
 
+  public selected: Collection
+  private collections: Collection[]
   private percentageSubscription: Subscription
-  private collection: Collection
-  public collections: Collection[]
-  public collectionItems: SelectCollection[]
-  public placeHolder = "Select a collection"
-  public selected: string
   public exportBeatmaps = true
   public path = ""
   public newName = ""
@@ -41,20 +34,13 @@ export class ImportexportComponent implements OnInit, OnDestroy {
       title: "Import / Export",
       subtitle: "Import and export collections",
     });
+    this.collections = this.collectionService.getCollections()
   }
 
   ngOnInit(): void {
     this.percentageSubscription = this.collectionService.progressCurrent.subscribe(progress => {
       this.exporting = progress != 0
       this.percentage = progress
-    })
-
-    this.collections = this.collectionService.getCollections()
-    this.collectionItems = this.collections.map(item => {
-      return {
-        text: item.name,
-        selected: false,
-      }
     })
   }
 
@@ -68,7 +54,7 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   export(): void {
     this.exporting = true
-    this.collectionService.exportCollection(this.selected, this.exportBeatmaps, this.path).then((res) => {
+    this.collectionService.exportCollection(this.selected.name, this.exportBeatmaps, this.path).then((res) => {
       if (res) {
         this.toastr.success("Collection exported", "Success")
       }
@@ -88,22 +74,18 @@ export class ImportexportComponent implements OnInit, OnDestroy {
     })
   }
 
-  async onChange() {
-    let selected = this.collectionItems.filter(item => item.selected).map(filter => filter.text)
-    if (selected.length) {
-      this.selected = selected[0]
-      this.collection = this.collections.find(item => item.name == this.selected)
-      this.estimatedSize = await this.collectionService.getEstimatedSize(this.collection, this.exportBeatmaps)
+  async onChange(selected: Collection) {
+    if (selected) {
+      this.estimatedSize = await this.collectionService.getEstimatedSize(selected, this.exportBeatmaps)
     } else {
-      this.collection = null
       this.estimatedSize = ""
-      this.selected = ""
     }
+    this.selected = selected
   }
 
   async selectExportBeatmaps() {
     this.exportBeatmaps = !this.exportBeatmaps
-    this.estimatedSize = await this.collectionService.getEstimatedSize(this.collection, this.exportBeatmaps)
+    this.estimatedSize = await this.collectionService.getEstimatedSize(this.selected, this.exportBeatmaps)
   }
 
   hideWarning(): void {

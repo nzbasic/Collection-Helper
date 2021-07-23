@@ -27,7 +27,7 @@
     <div class="flex flex-col z-0 m-4">
       <div class="flex flex-row w-full items-center">
         <span>Select a Collection to Export</span>
-        <ngx-dropdown-list class="ml-4 z-10 w-72 h-10" (selectionChange)="onChange()" [items]="collectionItems" [placeHolder]="selected ? selected : 'Select a collection'" [filterBox]="true" ></ngx-dropdown-list>
+        <app-collection-dropdown class="ml-4 z-10 w-72 h-10" (emitter)="onChange($event)"></app-collection-dropdown>
       </div>
       <div class="flex flex-row w-full items-center mt-4">
         <span>Export with Beatmap Files?</span>
