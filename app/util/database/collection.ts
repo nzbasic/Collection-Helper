@@ -1,7 +1,7 @@
 import { collections } from '../parsing/collections'
 import * as fs from 'fs'
 import { Database as Sqlite3 } from "sqlite3";
-import { open } from "sqlite";
+import { Database, open } from "sqlite";
 import { beatmapMap, setIds } from '../parsing/cache'
 import * as AdmZip from 'adm-zip';
 import { getOsuPath } from './settings';
@@ -95,12 +95,26 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
   exportPercentage = 0
 }
 
-export const importCollection = async (path: string, name: string) => {
-  importPercentage = 0.01
-  const database = await open({ filename: path, driver: Sqlite3 });
-  const osuPath = await getOsuPath()
+export const importCollection = async (path: string, name: string): Promise<void | string> => {
+  let database: Database
 
-  const allSets = await database.all("SELECT * FROM setidmap")
+  try {
+    database = await open({ filename: path, driver: Sqlite3 });
+  } catch(err) {
+    importPercentage = 0
+    return "Could not open database"
+  }
+
+  let allSets: any[]
+
+  try {
+    allSets = await database.all("SELECT * FROM setidmap")
+  } catch(err) {
+    importPercentage = 0
+    return "Invalid database format"
+  }
+
+  const osuPath = await getOsuPath()
   const numberBeatmaps = await database.get("SELECT count(*) AS number FROM beatmaps")
   const collection = await database.get("SELECT * FROM collection")
 
@@ -109,13 +123,27 @@ export const importCollection = async (path: string, name: string) => {
   const hashes = JSON.parse(collection.hashes.toString())
 
   if (exportBeatmaps) {
+
+    importPercentage = -1
+    // create temp table with all installed maps
+    await database.run("CREATE TABLE IF NOT EXISTS temp (hash TEXT PRIMARY KEY)")
+    const maps = Array.from(beatmapMap.values())
+
+    await database.run("BEGIN TRANSACTION")
+    for (const map of maps) {
+      await database.run("INSERT INTO temp (hash) VALUES (?)", [map.md5])
+    }
+    await database.run("COMMIT")
+
+    importPercentage = 0.01
+    const count = await database.get("SELECT COUNT(*) AS count, md5 FROM beatmaps WHERE NOT EXISTS ( SELECT hash FROM temp WHERE md5=hash )");
     const missingMaps = new Set<number>()
     const pageSize = 10
-    const pages = Math.ceil(numberBeatmaps.number/pageSize)
+    const pages = Math.ceil(count.count/pageSize)
     for (let i = 0 ; i < pages; i ++) {
       const offset = i*pageSize
       const limit = (i+1)*10 > number ? number-offset : 10
-      const beatmaps = await database.all("SELECT * FROM beatmaps LIMIT ? OFFSET ?", [limit, offset])
+      const beatmaps = await database.all("SELECT md5, zip, folderName, setId FROM beatmaps WHERE NOT EXISTS ( SELECT hash FROM temp WHERE md5=hash ) LIMIT ? OFFSET ? ", [limit, offset])
 
       for (const beatmap of beatmaps) {
         if (!setIds.has(beatmap.setId) && !beatmapMap.has(beatmap.md5)) {
@@ -137,8 +165,11 @@ export const importCollection = async (path: string, name: string) => {
         importPercentage = i / pages * 100
       }
     }
+
+    await database.run("DROP TABLE temp")
     await removeMissingMaps(missingMaps)
   } else { // need to report missing sets
+    importPercentage = 0.01
     const missingMaps: MissingMap[] = []
     let i = 0
     for (const beatmap of allSets) {
