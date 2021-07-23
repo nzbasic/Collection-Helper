@@ -126,6 +126,7 @@ export const importCollection = async (path: string, name: string): Promise<void
 
     importPercentage = -1
     // create temp table with all installed maps
+    await database.run("DROP TABLE IF EXISTS temp")
     await database.run("CREATE TABLE IF NOT EXISTS temp (hash TEXT PRIMARY KEY)")
     const maps = Array.from(beatmapMap.values())
 
