@@ -81,19 +81,19 @@ export class CollectionsService {
       this.progressSource.next(progress.data)
     }, 200)
 
-    let collections = (await axios.post(fullIp + "/collections/import", { name: name })).data
+    let res = (await axios.post(fullIp + "/collections/import", { name: name })).data
     clearInterval(progressInterval)
     this.progressSource.next(0)
 
-    if (collections.error) {
-      return collections.error
+    if (res.error) {
+      return res.error
     }
 
-    if (collections.collections.length == this.collections.collections.length) {
+    if (res.collections.collections.length == this.collections.collections.length) {
       return false
     }
 
-    this.setCollections(collections)
+    this.setCollections(res.collections)
     return true
   }
 
