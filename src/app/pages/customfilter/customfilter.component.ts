@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { Beatmap } from "../../../../models/cache";
+import { Collection } from "../../../../models/collection";
 import { CustomFilter } from "../../../../models/filters";
 import { fullIp } from "../../app.component";
 import { ComponentService, Display } from "../../services/component.service";
@@ -15,10 +16,12 @@ import { TitleService } from "../../services/title.service";
 })
 export class CustomfilterComponent implements OnInit, OnDestroy {
 
+  public selected: Collection
   private oldName: string
   public editFilter: CustomFilter
   public content: string = "resolve(beatmaps)"
   public numberResult = 0
+  public totalTested = 0
   public filteredText = ""
   public errorText = ""
   public rawError = ""
@@ -98,13 +101,15 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
       return
     }
 
-    this.filterService.testFilter(this.content, this.getHitObjects).then(res => {
+    this.filterService.testFilter(this.content, this.getHitObjects, this.selected?.name??"").then(res => {
+      console.log(res)
       try {
-        this.numberResult = JSON.parse(res).length
-        this.filteredText = res
+        this.numberResult = JSON.parse(res.filteredText).length
+        this.totalTested = res.numberTested
+        this.filteredText = res.filteredText
         this.toastr.success('Test was successful, check output for beatmaps matching the filter', 'Success')
       } catch {
-        this.filterService.evaluationErrorSource.next(res)
+        this.filterService.evaluationErrorSource.next(res.filteredText)
         this.toastr.error('Test failed, check output for error logs', 'Error')
       }
       this.gettingData = false
@@ -130,5 +135,9 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     }
 
     this.componentService.changeComponent(Display.FILTERS)
+  }
+
+  onChange(selected: Collection) {
+    this.selected = selected
   }
 }

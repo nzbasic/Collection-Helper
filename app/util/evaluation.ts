@@ -6,57 +6,75 @@ import axios from 'axios'
 import { readBeatmap } from "./parsing/hitobjects"
 import { readFilters, setCache } from "./database/filters"
 import { getOsuPath } from "./database/settings"
+import { collections } from "./parsing/collections"
+import { Collection } from "../../models/collection"
 
+let lastName: string
 let randomBeatmaps: Beatmap[]
-let toTest: Beatmap[]
+let storedBeatmaps: Beatmap[]
 let hitObjectsLoaded = false
 let args = ['resolve', 'beatmaps', 'axios']
 
 export let progress = 0
 
-export const testFilter = async (filter: string, getHitObjects: boolean): Promise<string> => {
+export const testFilter = async (filter: string, getHitObjects: boolean, name: string) => {
 
   let userFilter: Function
+  let beatmaps: Beatmap[]
+  let collection: Collection
+
+  if (lastName != name) {
+    hitObjectsLoaded = false
+  }
 
   try {
     userFilter = new Function(...args, filter);
   } catch(error) {
-    return error.message
+    return { filteredText: error.message, numberTested: 0 }
   }
 
-  if (!randomBeatmaps) {
-    randomBeatmaps = Array.from(beatmapMap.values()).sort(() => 0.5-Math.random())
-    randomBeatmaps = randomBeatmaps.slice(0,1000)
+  if (name) {
+    collection = collections.collections.find(item => item.name == name)
+    randomBeatmaps = collection.hashes.map(item => beatmapMap.get(item)).sort(() => 0.5-Math.random()).slice(0,1000)
   }
 
-  if (!toTest) {
-    if (getHitObjects) {
-      toTest = await getTestObjects(randomBeatmaps)
+  if (!randomBeatmaps || (name == "" && lastName != "")) {
+    randomBeatmaps = Array.from(beatmapMap.values()).sort(() => 0.5-Math.random()).slice(0,1000)
+  }
+
+  if (!getHitObjects && !hitObjectsLoaded) {
+    storedBeatmaps = randomBeatmaps
+  }
+
+  if (lastName == name) {
+    if (getHitObjects && !hitObjectsLoaded) {
+      storedBeatmaps = await getTestObjects(randomBeatmaps)
       hitObjectsLoaded = true
-    } else {
-      toTest = randomBeatmaps
     }
-  }
-
-  if (toTest && getHitObjects && !hitObjectsLoaded) {
-    toTest = await getTestObjects(randomBeatmaps)
-    hitObjectsLoaded = true
-  }
-
-  let filtered = await waitEval(userFilter, toTest);
-  if (typeof(filtered) == "string") {
-    return filtered
+    beatmaps = storedBeatmaps
+  } else {
+    lastName = name
+    if (getHitObjects) {
+      storedBeatmaps = await getTestObjects(randomBeatmaps)
+      hitObjectsLoaded = true
+    }
+    beatmaps = storedBeatmaps
   }
 
   let filteredText: string
+  let filtered = await waitEval(userFilter, beatmaps);
 
-  try {
-    filteredText = JSON.stringify(filtered.map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
-  } catch(error) {
-    return error.message
+  if (typeof(filtered) == "string") {
+    filteredText = filtered
+  } else {
+    try {
+      filteredText = JSON.stringify(filtered.map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
+    } catch(error) {
+      filteredText = error.message
+    }
   }
 
-  return filteredText
+  return { filteredText: filteredText, numberTested: randomBeatmaps.length }
 }
 
 export const generateCache = async (names: string[]) => {

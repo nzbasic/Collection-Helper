@@ -27,11 +27,12 @@
   <div class="flex flex-row mt-4 items-center text-sm">
     <button [disabled]="alreadyExists" class="bg-green-500 hover-bg-green-700 cursor-pointer border border-transparent shadow-sm text-white rounded-sm px-2 py-1" (click)="save()">{{editFilter ? "Save" : "Add"}} filter</button>
     <button class="bg-blue-600 hover-bg-blue-700 cursor-pointer ml-4 border border-transparent shadow-sm text-white rounded-sm px-2 py-1" (click)="test()">Test filter</button>
+    <app-collection-dropdown class="ml-4 z-10 w-72 h-10" (emitter)="onChange($event)"></app-collection-dropdown>
     <span *ngIf="alreadyExists" class="ml-4 text-red">Name Already Exists!</span>
   </div>
 
   <div *ngIf="filteredText.length || rawError.length " class="flex flex-col mt-4">
-    <span class="text-sm">Test Result: {{rawError.length ? "Failed" : numberResult + "/1000"}}</span>
+    <span class="text-sm">Test Result: {{rawError.length ? "Failed" : numberResult + "/" + totalTested}}</span>
     <div class="h-52 border border-gray-200">
       <ngx-monaco-editor [options]="editorOptions" style="height: 100%" [(ngModel)]="rawError.length ? errorText : filteredText"></ngx-monaco-editor>
     </div>

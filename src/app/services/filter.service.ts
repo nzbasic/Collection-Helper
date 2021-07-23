@@ -58,9 +58,9 @@ export class FilterService {
     this.setFilters(res.data)
   }
 
-  async testFilter(filter: string, getHitObjects: boolean): Promise<string> {
-    let res = await axios.post(fullIp + "/filters/testFilter", { filter: filter, getHitObjects: getHitObjects })
-    let data: string = res.data
+  async testFilter(filter: string, getHitObjects: boolean, name: string) {
+    let res = await axios.post(fullIp + "/filters/testFilter", { filter: filter, getHitObjects: getHitObjects, name: name })
+    let data: { filteredText: string, numberTested: number } = res.data
     return data
   }
 

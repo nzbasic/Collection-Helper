@@ -37,8 +37,8 @@ router.route("/setCache").post(async (req, res) => {
 
 router.route("/testFilter").post(async (req, res) => {
   log.info("[API] /filters/testFilter called " + JSON.stringify(req.body))
-  let body: { filter: string, getHitObjects: boolean } = req.body
-  res.json(await testFilter(body.filter, body.getHitObjects))
+  let body: { filter: string, getHitObjects: boolean, name: string } = req.body
+  res.json(await testFilter(body.filter, body.getHitObjects, body.name))
 })
 
 router.route("/generateCache").post(async (req, res) => {
