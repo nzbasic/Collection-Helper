@@ -15,7 +15,7 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/add").post(async (req, res) => {
-  log.info("[API] /collections/add called " + JSON.stringify(req.body))
+  log.info("[API] /collections/add called")
   await addCollection(req.body.name, req.body.hashes)
   res.json(collections)
 })
@@ -39,7 +39,7 @@ router.route("/remove").post(async (req, res) => {
 })
 
 router.route("/addMaps").post(async (req, res) => {
-  log.info("[API] /collections/addMaps called " + JSON.stringify(req.body))
+  log.info("[API] /collections/addMaps called")
   const body: { name: string, hashes: string[] } = req.body
   await addMaps(body.name, body.hashes)
   res.json(collections)
