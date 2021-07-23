@@ -65,12 +65,16 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   import(): void {
     this.importing = true
     this.collectionService.importCollection(this.newName).then((res) => {
-      if (res) {
-        this.toastr.success("Collection imported", "Success")
-        this.newName = ""
-        this.warning = true
+      if (typeof res === "string") {
+        this.toastr.error(res, "Error")
+      } else {
+        if (res) {
+          this.toastr.success("Collection imported", "Success")
+          this.newName = ""
+          this.warning = true
+        }
+        this.importing = false
       }
-      this.importing = false
     })
   }
 
