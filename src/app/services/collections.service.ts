@@ -16,10 +16,10 @@ export class CollectionsService {
 
   setCollections(collections: Collections): void {
     this.collections = collections
-    this.collections.collections = this.collections.collections.sort((a,b) => a.name.localeCompare(b.name))
   }
 
   getCollections(filter?: string, pageNumber?: number): Collection[] {
+    this.collections.collections = this.collections.collections.sort((a,b) => a.name.localeCompare(b.name))
     let output = this.collections.collections
     if (filter) {
       output = output.filter((collection) =>
