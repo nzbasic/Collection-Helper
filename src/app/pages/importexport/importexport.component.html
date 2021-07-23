@@ -42,7 +42,7 @@
 </div>
 
 <app-loading-bar *ngIf="exporting && percentage" [text]="exportBeatmaps ? 'Packing Beatmaps' : 'Exporting Collection'" [mode]="exportBeatmaps ? 'determinate' : 'indeterminate'" [percentage]="percentage"></app-loading-bar>
-<app-loading-bar *ngIf="importing && percentage" text="Unpacking collection" mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-loading-bar *ngIf="importing && percentage" [text]="percentage == -1 ? 'Constructing temporary table' : 'Unpacking collection'" [mode]="percentage == -1 ? 'indeterminate' : 'determinate'" [percentage]="percentage"></app-loading-bar>
 <app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>
 
 
