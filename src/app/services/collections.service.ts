@@ -94,13 +94,17 @@ export class CollectionsService {
   }
 
   async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<string> {
-    let size = 20000
+    let size = 28672
     let setCount = (await axios.post(fullIp + "/collections/setCount", { hashes: collection.hashes })).data
 
     if (exportBeatmaps) {
-      size = size + (setCount * 12000000)
+      // 21500 map sets = 207,660,670,976 bytes
+      // average map set = 9658635 bytes
+      size = size + (setCount * 9658635)
     } else {
-      size = size + (setCount * 40)
+      // 21500 map sets = 13,111,296 bytes
+      // average map set = 609
+      size = size + (setCount * 609)
     }
 
     return bytes(size)
