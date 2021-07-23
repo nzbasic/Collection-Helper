@@ -68,11 +68,16 @@ router.route("/export").post(async (req, res) => {
 router.route("/import").post(async (req, res) => {
   log.info("[API] /collections/import called " + JSON.stringify(req.body))
   const dialogRes = await dialog.showOpenDialog(win, {filters: [{ name: 'Collection Database File', extensions: ['db']}]})
+  let error: void | string
   if (!dialogRes.canceled) {
-    await importCollection(dialogRes.filePaths[0], req.body.name)
+    error = await importCollection(dialogRes.filePaths[0], req.body.name)
   }
 
-  res.json(collections)
+  if (typeof error === "string") {
+    res.json({ error: error })
+  } else {
+    res.json({ collections: collections })
+  }
 })
 
 router.route("/setCount").post((req, res) => {

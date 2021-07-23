@@ -75,7 +75,7 @@ export class CollectionsService {
     return
   }
 
-  async importCollection(name: string) {
+  async importCollection(name: string): Promise<boolean | string> {
     let progressInterval = setInterval(async () => {
       let progress = await axios.get(fullIp + "/collections/importProgress")
       this.progressSource.next(progress.data)
@@ -84,6 +84,10 @@ export class CollectionsService {
     let collections = (await axios.post(fullIp + "/collections/import", { name: name })).data
     clearInterval(progressInterval)
     this.progressSource.next(0)
+
+    if (collections.error) {
+      return collections.error
+    }
 
     if (collections.collections.length == this.collections.collections.length) {
       return false
