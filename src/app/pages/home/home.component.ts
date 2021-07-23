@@ -126,37 +126,37 @@ export class HomeComponent implements OnInit {
   }
 
   async addResponse(res: AddResponse) {
+    this.addModal = false
     if (res.name) {
-
+      this.loading = true
       await this.collectionsService.addCollection(res.name, res.hashes)
       this.toastr.success('The new collection has been written', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
-
+      this.loading = false
     }
-    this.addModal = false
   }
 
   async mergeResponse(status: boolean) {
+    this.mergeModal = false
     if (status) {
-      this.configuration.isLoading = true;
+      this.loading = true
       await this.collectionsService.mergeCollections(Array.from(this.selected))
       this.toastr.success('The selected collections have been merged', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
-      this.configuration.isLoading = false;
+      this.loading = false
     }
-    this.mergeModal = false
     this.selected = new Set<string>()
   }
 
   async renameResponse(name: string) {
+    this.renameModal = false
     if (name) {
-      this.configuration.isLoading = true;
+      this.loading = true
       await this.collectionsService.renameCollection(this.singleSelected.name, name)
       this.toastr.success('Your collection has been renamed', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
-      this.configuration.isLoading = false;
+      this.loading = false
     }
-    this.renameModal = false
   }
 
   async removeResponse(status: boolean) {
