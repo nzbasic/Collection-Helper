@@ -58,6 +58,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
         this.inputValue = edit.name
         this.description = edit.description
         this.content = edit.filter
+        this.getHitObjects = edit.getHitObjects
       }
     })
   }
@@ -65,18 +66,6 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.errorSubscription.unsubscribe()
     this.editSubscription.unsubscribe()
-  }
-
-  toggleGetHitObjects(): void {
-    this.getHitObjects = !this.getHitObjects
-  }
-
-  nameChange(event: KeyboardEvent): void {
-    this.inputValue = (event.target as HTMLTextAreaElement).value
-  }
-
-  descriptionChange(event: KeyboardEvent): void {
-    this.description = (event.target as HTMLTextAreaElement).value
   }
 
   openDoc(): void {

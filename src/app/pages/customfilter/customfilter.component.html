@@ -3,13 +3,13 @@
   <div class="flex flex-col">
     <div class="flex flex-row items-center w-full">
       <span>Name: </span>
-      <input class="ml-4 border border-gray-400 focus:outline-none" type="text" [value]="editFilter ? editFilter.name : ''" (keyup)="nameChange($event)">
+      <input class="ml-4 border border-gray-400 focus:outline-none" type="text" [(ngModel)]="inputValue">
       <span class="ml-4">Description: </span>
-      <input class="ml-4 w-full border border-gray-400 focus:outline-none" type="text" [value]="editFilter ? editFilter.description : ''" (keyup)="descriptionChange($event)">
+      <input class="ml-4 w-full border border-gray-400 focus:outline-none" type="text" [(ngModel)]="description">
     </div>
     <div class="flex mt-2 flex-row items-center">
       <span class="mr-2">Get Hit Objects?</span>
-      <input (click)="toggleGetHitObjects()" type="checkbox">
+      <input [(ngModel)]="getHitObjects" type="checkbox">
     </div>
 
     <span class="">
