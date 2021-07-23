@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   public removeModal = false;
   public mergeModal = false;
 
+  public loading = false
   public pageNumber = 1;
   private removeType = "";
   public inputValue = "";
@@ -126,11 +127,11 @@ export class HomeComponent implements OnInit {
 
   async addResponse(res: AddResponse) {
     if (res.name) {
-      this.configuration.isLoading = true;
+
       await this.collectionsService.addCollection(res.name, res.hashes)
       this.toastr.success('The new collection has been written', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
-      this.configuration.isLoading = false;
+
     }
     this.addModal = false
   }
@@ -159,16 +160,16 @@ export class HomeComponent implements OnInit {
   }
 
   async removeResponse(status: boolean) {
+    this.removeModal = false;
     if (status) {
-      this.configuration.isLoading = true;
+      this.loading = true
       let toRemove = this.removeType == "Mass" ? Array.from(this.selected) : Array.from([this.singleSelected.name]);
       if (this.removeType == "Mass") { this.selected = new Set<string>() }
       await this.collectionsService.removeCollections(toRemove);
       this.toastr.success('Removed collection(s)', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
-      this.configuration.isLoading = false;
+      this.loading = false
     }
     this.removeType = "";
-    this.removeModal = false;
   }
 }
