@@ -1,5 +1,5 @@
-<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
-  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+<div class="fixed modal">
+  <div class="bg-white dark:bg-dark1 rounded-md flex flex-col max-w-120 shadow-sm">
     <span class="text-xl text-center my-2 mx-10">{{text}} {{mode=="determinate" ? percentage.toFixed(2) + "%" : ""}}</span>
     <mat-progress-bar [mode]="mode" [value]="percentage"></mat-progress-bar>
   </div>

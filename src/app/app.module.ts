@@ -13,6 +13,7 @@ import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DropdownListModule } from 'ngx-dropdown-list';
+import { UiSwitchModule } from 'ngx-ui-switch'
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -88,7 +89,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MonacoEditorModule,
     DropdownListModule,
     ToastrModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    UiSwitchModule
   ],
   providers: [],
   bootstrap: [AppComponent],

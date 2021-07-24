@@ -1,10 +1,10 @@
-<div class="flex flex-col align-center bg-white shadow-md">
+<div class="flex flex-col align-center shadow-md">
 
   <div class="m-4 flex justify-between text-lg">
     <span>{{isCollectionShown ? 'Maps in Your Collection' : 'All (Your) Maps'}}</span>
   </div>
 
-  <div class="w-full bg-white top-bar z-10 h-16">
+  <div class="w-full top-bar z-10 h-16">
     <div class="flex flex-row items-center h-full text-xl pl-4 pt-2">
       <button (click)="changeView()" class="button button-green-enabled">{{isCollectionShown ? 'Swap to All Maps View': 'Swap to Collection Maps View'}}</button>
       <button *ngIf="!isCollectionShown" (click)="addMaps()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-blue-disabled' : 'button-blue-enabled'" class="ml-4 button">Add To Collection</button>

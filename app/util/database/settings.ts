@@ -33,3 +33,20 @@ export const verifyOsuPath = async (path: string, mode: string): Promise<boolean
     return false
   }
 }
+
+export const setDarkMode = async (mode: boolean) => {
+  const database = await getDb();
+
+  const rows = await database.get("SELECT * FROM darkmode")
+  if (!rows) {
+    await database.run("INSERT INTO darkmode (mode) VALUES (?)", [mode])
+  } else {
+    await database.run("UPDATE darkmode SET mode = ?", [mode])
+  }
+}
+
+export const getDarkMode = async () => {
+  const database = await getDb();
+  const row = await database.get("SELECT * FROM darkmode");
+  return row?.mode??false
+}

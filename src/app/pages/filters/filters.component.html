@@ -1,6 +1,6 @@
 <div class="flex flex-col shadow-md">
 
-  <div class="w-full bg-white z-10 h-16">
+  <div class="w-full z-10 h-16">
     <div class="flex flex-row items-center h-full text-xl pl-4 pt-2 ">
       <button (click)="generateCache(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">Generate Cache</button>
       <button (click)="showRemoveModal(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button" >Remove</button>

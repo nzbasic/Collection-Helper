@@ -1,6 +1,6 @@
-<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+<div class="fixed modal">
 
-  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm justify-center items-center">
+  <div class="bg-white dark:bg-dark1 rounded-md flex flex-col max-w-120 shadow-sm justify-center items-center">
     <div class="mx-8 mt-8 text-xl">{{title}}</div>
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Name:</span>
@@ -8,8 +8,8 @@
     </div>
     <span *ngIf="list.has(inputValue)" class="text-red-600 mt-2">Already exists!</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
-      <button (click)="cancel()" class="button button-red-enabled">Cancel</button>
-      <button [disabled]="disabled()" [ngClass]="disabled() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">{{action}}</button>
+      <button (click)="cancel()" class="button button-red-enabled button-large">Cancel</button>
+      <button [disabled]="disabled()" [ngClass]="disabled() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button button-large">{{action}}</button>
     </div>
   </div>
 

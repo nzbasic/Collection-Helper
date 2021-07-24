@@ -1,7 +1,7 @@
 import * as express from "express";
 import { loadFiles } from "../util/load";
 import { dialog, shell } from 'electron'
-import { getOsuPath, setOsuPath, verifyOsuPath } from "../util/database/settings";
+import { getDarkMode, getOsuPath, setDarkMode, setOsuPath, verifyOsuPath } from "../util/database/settings";
 import { win } from '../main'
 import * as log from 'electron-log'
 
@@ -14,7 +14,9 @@ router.route("/loadFiles").post(async (req, res) => {
 
 router.route("/loadSettings").get(async (req, res) => {
   log.info("[API] /loadSettings called")
-  res.json(await getOsuPath())
+  const path = await getOsuPath()
+  const darkMode = await getDarkMode()
+  res.json({ path: path, darkMode: darkMode })
 })
 
 router.route("/setPath").post(async (req, res) => {
@@ -38,6 +40,18 @@ router.route("/openBrowseDialog").get(async (req, res) => {
   log.info("[API] /openBrowseDialog called " + JSON.stringify(req.body))
   let dialogResult = await dialog.showOpenDialog(win, { properties: ['openDirectory'] })
   res.json(dialogResult)
+})
+
+router.route("/darkMode").post(async (req, res) => {
+  log.info("[API] POST /darkMode called " + JSON.stringify(req.body))
+  const body: { mode: boolean } = req.body
+  await setDarkMode(body.mode)
+})
+
+router.route("/darkMode").get(async (req, res) => {
+  log.info("[API] GET /darkMode called")
+  const darkMode = await getDarkMode()
+  res.json({ darkMode: darkMode })
 })
 
 export default router

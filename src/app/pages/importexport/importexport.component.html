@@ -1,13 +1,13 @@
 <div class="flex flex-col">
 
   <div class="shadow-md flex flex-col z-10">
-    <div class="w-full p-4 text-xl border-b border-gray-300">
+    <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
       <span class="">Import</span>
     </div>
     <div class="flex flex-col m-4">
       <div class="flex flex-row w-full items-center">
         <span>Name for Imported Collection:</span>
-        <input class="ml-4 border border-gray-700 focus:outline-none" type="text" [(ngModel)]="newName">
+        <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="newName">
         <span *ngIf="exists()" class="text-red-600 ml-4">Already Exists!</span>
       </div>
       <div class="flex flex-row w-full items-center mt-4">
@@ -18,10 +18,10 @@
   </div>
 
 
-  <div class="h-12 bg-default w-full z-0"></div>
+  <div class="h-12 bg-default dark:bg-dark0 w-full z-0"></div>
 
   <div class="shadow-md flex flex-col z-10">
-    <div class="w-full p-4 text-xl border-b border-gray-300">
+    <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
       <span class="">Export</span>
     </div>
     <div class="flex flex-col z-0 m-4">

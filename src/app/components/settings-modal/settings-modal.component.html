@@ -1,6 +1,6 @@
-<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+<div class="fixed modal ">
 
-  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-sm">
+  <div class="bg-white dark:bg-dark1 rounded-md flex flex-col max-w-120 shadow-sm">
     <div class="mx-8 mt-8 text-xl">Enter the path to your osu! installation</div>
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Path:</span>
@@ -9,8 +9,8 @@
     </div>
     <span class="text-red-600 text-center" *ngIf="invalid">Invalid Path</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
-      <button (click)="cancel()" *ngIf="mode=='edit'" class="button button-red-enabled mr-4">Cancel</button>
-      <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button">Set</button>
+      <button (click)="cancel()" *ngIf="mode=='edit'" class="button button-red-enabled button-large mr-4">Cancel</button>
+      <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button button-large">Set</button>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="flex flex-col shadow-md">
 
-  <div class="w-full bg-white z-10 h-16">
+  <div class="w-full z-10 h-16">
     <div class="flex flex-row items-center h-full text-xl pl-4 pt-2 ">
       <button (click)="showMergeModal()" [disabled]="selected.size < 2" [ngClass]="selected.size < 2 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">Merge</button>
       <button [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button" (click)="showRemoveModal('Mass')">Remove</button>
@@ -24,13 +24,13 @@
       <td class="">
         <div class="form-group">
           <label class="form-checkbox">
-            <input type="checkbox" class="ml-3" [checked]="isChecked(row)" (click)="checkBoxSelect(row)"/>
+            <input class="dark:bg-dark1" type="checkbox" class="ml-3" [checked]="isChecked(row)" (click)="checkBoxSelect(row)"/>
             <i class="form-icon"></i>
           </label>
         </div>
       </td>
       <td class="">
-        <a (click)="select(row)" class="text-blue-400 cursor-pointer hover-underline">
+        <a (click)="select(row)" class="text-blue-400 cursor-pointer hover:underline">
           {{row.name}}
         </a>
       </td>

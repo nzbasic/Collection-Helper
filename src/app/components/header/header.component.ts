@@ -55,6 +55,11 @@ export class HeaderComponent implements OnInit {
       "You need to restart the game and this client for new maps and new collections to load properly."
     ]})
 
+    this.dict.set(Display.SETTINGS, { title: "Settings" , lines: [
+      "Change application settings here.",
+      "Dark mode selection will persist when you close the app."
+    ]})
+
 
   }
 

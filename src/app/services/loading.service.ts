@@ -18,6 +18,9 @@ export class LoadingService {
     private collectionsService: CollectionsService
   ) {}
 
+  public darkModeSource = new BehaviorSubject<boolean>(false);
+  darkModeCurrent = this.darkModeSource.asObservable();
+
   public loadingSource = new BehaviorSubject<number>(0);
   loadingCurrent = this.loadingSource.asObservable();
 
@@ -35,15 +38,20 @@ export class LoadingService {
   async loadSettings() {
 
     this.componentService.changeComponent(Display.LOADING);
-    let path = (await axios.get(fullIp + "/loadSettings")).data
+    const settings = (await axios.get(fullIp + "/loadSettings")).data
 
-    if (path) {
-      this.settingsSource.next(path);
+    this.darkModeSource.next(settings.darkMode)
+
+    if (settings.darkMode) {
+      document.querySelector('html').classList.add('dark')
+    }
+
+    if (settings.path) {
+      this.settingsSource.next(settings.path);
       await this.loadData()
     } else {
       this.componentService.changeComponent(Display.SETUP);
     }
-
   }
 
 

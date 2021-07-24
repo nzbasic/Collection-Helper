@@ -1,11 +1,11 @@
 <div class="fixed bottom-10 right-10 z-10 bg-transparent inline-flex flex-row items-center justify-center">
 
-  <div class="bg-white rounded-md flex flex-col max-w-120 shadow-md">
+  <div class="bg-gray-700 text-white rounded-md flex flex-col max-w-120 shadow-md">
     <div class="mx-8 mt-8 text-xl">Update Available!</div>
     <div class="mx-8" [ngClass]="{'mb-8': !downloaded ? true : false}">{{downloaded ? "Would you like to update now?" : "Downloading..."}}</div>
-    <div *ngIf="downloaded" class="my-4 px-12 mt-8 flex flex-row justify-between w-full">
-      <button (click)="yes()" class="bg-blue-600 hover-bg-blue-700 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">Yes</button>
-      <button (click)="no()" class="ml-8 bg-red-600 hover-bg-red-700 py-2 px-4 border border-transparent text-white rounded-md cursor-pointer font-medium text-lg">No</button>
+    <div *ngIf="downloaded" class="my-4 px-12 mt-4 flex flex-row justify-between w-full">
+      <button (click)="yes()" class="button button-blue-enabled button-large">Yes</button>
+      <button (click)="no()" class="ml-8 button button-red-enabled button-large">No</button>
     </div>
   </div>
 

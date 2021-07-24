@@ -32,8 +32,8 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   public getHitObjects = false
   private errorSubscription: Subscription
   private editSubscription: Subscription
-  public editorOptions = {theme: 'vs', language: 'javascript'};
-  public resultOptions = {theme: 'vs', language: 'json', readOnly: true, }
+  public editorOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'javascript'};
+  public resultOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'json', readOnly: true, }
 
   constructor(private toastr: ToastrService, private titleService: TitleService, private filterService: FilterService, private componentService: ComponentService) {
     this.titleService.changeTitle({
@@ -43,6 +43,9 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+
+
     this.errorSubscription = this.filterService.evaluationError.subscribe(error => {
       this.rawError = error
       this.errorText = JSON.stringify([{error: error}])

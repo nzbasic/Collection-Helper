@@ -1,23 +1,23 @@
-<div class="fixed modal top-0 z-10 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center">
+<div class="fixed modal">
 
-  <div class="bg-white rounded-md flex flex-col w-add shadow-sm">
+  <div class="bg-white dark:bg-dark1 rounded-md flex flex-col w-add shadow-sm">
     <div class="mx-8 mt-8 text-xl">Add a new Collection</div>
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Name:</span>
-      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" (keyup)="textChange($event)"/>
+      <input class="mx-4 rounded-sm border border-gray-500 dark:border-black dark:bg-dark1 h-8 w-full focus:outline-none" (keyup)="textChange($event)"/>
       <span *ngIf="list.has(res.name)" class="text-red-600">Already exists!</span>
     </div>
     <div class="flex items-center mt-4">
-      <div class="flex-grow bg bg-gray-300 h-0.5"></div>
-      <span class="flex-grow-0 mx-5 text dark:text-white">Advanced Options</span>
-      <div class="flex-grow bg bg-gray-300 h-0.5"></div>
+      <div class="flex-grow bg bg-gray-300 dark:bg-black h-0.5"></div>
+      <span class="flex-grow-0 mx-5 text dark:text-white ">Advanced Options</span>
+      <div class="flex-grow bg bg-gray-300 dark:bg-black h-0.5"></div>
     </div>
     <div class="mt-2 mx-8">
       <span>If you use the search/filters below, the collection will be made with any matching maps already in it.</span>
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
       <span class="mr-3">Search: </span>
-      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none" (keyup)="searchChange($event)" placeholder="Use filters e.g. +DT stars>5 length<120 sotarks"/>
+      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none dark:text-white" (keyup)="searchChange($event)" placeholder="Use filters e.g. +DT stars>5 length<120 sotarks"/>
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
       <span class="mr-6">Filter: </span>
@@ -26,8 +26,8 @@
     </div>
 
     <div class="my-4 mt-8 flex flex-row justify-center w-full">
-      <button (click)="cancel()" class="button button-red-enabled">Cancel</button>
-      <button [disabled]="list.has(res.name.toLowerCase()) || res.name == ''" [ngClass]="list.has(res.name.toLowerCase()) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button">Add</button>
+      <button (click)="cancel()" class="button button-red-enabled button-large">Cancel</button>
+      <button [disabled]="list.has(res.name.toLowerCase()) || res.name == ''" [ngClass]="list.has(res.name.toLowerCase()) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button button-large">Add</button>
     </div>
   </div>
 

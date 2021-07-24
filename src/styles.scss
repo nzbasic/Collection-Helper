@@ -16,11 +16,22 @@ body {
   font-family: "Open Sans"
 }
 
+input[type=checkbox] {
+  appearance: none;
+  @apply border dark:border-black border-gray-300 rounded cursor-pointer w-5 h-5 dark:bg-dark2 flex flex-col items-center justify-center;
+}
+
+input[type=checkbox]:checked:after {
+  content: "✓";
+  @apply text-black dark:text-white;
+}
+
 .ngx-form-checkbox {
   padding: .2rem .4rem .4rem 0rem !important;
 }
 
 #selectAllCheckbox {
+  @apply dark:bg-dark2 dark:border-black;
   height: 1.25rem !important;
   width: 1.25rem !important;
 }
@@ -32,11 +43,13 @@ body {
 .modal {
   margin-left: -14rem;
   animation: fadeIn .5s;
+  @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }
 
 .modal-help {
   margin-left: -13rem;
   animation: fadeIn .5s;
+  @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }
 
 @keyframes fadeIn {
@@ -56,11 +69,17 @@ th {
   border-bottom: 1px solid lightgray;
   border-right: none;
   border-left: none;
+  @apply dark:bg-dark1 dark:border-black dark:text-white;
+}
+
+input {
+  @apply dark:text-white dark:bg-dark2
 }
 
 .search-add {
   border-right: 1px solid lightgray;
-  border-left: 1px solid lightgray
+  border-left: 1px solid lightgray;
+  @apply dark:text-white;
 }
 
 #selectAllCheckbox {
@@ -86,39 +105,107 @@ th {
   @apply transition duration-150 ease-in;
 }
 
+.button-large {
+  @apply text-lg px-4 py-2 rounded-md #{!important};
+}
+
 .button-blue-enabled {
   cursor: pointer;
   background-color: rgb(59, 130, 246);
+  @apply dark:bg-blue-700
 }
 
 .button-blue-enabled:hover {
   background-color: rgb(29, 78, 216);
+  @apply dark:hover:bg-blue-900
 }
 
 .button-blue-disabled {
   cursor: default;
   background-color: rgb(96, 165, 250);
+  @apply dark:bg-blue-500
 }
 
 .button-red-enabled {
   cursor: pointer;
   background-color: rgb(239, 68, 68);
+  @apply dark:bg-red-700
 }
 
 .button-red-enabled:hover {
   background-color: rgb(185, 28, 28);
+  @apply dark:hover:bg-red-900
 }
 
 .button-red-disabled {
   cursor: default;
   background-color: rgb(248, 113, 113);
+  @apply dark:bg-red-500
 }
 
 .button-green-enabled {
   cursor: pointer;
   background-color: rgb(16, 185, 129);
+  @apply dark:bg-green-600
 }
 
 .button-green-enabled:hover {
   background-color: rgb(5, 150, 105);
+  @apply dark:bg-green-800
+}
+
+.ngx-select {
+  @apply dark:bg-dark1 dark:border-black dark:text-white #{!important};
+}
+
+.options {
+  @apply dark:bg-dark1 dark:text-white dark:border-black #{!important};
+}
+
+.selection-anchor-open, .selection-anchor-close {
+  @apply dark:border-black #{!important};
+}
+
+.place-holder {
+  @apply dark:text-white #{!important};
+}
+
+.switch {
+  @apply dark:border-black #{!important};
+}
+
+.dropdown {
+  @apply dark:border-black #{!important};
+}
+
+.ngx {
+  // &-container--dark {
+  //   background-color: $dark;
+  // }
+
+  &-table {
+    @apply dark:bg-dark1 dark:text-white;
+
+    td {
+      @apply dark:border-black
+    }
+
+    th {
+      @apply dark:border-black;
+    }
+
+    &__table-row--selected,
+    &__table-col--selected,
+    &__table-cell--selected {
+      @apply dark:bg-dark2 #{!important};
+    }
+
+    &__table--hoverable > tbody tr:hover {
+      @apply dark:bg-dark2;
+    }
+
+    &__table--striped > tbody tr:nth-of-type(odd) {
+      @apply dark:bg-dark2;
+    }
+  }
 }

@@ -1,10 +1,14 @@
 <div class="flex flex-col shadow-md">
-  <div class="w-full p-4 text-xl border-b border-gray-300">
+  <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
     <span class="">Settings</span>
   </div>
   <div class="p-4 flex flex-row items-center">
     <span>Path: {{osuPath}}</span>
     <button (click)="changePath()" class="button button-blue-enabled ml-4">Change Path</button>
+  </div>
+  <div class="p-4 flex flex-row items-center">
+    <span>Dark Mode</span>
+    <ui-switch class="ml-4" (changeEvent)="changeStyle()" [(ngModel)]="darkMode"></ui-switch>
   </div>
 </div>
 
