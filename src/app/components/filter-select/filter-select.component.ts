@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FilterService } from '../../services/filter.service';
+import { limitTextLength } from '../../util/processing';
 
 export interface SelectFilter {
   text: string;
+  value: string;
   selected: boolean;
 }
 
@@ -20,15 +22,15 @@ export class FilterSelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.filters = this.filterService.getFilters().filter(filter => filter.isCached).map((filter): SelectFilter => {
-      return {text: filter.name, selected: false}
+      return {text: limitTextLength(filter.name, 15), value: filter.name, selected: false}
     })
   }
 
   onChange() {
-    let selected = this.filters.filter(item => item.selected).map(filter => filter.text)
+    let selected = this.filters.filter(item => item.selected).map(filter => filter.value)
 
     if (selected.length) {
-      this.placeHolder = selected.toString()
+      this.placeHolder = limitTextLength(selected.toString(), 15)
     } else {
       this.placeHolder = "Custom Filters"
     }
