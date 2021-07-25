@@ -185,6 +185,10 @@ input {
   display: none !important;
 }
 
+app-pagination {
+  @apply dark:border-black border-t;
+}
+
 .ngx {
   // &-container--dark {
   //   background-color: $dark;
@@ -194,11 +198,11 @@ input {
     @apply dark:bg-dark1 dark:text-white;
 
     td {
-      @apply dark:border-black
+      @apply dark:border-black border-t-2;
     }
 
     th {
-      @apply dark:border-black;
+      @apply border-t-0;
     }
 
     &__table-row--selected,
