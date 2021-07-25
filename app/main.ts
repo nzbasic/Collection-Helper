@@ -45,6 +45,7 @@ const server = rest.listen(port, '127.0.0.1');
 const mainOpts: Electron.BrowserWindowConstructorOptions = {
   x: 0,
   y: 0,
+  show: false,
   width: 1400,
   height: 900,
   minWidth: 1400,
@@ -87,6 +88,10 @@ function createWindow(): BrowserWindow {
         slashes: true,
       })
     );
+
+    win.webContents.once('did-finish-load', () => {
+      win.show();
+    })
 
     autoUpdater.on('update-available', () => {
       log.info("Update available.");
@@ -140,7 +145,6 @@ try {
   if (!serve) {
     app.on("ready", () => setTimeout(createWindow, 400));
   }
-
 
   // Quit when all windows are closed.
   app.on("window-all-closed", () => {
