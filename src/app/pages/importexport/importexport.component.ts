@@ -6,6 +6,7 @@ import { Collection } from "../../../../models/collection";
 import { SelectCollection } from "../../components/collection-dropdown/collection-dropdown.component";
 import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
+import { UtilService } from "../../services/util.service";
 
 @Component({
   selector: "app-importexport",
@@ -29,7 +30,11 @@ export class ImportexportComponent implements OnInit, OnDestroy {
     "You will need to launch/relaunch osu! AND refresh cache in this client for new maps or new collections to load.",
   ];
 
-  constructor(private titleService: TitleService, private collectionService: CollectionsService, private toastr: ToastrService) {
+  constructor(private titleService: TitleService,
+    private collectionService: CollectionsService,
+    private toastr: ToastrService,
+    private utilService: UtilService) {
+
     this.titleService.changeTitle({
       title: "Import / Export",
       subtitle: "Import and export collections",
@@ -94,5 +99,9 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   hideWarning(): void {
     this.warning = false
+  }
+
+  openCollectionsDrive() {
+    this.utilService.openUrl("https://drive.google.com/drive/folders/1PBtYMH5EmrAezc8wQdLd8cMiozddYhRZ?usp=sharing")
   }
 }

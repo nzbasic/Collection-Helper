@@ -9,6 +9,7 @@ import { fullIp } from "../../app.component";
 import { ComponentService, Display } from "../../services/component.service";
 import { FilterService } from "../../services/filter.service";
 import { TitleService } from "../../services/title.service";
+import { UtilService } from "../../services/util.service";
 
 interface Tested {
   status: boolean;
@@ -44,7 +45,12 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   public editorOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'javascript'};
   public resultOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'json', readOnly: true, }
 
-  constructor(private toastr: ToastrService, private titleService: TitleService, private filterService: FilterService, private componentService: ComponentService) {
+  constructor(private toastr: ToastrService,
+    private titleService: TitleService,
+    private filterService: FilterService,
+    private componentService: ComponentService,
+    private utilService: UtilService) {
+
     this.titleService.changeTitle({
       title: "Custom Filter",
       subtitle: "Write a custom filter in JavaScript",
@@ -91,7 +97,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   }
 
   openDoc(): void {
-    axios.post(fullIp + "/openUrl", { url: "https://github.com/nzbasic/Collection-Helper#custom-filters" })
+    this.utilService.openUrl("https://github.com/nzbasic/Collection-Helper#custom-filters")
   }
 
   async test() {

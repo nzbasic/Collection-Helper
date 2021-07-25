@@ -13,9 +13,9 @@ import { debounce } from 'ts-debounce'
 import { CollectionsService } from "../../services/collections.service";
 import { FilterService } from "../../services/filter.service";
 import { ToastrService } from 'ngx-toastr';
-import { FilterSelectComponent, SelectFilter } from "../../components/filter-select/filter-select.component";
 import axios from "axios";
 import { fullIp } from "../../app.component";
+import { UtilService } from "../../services/util.service";
 
 @Component({
   selector: "app-edit",
@@ -48,7 +48,14 @@ export class EditComponent implements OnInit, OnDestroy {
   public customApplied = false
   private lastSearchTerm = ""
 
-  constructor(private toastr: ToastrService, private filterService: FilterService, private titleService: TitleService, private selectedService: SelectedService, private beatmapService: BeatmapService, private collectionsService: CollectionsService) {
+  constructor(private toastr: ToastrService,
+    private filterService: FilterService,
+    private titleService: TitleService,
+    private selectedService: SelectedService,
+    private beatmapService: BeatmapService,
+    private collectionsService: CollectionsService,
+    private utilService: UtilService) {
+
     this.titleService.changeTitle({
       title: "Edit",
       subtitle: "Edit maps in your collection",
@@ -200,6 +207,6 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   openUrl(setId: number): void {
-    axios.post(fullIp + "/openUrl", { url: "https://osu.ppy.sh/beatmapsets/" + setId })
+    this.utilService.openUrl("https://osu.ppy.sh/beatmapsets/" + setId)
   }
 }
