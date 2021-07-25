@@ -51,8 +51,8 @@ export class HeaderComponent implements OnInit {
     ]})
 
     this.dict.set(Display.IMPORT_EXPORT, { title: "Import / Export", lines: [
-      "This feature may be unstable currently.",
-      "You need to restart the game and this client for new maps and new collections to load properly."
+      "You should only import one collection at a time, then open osu!, wait for the maps to process, and then refresh the cache in collection helper.",
+      "I recommend exporting and importing collections with beatmaps included so you avoid missing beatmaps."
     ]})
 
     this.dict.set(Display.SETTINGS, { title: "Settings" , lines: [
