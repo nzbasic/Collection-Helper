@@ -8,7 +8,7 @@
   </div>
   <div class="p-4 flex flex-row items-center">
     <span>Dark Mode</span>
-    <ui-switch class="ml-4" (changeEvent)="changeStyle()" [(ngModel)]="darkMode"></ui-switch>
+    <ui-switch class="ml-4" (ngModelChange)="changeStyle($event)" [(ngModel)]="darkMode"></ui-switch>
   </div>
 </div>
 

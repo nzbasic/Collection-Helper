@@ -54,5 +54,15 @@ export class LoadingService {
     }
   }
 
+  async setDarkMode(mode: boolean) {
+    if (mode) {
+      document.querySelector('html').classList.add('dark')
+    } else {
+      document.querySelector('html').classList.remove('dark')
+    }
+
+    this.darkModeSource.next(mode)
+    axios.post(fullIp + "/darkMode", { mode: document.querySelector('html').classList.contains('dark') })
+  }
 
 }

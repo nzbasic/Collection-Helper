@@ -48,13 +48,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.isChange = false
   }
 
-  changeStyle() {
-    if (document.querySelector('html').classList.contains('dark')) {
-      document.querySelector('html').classList.remove('dark')
-    } else {
-      document.querySelector('html').classList.add('dark')
-    }
-
-    axios.post(fullIp + "/darkMode", { mode: document.querySelector('html').classList.contains('dark') })
+  changeStyle(mode: boolean) {
+    this.loadingService.setDarkMode(mode)
   }
 }
