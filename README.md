@@ -133,7 +133,7 @@ Custom filters work by passing you a list of beatmaps which get filtered by your
 
 Any function you write must resolve with a list of beatmaps. Minimum boilerplate code is given when creating a new custom filter.
 
-Your filter will be passed 3 objects: The resolve function, a list of beatmaps, and axios for any request needs.
+Your filter will be passed 4 objects: The resolve function, a list of beatmaps, axios for any request needs, and farmSets which is a list of osutracker.com farm sets.
 
 If you want to use a beatmaps hit objects, you must select the Get HitObjects checkbox on the creation screen. Note: this will cause the filter to take a lot longer to cache, on my computer this is about 15 minutes for 87000 maps.
 
