@@ -3,7 +3,7 @@
   <div class="flex flex-col w-full h-full">
     <app-header class="bg-one dark:bg-black"></app-header>
     <div class="h-full w-full bg-default dark:bg-dark0">
-      <div class="bg-white dark:bg-dark1 m-4 rounded-sm dark:text-white">
+      <div class="bg-white dark:bg-dark1 m-4 rounded-sm dark:text-gray-300">
         <app-help *ngIf="launch && display!=allTypes.SETUP && display!=allTypes.LOADING" title="Welcome to the Collection Helper Beta!" [lines]="lines" (emitter)="hideLaunch()"></app-help>
         <app-home class="shadow-md" *ngIf="display==allTypes.COLLECTIONS" class="rounded-sm"></app-home>
         <app-loading *ngIf="display==allTypes.LOADING" class="rounded-sm"></app-loading>

@@ -88,6 +88,7 @@ input {
 
 .top-bar {
   border-top: 1px solid lightgrey;
+  @apply dark:border-black;
 }
 
 .button {
@@ -145,11 +146,13 @@ input {
 
 .button-green-enabled {
   cursor: pointer;
+  color: white;
   background-color: rgb(16, 185, 129);
-  @apply dark:bg-green-700
+  @apply dark:bg-green-600
 }
 
 .button-green-enabled:hover {
+  color: white;
   background-color: rgb(5, 150, 105);
   @apply dark:bg-green-800
 }
@@ -176,6 +179,14 @@ input {
 
 .dropdown {
   @apply dark:border-black #{!important};
+}
+
+.ng-star-inserted {
+  display: none !important;
+}
+
+.container-checkbox > input {
+  display: none !important;
 }
 
 .ngx {
