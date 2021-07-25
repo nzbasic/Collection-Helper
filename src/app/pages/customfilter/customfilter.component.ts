@@ -10,15 +10,25 @@ import { ComponentService, Display } from "../../services/component.service";
 import { FilterService } from "../../services/filter.service";
 import { TitleService } from "../../services/title.service";
 
+interface Tested {
+  status: boolean;
+  text: string;
+}
+
 @Component({
   selector: "app-customfilter",
   templateUrl: "./customfilter.component.html",
 })
 export class CustomfilterComponent implements OnInit, OnDestroy {
 
+  public tested: Tested = { status: false, text: "" }
   public selected: Collection
-  private oldName: string
+  private errorSubscription: Subscription
+  private editSubscription: Subscription
   public editFilter: CustomFilter
+  private names: string[] = []
+
+  private oldName: string
   public content: string = "resolve(beatmaps)"
   public numberResult = 0
   public totalTested = 0
@@ -30,8 +40,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   public description = ""
   public alreadyExists = false
   public getHitObjects = false
-  private errorSubscription: Subscription
-  private editSubscription: Subscription
+
   public editorOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'javascript'};
   public resultOptions = {theme: document.querySelector('html').classList.contains('dark') ? 'vs-dark' : 'vs', language: 'json', readOnly: true, }
 
@@ -43,8 +52,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
-
+    this.names = this.filterService.getFilters().map(filter => filter.name.toLowerCase())
 
     this.errorSubscription = this.filterService.evaluationError.subscribe(error => {
       this.rawError = error
@@ -62,6 +70,8 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
         this.description = edit.description
         this.content = edit.filter
         this.getHitObjects = edit.getHitObjects
+        this.tested = { text: edit.filter, status: true }
+        this.names = this.names.filter(name => name !== edit.name.toLowerCase())
       }
     })
   }
@@ -69,6 +79,14 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.errorSubscription.unsubscribe()
     this.editSubscription.unsubscribe()
+  }
+
+  validFilter(): boolean {
+    return this.alreadyExists || !this.inputValue || this.content != this.tested.text || !this.tested.status
+  }
+
+  onNameChange(event: string): void {
+    this.alreadyExists = this.names.includes(this.inputValue.toLowerCase())
   }
 
   openDoc(): void {
@@ -99,6 +117,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
         this.totalTested = res.numberTested
         this.filteredText = res.filteredText
         this.toastr.success('Test was successful, check output for beatmaps matching the filter', 'Success')
+        this.tested = { text: this.content, status: true }
       } catch {
         this.filterService.evaluationErrorSource.next(res.filteredText)
         this.toastr.error('Test failed, check output for error logs', 'Error')
@@ -128,7 +147,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     this.componentService.changeComponent(Display.FILTERS)
   }
 
-  onChange(selected: Collection) {
+  onCollectionChange(selected: Collection) {
     this.selected = selected
   }
 }

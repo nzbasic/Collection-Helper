@@ -3,7 +3,7 @@
   <div class="flex flex-col">
     <div class="flex flex-row items-center w-full">
       <span>Name: </span>
-      <input class="ml-4 border border-gray-400 dark:border-black focus:outline-none" type="text" [(ngModel)]="inputValue">
+      <input class="ml-4 border border-gray-400 dark:border-black focus:outline-none" type="text" [(ngModel)]="inputValue" (ngModelChange)="onNameChange($event)">
       <span class="ml-4">Description: </span>
       <input class="ml-4 w-full border border-gray-400 dark:border-black focus:outline-none" type="text" [(ngModel)]="description">
     </div>
@@ -20,15 +20,17 @@
 
   </div>
 
-  <div class="h-96 border border-gray-200 dark:border-black">
+  <div class="mt-2 h-96 border border-gray-200 dark:border-black">
     <ngx-monaco-editor [options]="editorOptions" style="height: 100%" [(ngModel)]="content"></ngx-monaco-editor>
   </div>
 
   <div class="flex flex-row mt-4 items-center text-sm">
-    <button [disabled]="alreadyExists || !inputValue" [ngClass]="alreadyExists || !inputValue ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="save()">{{editFilter ? "Save" : "Add"}} filter</button>
+    <button [disabled]="validFilter()" [ngClass]="validFilter() ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="save()">{{editFilter ? "Save" : "Add"}} filter</button>
     <button class="ml-4 button button-green-enabled" (click)="test()">Test filter</button>
-    <app-collection-dropdown class="ml-4 z-10 w-72 h-10 dark:bg-dark1" (emitter)="onChange($event)"></app-collection-dropdown>
-    <span *ngIf="alreadyExists" class="ml-4 text-red">Name Already Exists!</span>
+    <app-collection-dropdown class="ml-4 z-10 w-72 h-10 dark:bg-dark1" (emitter)="onCollectionChange($event)"></app-collection-dropdown>
+    <span *ngIf="alreadyExists" class="ml-4 text-red-600">Name Already Exists!</span>
+    <span *ngIf="!tested.status || content != tested.text" class="ml-4 text-red-600">Filter Not Tested!</span>
+    <span *ngIf="!inputValue" class="ml-4 text-red-600">Name required!</span>
   </div>
 
   <div *ngIf="filteredText.length || rawError.length " class="flex flex-col mt-4">
