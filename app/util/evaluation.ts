@@ -63,8 +63,9 @@ export const testFilter = async (filter: string, getHitObjects: boolean, name: s
     beatmaps = storedBeatmaps
   }
 
+  const farm = await getFarmSets()
   let filteredText: string
-  let filtered = await waitEval(userFilter, beatmaps);
+  const filtered = await waitEval(userFilter, beatmaps, farm);
 
   if (typeof(filtered) == "string") {
     filteredText = filtered
@@ -98,9 +99,10 @@ export const generateCache = async (names: string[]) => {
     }
   })
 
+  const farm = await getFarmSets()
+
   const beatmaps = Array.from(beatmapMap.values())
   const pages = beatmaps.length / 1000
-
   for (let i = 0; i < pages; i++) {
     progress = ((i)/pages) * 100
 
@@ -115,7 +117,7 @@ export const generateCache = async (names: string[]) => {
 
     // generate hashes for each filter given
     for (const [name, filter] of userFilters) {
-      let beatmapObjects = await waitEval(filter, slice)
+      let beatmapObjects = await waitEval(filter, slice, farm)
       if (typeof(beatmapObjects) != "string") {
         cache.set(name, (cache.get(name)??[]).concat(beatmapObjects.map(beatmap => beatmap.md5)))
       }
@@ -133,19 +135,8 @@ export const generateCache = async (names: string[]) => {
 /**
  * Uses promises to wait for user code to finish evaluating. Returns either result beatmaps or error string.
  */
-const waitEval = (func, beatmaps): Promise<Beatmap[] | string> => {
+const waitEval = (func, beatmaps, farm): Promise<Beatmap[] | string> => {
   return new Promise(async (res, rej) => {
-
-    const isConnected = await isReachable("osutracker.com", { timeout: 1000 })
-    let farm: string[] = []
-
-    if (isConnected) {
-      farm = (await axios.get("https://osutracker.com/api/stats/farmSets")).data
-      updateFarmFallback(farm)
-    } else {
-      farm = await getFarmFallback()
-    }
-
     try {
       // resolve inside eval
       func(res, beatmaps, axios, farm)
@@ -153,4 +144,18 @@ const waitEval = (func, beatmaps): Promise<Beatmap[] | string> => {
       res(error.message)
     }
   })
+}
+
+const getFarmSets = async (): Promise<string[]> => {
+  const isConnected = await isReachable("osutracker.com", { timeout: 1000 })
+  let farm: string[] = []
+
+  if (isConnected) {
+    farm = (await axios.get("https://osutracker.com/api/stats/farmSets")).data
+    updateFarmFallback(farm)
+  } else {
+    farm = await getFarmFallback()
+  }
+
+  return farm
 }
