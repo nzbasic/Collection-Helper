@@ -73,7 +73,7 @@ th {
 }
 
 input {
-  @apply dark:text-white dark:bg-dark2
+  @apply dark:bg-dark2 #{!important};
 }
 
 .search-add {
@@ -158,11 +158,11 @@ input {
 }
 
 .ngx-select {
-  @apply dark:bg-dark1 dark:border-black dark:text-white #{!important};
+  @apply dark:bg-dark2 dark:border-black dark:text-white #{!important};
 }
 
 .options {
-  @apply dark:bg-dark1 dark:text-white dark:border-black #{!important};
+  @apply dark:bg-dark2 dark:text-white dark:border-black #{!important};
 }
 
 .selection-anchor-open, .selection-anchor-close {
