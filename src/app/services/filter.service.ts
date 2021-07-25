@@ -82,8 +82,8 @@ export class FilterService {
     this.componentService.changeComponent(Display.CUSTOM_FILTERS)
   }
 
-  async saveFilter(oldName: string, filter: CustomFilter) {
-    let res = await axios.post(fullIp + "/filters/save", { oldName: oldName, filter: filter })
+  async saveFilter(oldName: string, filter: CustomFilter, sameAsOld?: boolean) {
+    let res = await axios.post(fullIp + "/filters/save", { oldName: oldName, filter: filter, sameAsOld: sameAsOld??false })
     this.setFilters(res.data)
   }
 }

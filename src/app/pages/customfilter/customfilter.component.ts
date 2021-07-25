@@ -26,10 +26,10 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   private errorSubscription: Subscription
   private editSubscription: Subscription
   public editFilter: CustomFilter
+  private oldContent = ""
+  private oldName = ""
   private names: string[] = []
-
-  private oldName: string
-  public content: string = "resolve(beatmaps)"
+  public content = "resolve(beatmaps)"
   public numberResult = 0
   public totalTested = 0
   public filteredText = ""
@@ -64,6 +64,7 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
 
     this.editSubscription = this.filterService.editCurrent.subscribe(edit => {
       if (edit.name) {
+        this.oldContent = edit.filter
         this.oldName = edit.name
         this.editFilter = edit
         this.inputValue = edit.name
@@ -131,11 +132,19 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     let filter: CustomFilter = {name: this.inputValue, description: this.description, getHitObjects: this.getHitObjects, filter: this.content, cache: [], numberCached: 0, isCached: false}
 
     if (this.editFilter) {
+
+      const sameAsOld = this.content == this.oldContent
       this.editFilter.name = this.inputValue
       this.editFilter.description = this.description
       this.editFilter.filter = this.content
-      await this.filterService.saveFilter(this.oldName, this.editFilter)
-      this.toastr.success('Filter saved, you must generate its cache before using it in map selection', 'Success')
+
+      await this.filterService.saveFilter(this.oldName, this.editFilter, sameAsOld)
+
+      if (sameAsOld) {
+        this.toastr.success('Filter saved', 'Success')
+      } else {
+        this.toastr.success('Filter saved, you must generate its cache before using it in map selection', 'Success')
+      }
 
       // reset edit observable
       this.filterService.editSource.next({ name: "", filter: "", description: "", isCached: false, getHitObjects: false, numberCached: 0 })

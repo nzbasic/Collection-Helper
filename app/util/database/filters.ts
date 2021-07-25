@@ -16,7 +16,7 @@ export const writeFilter = async (filter: CustomFilter) => {
   });
 }
 
-export const updateFilter = async (oldName: string, filter: CustomFilter) => {
+export const updateFilter = async (oldName: string, filter: CustomFilter, sameAsOld: boolean) => {
   const database = await getDb();
 
   await database.run("UPDATE filters SET name=$1, description=$2, filter=$3, gethitobjects=$4, iscached=$5, cache=$6 WHERE name=$7", {
@@ -24,8 +24,8 @@ export const updateFilter = async (oldName: string, filter: CustomFilter) => {
     $2: filter.description,
     $3: filter.filter,
     $4: filter.getHitObjects,
-    $5: false,
-    $6: Buffer.from(JSON.stringify([])),
+    $5: sameAsOld,
+    $6: sameAsOld ? Buffer.from(JSON.stringify(filter.cache)) : Buffer.from(JSON.stringify([])),
     $7: oldName
   })
 

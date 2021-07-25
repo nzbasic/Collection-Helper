@@ -60,9 +60,9 @@ router.route("/remove").post(async (req, res) => {
 })
 
 router.route("/save").post(async (req, res) => {
-  log.info("[API] /filters/save called " + JSON.stringify(req.body))
-  let body: { oldName: string, filter: CustomFilter } = req.body
-  await updateFilter(body.oldName, body.filter)
+  log.info("[API] /filters/save called")
+  let body: { oldName: string, filter: CustomFilter, sameAsOld: boolean } = req.body
+  await updateFilter(body.oldName, body.filter, body.sameAsOld)
   let filters = await readFilters()
   res.json(filters)
 })
