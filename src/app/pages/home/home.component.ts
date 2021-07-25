@@ -8,7 +8,6 @@ import baseConfig from "../../util/baseConfig";
 import { SelectedService } from "../../services/selected.service";
 import { ComponentService, Display } from "../../services/component.service";
 import { ToastrService } from 'ngx-toastr';
-import { BeatmapService } from "../../services/beatmap.service";
 
 @Component({
   selector: "app-home",
@@ -133,6 +132,7 @@ export class HomeComponent implements OnInit {
       this.toastr.success('The new collection has been written', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
+      this.pageNumber = 1
     }
   }
 
@@ -144,6 +144,7 @@ export class HomeComponent implements OnInit {
       this.toastr.success('The selected collections have been merged', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
+      this.pageNumber = 1
     }
     this.selected = new Set<string>()
   }
@@ -169,6 +170,7 @@ export class HomeComponent implements OnInit {
       this.toastr.success('Removed collection(s)', 'Success')
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
+      this.pageNumber = 1
     }
     this.removeType = "";
   }
