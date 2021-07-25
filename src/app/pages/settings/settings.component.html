@@ -4,11 +4,15 @@
   </div>
   <div class="p-4 flex flex-row items-center">
     <span>Path: {{osuPath}}</span>
-    <button (click)="changePath()" class="button button-blue-enabled ml-4">Change Path</button>
+    <button (click)="changePath()" class="button button-green-enabled ml-4">Change Path</button>
   </div>
   <div class="p-4 flex flex-row items-center">
-    <span>Dark Mode</span>
+    <span>Dark Mode:</span>
     <ui-switch class="ml-4" (ngModelChange)="changeStyle($event)" [(ngModel)]="darkMode"></ui-switch>
+  </div>
+  <div class="p-4 flex flex-row items-center">
+    <span>Backup Collections:</span>
+    <button (click)="backup()" class="button button-green-enabled ml-4">Create Backup</button>
   </div>
 </div>
 

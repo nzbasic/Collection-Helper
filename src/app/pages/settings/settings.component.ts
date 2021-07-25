@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import axios from "axios";
+import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { fullIp } from "../../app.component";
 import { ComponentService } from "../../services/component.service";
@@ -18,7 +19,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   public darkModeSubscription: Subscription;
   public darkMode = false
 
-  constructor(private titleService: TitleService, private loadingService: LoadingService) {
+  constructor(private titleService: TitleService, private loadingService: LoadingService, private toastr: ToastrService) {
     this.titleService.changeTitle({
       title: "Settings",
       subtitle: "Application settings",
@@ -50,5 +51,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   changeStyle(mode: boolean) {
     this.loadingService.setDarkMode(mode)
+  }
+
+  backup() {
+    this.loadingService.createBackup()
   }
 }

@@ -37,7 +37,7 @@ export const readCollections = async (path: string) => {
 /**
  * Writes the current collections to disk
  */
-export const writeCollections = async (backup?: boolean) => {
+export const writeCollections = async (initialBackup?: boolean, newBackup?: boolean) => {
 
   const osuPath = await getOsuPath()
   const length = calculateLength();
@@ -59,13 +59,17 @@ export const writeCollections = async (backup?: boolean) => {
   const buffer = Buffer.from(writer.buff);
 
   let path = ""
-  if (backup) {
+  if (initialBackup) {
     path = osuPath + "/collectionBackup.db"
     try {
       await fs.promises.stat(path)
     } catch {
       await fs.promises.writeFile(path, buffer);
     }
+  } else if (newBackup) {
+    const dateTime = new Date().toISOString().replace(/:/g, '-')
+    await fs.promises.writeFile(osuPath + "/collection" + dateTime + ".db", buffer)
+    return dateTime
   } else {
     path = osuPath + "/collection.db"
     await fs.promises.writeFile(path, buffer);

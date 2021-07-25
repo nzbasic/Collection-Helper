@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import axios from "axios";
+import { ToastrService } from "ngx-toastr";
 import { BehaviorSubject } from "rxjs";
 import { Collections } from "../../../models/collection";
 import { CustomFilter } from "../../../models/filters";
@@ -15,7 +16,8 @@ export class LoadingService {
   constructor(
     private filterService: FilterService,
     private componentService: ComponentService,
-    private collectionsService: CollectionsService
+    private collectionsService: CollectionsService,
+    private toastr: ToastrService
   ) {}
 
   public darkModeSource = new BehaviorSubject<boolean>(false);
@@ -63,6 +65,11 @@ export class LoadingService {
 
     this.darkModeSource.next(mode)
     axios.post(fullIp + "/darkMode", { mode: document.querySelector('html').classList.contains('dark') })
+  }
+
+  async createBackup() {
+    const timeRes = await axios.post(fullIp + "/createBackup")
+    this.toastr.success("collection" + timeRes.data + ".db created in your osu! path.", "Success")
   }
 
 }

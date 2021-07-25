@@ -4,6 +4,7 @@ import { dialog, shell } from 'electron'
 import { getDarkMode, getOsuPath, setDarkMode, setOsuPath, verifyOsuPath } from "../util/database/settings";
 import { win } from '../main'
 import * as log from 'electron-log'
+import { writeCollections } from "../util/parsing/collections";
 
 const router = express.Router();
 router.route("/loadFiles").post(async (req, res) => {
@@ -52,6 +53,12 @@ router.route("/darkMode").get(async (req, res) => {
   log.info("[API] GET /darkMode called")
   const darkMode = await getDarkMode()
   res.json({ darkMode: darkMode })
+})
+
+router.route("/createBackup").post(async (req, res) => {
+  log.info("[API] POST /createBackup called")
+  const dateTime = await writeCollections(false, true)
+  res.json(dateTime)
 })
 
 export default router
