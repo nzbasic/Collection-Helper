@@ -12,7 +12,7 @@
       <input [(ngModel)]="getHitObjects" type="checkbox">
     </div>
 
-    <span class="">
+    <span class="mt-2">
       Write a JavaScript function to filter your beatmaps. See <a (click)="openDoc()" class="text-blue-400 cursor-pointer">documentation</a> or the <span class="text-blue-400 line-through">video guide</span>
       <br />
       After you have created a filter, you should generate its cache in the filters menu to use it.
@@ -24,10 +24,10 @@
     <ngx-monaco-editor [options]="editorOptions" style="height: 100%" [(ngModel)]="content"></ngx-monaco-editor>
   </div>
 
-  <div class="flex flex-row mt-4 items-center text-sm">
+  <div class="flex flex-row mt-4 items-center">
     <button [disabled]="validFilter()" [ngClass]="validFilter() ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="save()">{{editFilter ? "Save" : "Add"}} filter</button>
     <button class="ml-4 button button-green-enabled" (click)="test()">Test filter</button>
-    <app-collection-dropdown class="ml-4 z-10 w-72 h-10 dark:bg-dark1" (emitter)="onCollectionChange($event)"></app-collection-dropdown>
+    <app-collection-dropdown class="ml-4 z-10 w-96 h-10 dark:bg-dark1" (emitter)="onCollectionChange($event)" placeHolder="Collection to test filter on (optional)"></app-collection-dropdown>
     <span *ngIf="alreadyExists" class="ml-4 text-red-600">Name Already Exists!</span>
     <span *ngIf="!tested.status || content != tested.text" class="ml-4 text-red-600">Filter Not Tested!</span>
     <span *ngIf="!inputValue" class="ml-4 text-red-600">Name Required!</span>

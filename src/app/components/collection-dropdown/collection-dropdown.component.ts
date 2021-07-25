@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Collection } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
 
@@ -14,11 +14,11 @@ export interface SelectCollection {
 export class CollectionDropdownComponent implements OnInit {
 
   @Output() emitter = new EventEmitter<Collection>()
+  @Input() placeHolder!: string
 
   private collection: Collection
   public collections: Collection[]
   public collectionItems: SelectCollection[]
-  public placeHolder = "Select a collection"
   public selected: string
 
   constructor(private collectionService: CollectionsService) { }
