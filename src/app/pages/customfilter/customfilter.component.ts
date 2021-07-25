@@ -112,19 +112,20 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
       return
     }
 
-    this.filterService.testFilter(this.content, this.getHitObjects, this.selected?.name??"").then(res => {
-      try {
-        this.numberResult = JSON.parse(res.filteredText).length
-        this.totalTested = res.numberTested
-        this.filteredText = res.filteredText
-        this.toastr.success('Test was successful, check output for beatmaps matching the filter', 'Success')
-        this.tested = { text: this.content, status: true }
-      } catch {
-        this.filterService.evaluationErrorSource.next(res.filteredText)
-        this.toastr.error('Test failed, check output for error logs', 'Error')
-      }
-      this.gettingData = false
-    })
+    const res = await this.filterService.testFilter(this.content, this.getHitObjects, this.selected?.name??"")
+
+    try {
+      this.numberResult = JSON.parse(res.filteredText).length
+      this.totalTested = res.numberTested
+      this.filteredText = res.filteredText
+      this.toastr.success('Test was successful, check output for beatmaps matching the filter', 'Success')
+      this.tested = { text: this.content, status: true }
+    } catch {
+      this.filterService.evaluationErrorSource.next(res.filteredText)
+      this.toastr.error('Test failed, check output for error logs', 'Error')
+    }
+    this.gettingData = false
+
   }
 
   async save() {
