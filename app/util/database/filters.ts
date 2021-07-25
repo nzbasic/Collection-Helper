@@ -63,11 +63,29 @@ export const readFilters = async (): Promise<CustomFilter[]> => {
 }
 
 export const removeFilters = async (names: string[]) => {
-
   const database = await getDb();
-
   for (const name of names) {
     await database.run("DELETE FROM filters WHERE name=$1", { $1: name })
   }
-
 }
+
+export const updateFarmFallback = async (farm: string[]) => {
+  const database = await getDb();
+  await database.run("DELETE FROM farmfallback")
+  await database.run("BEGIN TRANSACTION")
+  for (const setId of farm) {
+    await database.run("INSERT INTO farmfallback (setId) VALUES (?)", [setId])
+  }
+  await database.run("COMMIT")
+}
+
+export const getFarmFallback = async (): Promise<string[]> => {
+  const database = await getDb();
+  const rows = await database.all("SELECT * FROM farmfallback");
+  const output: string[] = []
+  rows.forEach(row => {
+    output.push(row.setId)
+  })
+  return output
+}
+

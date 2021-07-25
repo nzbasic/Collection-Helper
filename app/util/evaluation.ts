@@ -4,16 +4,18 @@ import { getTestObjects } from "./hitobjects"
 import { beatmapMap } from './parsing/cache'
 import axios from 'axios'
 import { readBeatmap } from "./parsing/hitobjects"
-import { readFilters, setCache } from "./database/filters"
+import { getFarmFallback, readFilters, setCache, updateFarmFallback } from "./database/filters"
 import { getOsuPath } from "./database/settings"
 import { collections } from "./parsing/collections"
 import { Collection } from "../../models/collection"
+import * as dns from 'dns'
+import * as isReachable from 'is-reachable'
 
 let lastName: string
 let randomBeatmaps: Beatmap[]
 let storedBeatmaps: Beatmap[]
 let hitObjectsLoaded = false
-let args = ['resolve', 'beatmaps', 'axios']
+const args = ['resolve', 'beatmaps', 'axios', 'farmSets']
 
 export let progress = 0
 
@@ -132,10 +134,21 @@ export const generateCache = async (names: string[]) => {
  * Uses promises to wait for user code to finish evaluating. Returns either result beatmaps or error string.
  */
 const waitEval = (func, beatmaps): Promise<Beatmap[] | string> => {
-  return new Promise((res, rej) => {
+  return new Promise(async (res, rej) => {
+
+    const isConnected = await isReachable("osutracker.com", { timeout: 1000 })
+    let farm: string[] = []
+
+    if (isConnected) {
+      farm = (await axios.get("https://osutracker.com/api/stats/farmSets")).data
+      updateFarmFallback(farm)
+    } else {
+      farm = await getFarmFallback()
+    }
+
     try {
       // resolve inside eval
-      func(res, beatmaps, axios)
+      func(res, beatmaps, axios, farm)
     } catch(error) {
       res(error.message)
     }
