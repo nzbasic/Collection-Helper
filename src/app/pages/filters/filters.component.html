@@ -30,7 +30,7 @@
         </div>
       </td>
       <td>
-        {{row.name}}
+        {{limitTextLength(row.name, 30)}}
       </td>
       <td>
         {{row.isCached ? "Yes" : "No"}}

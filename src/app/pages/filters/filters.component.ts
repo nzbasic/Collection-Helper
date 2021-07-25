@@ -7,6 +7,7 @@ import { ComponentService, Display } from "../../services/component.service";
 import { FilterService } from "../../services/filter.service";
 import { TitleService } from "../../services/title.service";
 import baseConfig from "../../util/baseConfig";
+import { limitTextLength } from "../../util/processing"
 
 @Component({
   selector: "app-filters",
@@ -31,6 +32,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   private noResetSelected = false;
   public percentage = 0
   private toRemove: string[]
+  public limitTextLength = limitTextLength
 
   constructor(private toastr: ToastrService, private titleService: TitleService, private filterService: FilterService, private componentService: ComponentService) {
     this.titleService.changeTitle({
