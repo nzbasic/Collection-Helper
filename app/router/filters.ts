@@ -7,7 +7,7 @@ import * as log from 'electron-log'
 const router = express.Router();
 
 router.route("/add").post(async (req, res) => {
-  log.info("[API] /filters/add called " + JSON.stringify(req.body))
+  //log.info("[API] /filters/add called " + JSON.stringify(req.body))
   let body: CustomFilter = req.body
   await writeFilter(body)
   let filters = await readFilters()
@@ -15,7 +15,7 @@ router.route("/add").post(async (req, res) => {
 })
 
 router.route("/").get(async (req, res) => {
-  log.info("[API] /filters called " + JSON.stringify(req.body))
+  //log.info("[API] /filters called " + JSON.stringify(req.body))
   let filters = await readFilters()
   let clones: CustomFilter[] = []
 
@@ -29,20 +29,20 @@ router.route("/").get(async (req, res) => {
 })
 
 router.route("/setCache").post(async (req, res) => {
-  log.info("[API] /filters/setCache called " + JSON.stringify(req.body.name))
+  //log.info("[API] /filters/setCache called " + JSON.stringify(req.body.name))
   let body: {name: string, cache: string[]} = req.body
   await setCache(body.name, body.cache)
   res.json(true)
 })
 
 router.route("/testFilter").post(async (req, res) => {
-  log.info("[API] /filters/testFilter called " + JSON.stringify(req.body))
+  //log.info("[API] /filters/testFilter called " + JSON.stringify(req.body))
   let body: { filter: string, getHitObjects: boolean, name: string } = req.body
   res.json(await testFilter(body.filter, body.getHitObjects, body.name))
 })
 
 router.route("/generateCache").post(async (req, res) => {
-  log.info("[API] /filters/generateCache called " + JSON.stringify(req.body))
+  //log.info("[API] /filters/generateCache called " + JSON.stringify(req.body))
   await generateCache(req.body)
   let filters = await readFilters()
   res.json(filters)
@@ -53,14 +53,14 @@ router.route("/progress").get((req, res) => {
 })
 
 router.route("/remove").post(async (req, res) => {
-  log.info("[API] /filters/remove called " + JSON.stringify(req.body))
+  //log.info("[API] /filters/remove called " + JSON.stringify(req.body))
   await removeFilters(req.body)
   let filters = await readFilters()
   res.json(filters)
 })
 
 router.route("/save").post(async (req, res) => {
-  log.info("[API] /filters/save called")
+  //log.info("[API] /filters/save called")
   let body: { oldName: string, filter: CustomFilter, sameAsOld: boolean } = req.body
   await updateFilter(body.oldName, body.filter, body.sameAsOld)
   let filters = await readFilters()
