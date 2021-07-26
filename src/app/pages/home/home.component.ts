@@ -130,9 +130,9 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.addCollection(res.name, res.hashes)
       this.toastr.success('The new collection has been written', 'Success')
+      this.pageNumber = 1
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
-      this.pageNumber = 1
     }
   }
 
@@ -142,9 +142,9 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.mergeCollections(Array.from(this.selected))
       this.toastr.success('The selected collections have been merged', 'Success')
+      this.pageNumber = 1
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
-      this.pageNumber = 1
     }
     this.selected = new Set<string>()
   }
@@ -168,9 +168,9 @@ export class HomeComponent implements OnInit {
       if (this.removeType == "Mass") { this.selected = new Set<string>() }
       await this.collectionsService.removeCollections(toRemove);
       this.toastr.success('Removed collection(s)', 'Success')
+      this.pageNumber = 1
       this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
       this.loading = false
-      this.pageNumber = 1
     }
     this.removeType = "";
   }
