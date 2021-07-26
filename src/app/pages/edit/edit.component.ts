@@ -32,7 +32,6 @@ export class EditComponent implements OnInit, OnDestroy {
   public selected: Set<string> = new Set<string>()
   private selectedSubscription: Subscription
   public selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
-  public appliedFilters: string[] = []
   public selectedFilters: string[] = []
 
   public filterNumber = 0
@@ -94,10 +93,6 @@ export class EditComponent implements OnInit, OnDestroy {
 
   changeSelected(selected: string[]) {
     this.selectedFilters = selected
-  }
-
-  applyCustomFilters() {
-    this.appliedFilters = this.selectedFilters
     this.pageNumber = 1
     this.updateCurrentlyShown(true)
   }
