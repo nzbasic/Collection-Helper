@@ -54,8 +54,8 @@ let previousFilter: Filter;
 
   if (beatmapList.length) {
 
-    const lower = (request.page-1) * 15
-    const higher = (request.page) * 15
+    const lower = (request.page-1) * 10
+    const higher = (request.page) * 10
 
     response.beatmaps = beatmapList.slice(lower, higher)
   }
@@ -128,12 +128,12 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
 
   const filtered = toSearch.filter(map => {
 
-    if (!map) {
+    if (!map || map.setId == -1) {
       return false
     }
 
     if (map.missing) {
-      return true
+      return false
     } else {
       if (filterIntersection.size) {
         if (!filterIntersection.has(map.md5)) {
