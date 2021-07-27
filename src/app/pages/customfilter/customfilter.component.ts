@@ -86,6 +86,10 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.errorSubscription.unsubscribe()
     this.editSubscription.unsubscribe()
+
+    if (this.editFilter) {
+      this.filterService.editSource.next({ name: "", filter: "", description: "", isCached: false, getHitObjects: false, numberCached: 0 })
+    }
   }
 
   validFilter(): boolean {
@@ -98,6 +102,10 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
 
   openDoc(): void {
     this.utilService.openUrl("https://github.com/nzbasic/Collection-Helper#custom-filters")
+  }
+
+  openVid(): void {
+    this.utilService.openUrl("https://youtu.be/ukOA1JCHLLo")
   }
 
   async test() {
