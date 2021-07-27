@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   public lines = [
     "I have included some help text for each component of Collection Helper, if you are confused please use the help button on the top right.",
-    "I have also made some videos to explain basic usage and custom filter creation",
+    "I made some videos to explain basic usage and custom filter creation which can be found on the github page.",
     "A backup of your collection.db file will be created when you set your osu! path. To restore it, go to your osu! path, and replace your collection.db file with collectionBackup.db. You can make extra backups in the settings menu.",
   ]
 
