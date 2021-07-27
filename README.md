@@ -3,7 +3,7 @@
     <img src="https://user-images.githubusercontent.com/54062686/125156185-54ed4500-e1b8-11eb-8051-2f4b981eb542.png" alt="Logo" width="256" height="256">
   </a>
   
-  Collection Helper (WIP)
+  Collection Helper
 </h1>
 
 <div align="center">
