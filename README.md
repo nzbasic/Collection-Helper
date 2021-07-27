@@ -7,6 +7,8 @@
 </h1>
 
 <div align="center">
+  <a href="https://www.youtube.com/watch?v=gafuDhsAIC0">Video Guide</a>
+  ·
   <a href="https://github.com/nzbasic/Collection-Helper/releases/latest">Latest Release</a>
   ·
   <a href="https://github.com/nzbasic/Collection-Helper/issues/new?assignees=&labels=&template=bug_report.md&title=Bug%3A+">Report a Bug</a>
@@ -92,19 +94,22 @@ The key features of **Collection Helper**:
 
 ### Demo
 
-Example making a collection with the farm filter. Note: you only have to generate cache for a filter once ever.
-![ezgif-2-4e4cb569259a](https://user-images.githubusercontent.com/54062686/125193748-3b282c80-e2a2-11eb-9578-ec205ea8fb51.gif)
+Example making a collection with the farm filter. Note: you only have to generate cache for a filter once.
+![Demo GIF](https://user-images.githubusercontent.com/54062686/127122261-fad9f22e-0f20-43e4-bb39-12463723c55d.gif)
 
 ### Screenshots
 
 Collections
-![image](https://user-images.githubusercontent.com/54062686/125189725-aa475600-e28d-11eb-883e-29c967157b29.png)
+![Collections image](https://user-images.githubusercontent.com/54062686/125189725-aa475600-e28d-11eb-883e-29c967157b29.png)
 
 Running custom filter
-![image](https://user-images.githubusercontent.com/54062686/125189778-f1354b80-e28d-11eb-966f-c34f496322de.png)
+![Custom filter image](https://user-images.githubusercontent.com/54062686/125189778-f1354b80-e28d-11eb-966f-c34f496322de.png)
 
 Collection editing with custom filter applied (Farm)
-![image](https://user-images.githubusercontent.com/54062686/125189812-1d50cc80-e28e-11eb-8a9e-ae700ca479f8.png)
+![Collection edit image](https://user-images.githubusercontent.com/54062686/125189812-1d50cc80-e28e-11eb-8a9e-ae700ca479f8.png)
+
+Dark mode
+![Dark mode image](https://user-images.githubusercontent.com/54062686/127122453-8fc3a7a0-c2b7-4adf-80a4-b5e6ca42e0b9.png)
 
 ## Getting Started
 
@@ -115,6 +120,9 @@ Collection editing with custom filter applied (Farm)
 You must have run your osu! client at least once.
 
 ### Usage
+
+<a href="https://www.youtube.com/watch?v=gafuDhsAIC0">Video Guide</a>
+
 
 <a href="https://github.com/nzbasic/Collection-Helper/releases/latest">Download the latest release here</a>
 
@@ -128,6 +136,8 @@ Please follow these steps to build the project yourself:
 4. Run the installer found in /releases/
 
 #### Custom filters
+
+<a href="https://youtu.be/ukOA1JCHLLo">Video Guide</a>
 
 Custom filters work by passing you a list of beatmaps which get filtered by your code.
 
