@@ -10,6 +10,7 @@ import { getDb } from './database';
 import { addCollection } from '../collections';
 import * as log from 'electron-log';
 import { generateHash } from 'random-hash'
+import { externalStorage } from '../load'
 
 export let exportPercentage = 0
 export let importPercentage = 0
@@ -29,6 +30,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
   await database.run("CREATE TABLE IF NOT EXISTS setidmap (md5 TEXT PRIMARY KEY, id INTEGER, setId INTEGER)")
 
   const osuPath = await getOsuPath()
+  const songsPath = externalStorage??(osuPath + "/Songs/")
   const setSet = new Set<number>()
   let lastInvalid = ""
   let progress = 0
@@ -52,7 +54,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
           setSet.add(beatmap.setId)
 
           if (exportBeatmaps) {
-            const fullPath = osuPath + "/Songs/" + beatmap.folderName
+            const fullPath = songsPath + beatmap.folderName
 
             try {
               let files = await fs.promises.readdir(fullPath)
@@ -115,6 +117,7 @@ export const importCollection = async (path: string, name: string): Promise<void
   }
 
   const osuPath = await getOsuPath()
+  const songsPath = externalStorage??(osuPath + "/Songs/")
   const numberBeatmaps = await database.get("SELECT count(*) AS number FROM beatmaps")
   const collection = await database.get("SELECT * FROM collection")
 
@@ -153,7 +156,7 @@ export const importCollection = async (path: string, name: string): Promise<void
           beatmap.folderName = randomHash
         }
         try {
-          await fs.promises.writeFile(osuPath + "/Songs/" + beatmap.folderName + ".osz", buffer)
+          await fs.promises.writeFile(songsPath + beatmap.folderName + ".osz", buffer)
           missingMaps.add(beatmap.setId)
         } catch(err) {
           log.error("Error importing beatmap " + beatmap.folderName)

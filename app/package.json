@@ -38,6 +38,7 @@
     "osu-buffer": "^2.0.2",
     "random-hash": "^4.0.1",
     "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "username": "^5.1.0"
   }
 }
