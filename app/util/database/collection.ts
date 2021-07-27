@@ -30,7 +30,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
   await database.run("CREATE TABLE IF NOT EXISTS setidmap (md5 TEXT PRIMARY KEY, id INTEGER, setId INTEGER)")
 
   const osuPath = await getOsuPath()
-  const songsPath = externalStorage??(osuPath + "/Songs/")
+  const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
   const setSet = new Set<number>()
   let lastInvalid = ""
   let progress = 0
@@ -117,7 +117,7 @@ export const importCollection = async (path: string, name: string): Promise<void
   }
 
   const osuPath = await getOsuPath()
-  const songsPath = externalStorage??(osuPath + "/Songs/")
+  const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
   const numberBeatmaps = await database.get("SELECT count(*) AS number FROM beatmaps")
   const collection = await database.get("SELECT * FROM collection")
 

@@ -8,7 +8,7 @@ const readFile = promisify(fs.readFile);
 
 export const readBeatmap = async (beatmap: Beatmap, osuPath: string): Promise<Beatmap> => {
 
-  const songsPath = externalStorage??(osuPath + "/Songs/")
+  const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
   const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
 
   try {
