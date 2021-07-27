@@ -5,7 +5,6 @@
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
       <span>Name:</span>
       <input class="mx-4 rounded-sm border border-gray-500 dark:border-black dark:bg-dark1 h-8 w-full focus:outline-none" (keyup)="textChange($event)"/>
-      <span *ngIf="list.has(res.name)" class="text-red-600">Already exists!</span>
     </div>
     <div class="flex items-center mt-4">
       <div class="flex-grow bg bg-gray-300 dark:bg-black h-0.5"></div>
@@ -24,6 +23,10 @@
       <app-filter-select (emitter)="changeSelected($event)" class="w-52"></app-filter-select>
       <span class="ml-4">Result: {{result}} maps</span>
     </div>
+    <div class="w-full text-center mt-6">
+      <span *ngIf="list.has(res.name.toLowerCase())" class="text-red-600">Already exists!</span>
+    </div>
+
 
     <div class="my-4 mt-8 flex flex-row justify-center w-full">
       <button (click)="cancel()" class="button button-red-enabled button-large">Cancel</button>
