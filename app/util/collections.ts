@@ -41,6 +41,7 @@ export const mergeCollections = async (names: string[]) => {
     for (let i = 1; i < toMerge.length; i++) {
       original.hashes = original.hashes.concat(toMerge[i].hashes)
     }
+    original.hashes = Array.from(new Set(original.hashes))
     original.numberMaps = original.hashes.length
     toMerge.shift()
   }
