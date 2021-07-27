@@ -56,9 +56,8 @@ export class HomeComponent implements OnInit {
     ];
 
     this.configuration.orderEnabled = false
-    this.collections = this.collectionsService.getCollections("", 1);
+    this.setCollections(this.collectionsService.getCollections("", 1))
     this.configuration.isLoading = false;
-    this.names = new Set(this.collections.map((collection) => collection.name.toLowerCase()));
   }
 
   onChange(event: Event): void {
@@ -124,14 +123,19 @@ export class HomeComponent implements OnInit {
     this.removeType = type;
   }
 
+  setCollections(collections: Collection[]) {
+    this.collections = collections
+    this.pageNumber = 1
+    this.names = new Set(this.collections.map((collection) => collection.name.toLowerCase()));
+  }
+
   async addResponse(res: AddResponse) {
     this.addModal = false
     if (res.name) {
       this.loading = true
       await this.collectionsService.addCollection(res.name, res.hashes)
       this.toastr.success('The new collection has been written', 'Success')
-      this.pageNumber = 1
-      this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
   }
@@ -142,8 +146,7 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.mergeCollections(Array.from(this.selected))
       this.toastr.success('The selected collections have been merged', 'Success')
-      this.pageNumber = 1
-      this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
     this.selected = new Set<string>()
@@ -155,7 +158,7 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.renameCollection(this.singleSelected.name, name)
       this.toastr.success('Your collection has been renamed', 'Success')
-      this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
   }
@@ -168,8 +171,7 @@ export class HomeComponent implements OnInit {
       if (this.removeType == "Mass") { this.selected = new Set<string>() }
       await this.collectionsService.removeCollections(toRemove);
       this.toastr.success('Removed collection(s)', 'Success')
-      this.pageNumber = 1
-      this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
     this.removeType = "";
