@@ -55,7 +55,7 @@
 
   </ngx-table>
 
-  <app-pagination [pageNumber]="pageNumber" (emitter)="pageUpdate($event)" [showNumberResults]="true" [numberResults]="numberResults" [rowsPerPage]="10"></app-pagination>
+  <app-pagination *ngIf="!configuration.isLoading" [pageNumber]="pageNumber" (emitter)="pageUpdate($event)" [showNumberResults]="true" [numberResults]="numberResults" [rowsPerPage]="10"></app-pagination>
 
 </div>
 
