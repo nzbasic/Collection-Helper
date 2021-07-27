@@ -31,6 +31,6 @@ export class RenameModalComponent {
   }
 
   disabled(): boolean {
-    return this.list.has(this.inputValue) || this.inputValue == '' || this.inputValue == this.value
+    return this.list.has(this.inputValue.toLowerCase()) || this.inputValue == '' || this.inputValue == this.value
   }
 }

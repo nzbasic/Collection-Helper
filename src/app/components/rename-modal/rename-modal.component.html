@@ -6,7 +6,7 @@
       <span>Name:</span>
       <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="value" (keyup)="textChange($event)"/>
     </div>
-    <span *ngIf="list.has(inputValue)" class="text-red-600 mt-2">Already exists!</span>
+    <span *ngIf="list.has(inputValue.toLowerCase())" class="text-red-600 mt-2">Already exists!</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
       <button (click)="cancel()" class="button button-red-enabled button-large">Cancel</button>
       <button [disabled]="disabled()" [ngClass]="disabled() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button button-large">{{action}}</button>
