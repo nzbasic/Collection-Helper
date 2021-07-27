@@ -30,7 +30,7 @@
     <app-collection-dropdown class="ml-4 z-10 w-96 h-10 dark:bg-dark1" (emitter)="onCollectionChange($event)" placeHolder="Collection to test filter on (optional)"></app-collection-dropdown>
     <span *ngIf="alreadyExists" class="ml-4 text-red-600">Name Already Exists!</span>
     <span *ngIf="!tested.status || content != tested.text" class="ml-4 text-red-600">Filter Not Tested!</span>
-    <span *ngIf="!inputValue" class="ml-4 text-red-600">Name Required!</span>
+    <span *ngIf="!inputValue" class="ml-4 text-red-600">Filter Name Required!</span>
   </div>
 
   <div *ngIf="filteredText.length || rawError.length " class="flex flex-col mt-4">
