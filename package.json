@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Standalone, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -125,6 +125,7 @@
     "ts-debounce": "3.0.0",
     "tslib": "2.1.0",
     "username": "^5.1.0",
+    "utf8-string-bytes": "^1.0.3",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
