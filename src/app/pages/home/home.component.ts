@@ -123,9 +123,12 @@ export class HomeComponent implements OnInit {
     this.removeType = type;
   }
 
-  setCollections(collections: Collection[]) {
+  setCollections(collections: Collection[], noResetPage?: boolean) {
     this.collections = collections
-    this.pageNumber = 1
+    if (!noResetPage) {
+      this.pageNumber = 1
+    }
+
     this.names = new Set(this.collections.map((collection) => collection.name.toLowerCase()));
   }
 
@@ -158,7 +161,7 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.renameCollection(this.singleSelected.name, name)
       this.toastr.success('Your collection has been renamed', 'Success')
-      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber), true)
       this.loading = false
     }
   }
