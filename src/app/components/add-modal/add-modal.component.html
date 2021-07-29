@@ -20,7 +20,7 @@
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
       <span class="mr-6">Filter: </span>
-      <app-filter-select (emitter)="changeSelected($event)" class="w-52"></app-filter-select>
+      <app-filter-select (emitter)="changeSelected($event)" [ngClass]="filterNumber ? 'w-52' : ''"></app-filter-select>
       <span class="ml-4">Result: {{result}} maps</span>
     </div>
     <div class="w-full text-center mt-6">

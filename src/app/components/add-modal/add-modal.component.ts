@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { debounce } from 'ts-debounce';
 import { BeatmapService } from '../../services/beatmap.service';
+import { FilterService } from '../../services/filter.service';
 
 export interface AddResponse {
   name: string;
@@ -11,7 +13,7 @@ export interface AddResponse {
   selector: 'app-add-modal',
   templateUrl: './add-modal.component.html'
 })
-export class AddModalComponent {
+export class AddModalComponent implements OnInit, OnDestroy {
 
   @Input() list!: Set<string>
   @Output() response = new EventEmitter<AddResponse>();
@@ -20,8 +22,20 @@ export class AddModalComponent {
   public searchValue = ""
   public result = "0"
   public selectedFilters: string[] = []
+  public filterNumber = 0
+  private numberSubscription: Subscription
 
-  constructor(private beatmapService: BeatmapService) { }
+  constructor(private beatmapService: BeatmapService, private filterService: FilterService) { }
+
+  ngOnInit() {
+    this.numberSubscription = this.filterService.filterNumber.subscribe((filterNumber: number) => {
+      this.filterNumber = filterNumber
+    })
+  }
+
+  ngOnDestroy() {
+    this.numberSubscription.unsubscribe()
+  }
 
   confirm(): void {
     this.response.emit(this.res)

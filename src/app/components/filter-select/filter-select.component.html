@@ -1,1 +1,2 @@
-<ngx-dropdown-list class="dark:bg-dark1 dark:text-white" (selectionChange)="onChange()" [items]="filters" [multiSelection]="true" [placeHolder]="placeHolder"></ngx-dropdown-list>
+<ngx-dropdown-list *ngIf="filters.length" class="dark:bg-dark1 dark:text-white" (selectionChange)="onChange()" [items]="filters" [multiSelection]="true" [placeHolder]="placeHolder"></ngx-dropdown-list>
+<span *ngIf="!filters.length">No filters cached!</span>

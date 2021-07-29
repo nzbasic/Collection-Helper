@@ -37,7 +37,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   constructor(private toastr: ToastrService, private titleService: TitleService, private filterService: FilterService, private componentService: ComponentService) {
     this.titleService.changeTitle({
       title: "Filters",
-      subtitle: "Your filters",
+      subtitle: "Your filters. You must generate a filters cache before using it.",
     });
   }
 

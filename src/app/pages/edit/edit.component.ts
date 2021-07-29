@@ -31,6 +31,7 @@ export class EditComponent implements OnInit, OnDestroy {
   public shownMaps: Beatmap[] = []
   public selected: Set<string> = new Set<string>()
   private selectedSubscription: Subscription
+  private numberSubscription: Subscription
   public selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
   public selectedFilters: string[] = []
 
@@ -63,6 +64,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.selectedSubscription.unsubscribe()
+    this.numberSubscription.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -70,7 +72,7 @@ export class EditComponent implements OnInit, OnDestroy {
       this.selectedCollection = collection
     })
 
-    this.filterService.filterNumber.subscribe((filterNumber: number) => {
+    this.numberSubscription = this.filterService.filterNumber.subscribe((filterNumber: number) => {
       this.filterNumber = filterNumber
     })
 
