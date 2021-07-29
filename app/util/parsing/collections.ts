@@ -2,6 +2,29 @@ import { Collections, Collection } from "../../../models/collection";
 import { OsuReader, OsuWriter } from "osu-buffer";
 import * as fs from "fs";
 import { getOsuPath } from "../database/settings";
+import { utf8ByteArrayToString, stringToUtf8ByteArray } from 'utf8-string-bytes'
+
+const readNameUtf8 = (reader: OsuReader): string => {
+  const byte = reader.readBytes(1);
+  if (byte[0] !== 0) {
+    const length = reader.read7bitInt();
+    const bytes = reader.readBytes(length);
+    return utf8ByteArrayToString(bytes)
+  } else {
+    return "";
+  }
+}
+
+const writeNameUtf8 = (writer: OsuWriter, name: string): void => {
+  if (name == "") {
+    writer.writeUint8(0);
+  } else {
+    writer.writeUint8(11);
+    const bytes = stringToUtf8ByteArray(name)
+    writer.write7bitInt(bytes.length);
+    writer.writeBytes(bytes);
+  }
+}
 
 export let collections: Collections;
 
@@ -21,10 +44,10 @@ export const readCollections = async (path: string) => {
 
   for (let colIdx = 0; colIdx < collections.numberCollections; colIdx++) {
     const collection: Collection = {
-      name: reader.readString(),
+      name: readNameUtf8(reader),
       numberMaps: reader.readInt32(),
       hashes: [],
-    };
+    }
 
     for (let mapIdx = 0; mapIdx < collection.numberMaps; mapIdx++) {
       collection.hashes.push(reader.readString());
@@ -48,7 +71,7 @@ export const writeCollections = async (initialBackup?: boolean, newBackup?: bool
   writer.writeInt32(collections.numberCollections);
 
   collections.collections.forEach((collection) => {
-    writer.writeString(collection.name);
+    writeNameUtf8(writer, collection.name);
     writer.writeInt32(collection.numberMaps);
 
     collection.hashes.forEach((hash) => {
@@ -90,7 +113,7 @@ const calculateLength = (): number => {
     if (collection.name == "") {
       count += 1;
     } else {
-      count += collection.name.length + 2;
+      count += stringToUtf8ByteArray(collection.name).length + 2;
     }
 
     // 4 bytes for numberMaps
