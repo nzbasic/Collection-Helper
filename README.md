@@ -197,15 +197,6 @@ More details from osu! documentation:
 - [Cache File](https://osu.ppy.sh/wiki/en/osu!_File_Formats/Db_(file_format))
 - [Beatmap File](https://osu.ppy.sh/wiki/en/osu%21_File_Formats/Osu_%28file_format%29)
 
-## Roadmap
-
-- Add importing collections
-- Add exporting collections
-- Automatically download missing maps
-- Improve error handling 
-- Improve beatmap hit object parsing speed
-- More user settings 
-
 ## Contributing
 
 First off, thanks for taking the time to contribute! Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
