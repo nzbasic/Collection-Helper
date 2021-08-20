@@ -2,6 +2,7 @@ import { Beatmap, IntDoublePair, TimingPoint } from "../../../models/cache";
 import { OsuReader } from "osu-buffer";
 import * as fs from "fs";
 import { getMissingMaps, removeMissingMaps } from "../database/collection";
+import { readNameUtf8 } from "./utf8";
 
 export let beatmapMap: Map<string, Beatmap>
 export let setIds: Set<number>
@@ -26,9 +27,9 @@ export const readCache = async (path: string) => {
   for (let i = 0; i < numberBeatmaps; i++) {
     let beatmap: Beatmap = {
       artist: reader.readString(),
-      artistUnicode: reader.readString(),
+      artistUnicode: readNameUtf8(reader),
       song: reader.readString(),
-      songUnicode: reader.readString(),
+      songUnicode: readNameUtf8(reader),
       creator: reader.readString(),
       difficulty: reader.readString(),
       audioFile: reader.readString(),
@@ -63,7 +64,7 @@ export const readCache = async (path: string) => {
       stackLeniency: reader.readFloat(),
       mode: reader.readBytes(1)[0],
       songSource: reader.readString(),
-      songTags: reader.readString(),
+      songTags: readNameUtf8(reader),
       onlineOffset: reader.readUint16(),
       font: reader.readString(),
       unplayed: reader.readBoolean(),
@@ -213,8 +214,8 @@ const parseBpm = (beatmap: Beatmap): number => {
  */
 const deleteFields = (beatmap: Beatmap): Beatmap => {
   // dont need all of those
-  delete beatmap.artistUnicode;
-  delete beatmap.audioFile;
+  //delete beatmap.artistUnicode;
+  //delete beatmap.audioFile;
   delete beatmap.catchRank;
   delete beatmap.disableStory;
   delete beatmap.disableVideo;
@@ -228,11 +229,11 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   delete beatmap.onlineOffset;
   delete beatmap.osz2;
   delete beatmap.previewTime;
-  delete beatmap.scrollSpeed;
-  delete beatmap.sliderVelocity;
-  delete beatmap.songSource;
-  delete beatmap.songUnicode;
-  delete beatmap.stackLeniency;
+  //delete beatmap.scrollSpeed;
+  //delete beatmap.sliderVelocity;
+  //delete beatmap.songSource;
+  //delete beatmap.songUnicode;
+  //delete beatmap.stackLeniency;
   delete beatmap.standardRank;
   delete beatmap.taikoRank;
   delete beatmap.threadId;
