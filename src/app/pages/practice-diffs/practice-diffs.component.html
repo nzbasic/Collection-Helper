@@ -1,0 +1,12 @@
+<div class="flex flex-col p-4">
+  <div class="flex flex-row items-center">
+    <span>Collection:</span>
+    <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected"></app-collection-dropdown>
+  </div>
+  <div class="flex flex-row items-center mt-4">
+    <span>Preferred Length (seconds):</span>
+    <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="length" (keypress)="lengthChange($event)">
+  </div>
+  <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="mt-4 button w-24">Generate</button>
+</div>
+

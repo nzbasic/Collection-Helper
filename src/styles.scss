@@ -41,13 +41,13 @@ input[type=checkbox]:checked:after {
 }
 
 .modal {
-  margin-left: -14rem;
+  margin-left: -15rem;
   animation: fadeIn .5s;
   @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }
 
 .modal-help {
-  margin-left: -13rem;
+  margin-left: -14rem;
   animation: fadeIn .5s;
   @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }

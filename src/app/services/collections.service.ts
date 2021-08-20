@@ -113,4 +113,8 @@ export class CollectionsService {
 
     return bytes(size)
   }
+
+  async generatePracticeDiffs(collection: Collection, prefLength: number) {
+    axios.post(fullIp + "/collections/generatePracticeDiffs", { collection: collection, prefLength: prefLength })
+  }
 }

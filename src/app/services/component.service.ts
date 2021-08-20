@@ -10,6 +10,7 @@ export enum Display {
   CUSTOM_FILTERS,
   IMPORT_EXPORT,
   SETTINGS,
+  PRACTICE_DIFF_GENERATOR
 }
 
 @Injectable({

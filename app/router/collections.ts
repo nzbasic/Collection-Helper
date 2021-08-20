@@ -6,6 +6,8 @@ import { win } from '../main'
 import { exportCollection, exportPercentage, importCollection, importPercentage } from "../util/database/collection";
 import { beatmapMap } from "../util/parsing/cache";
 import * as log from 'electron-log'
+import { Collection } from "../../models/collection";
+import { generatePracticeDiffs } from "../util/practice";
 
 const router = express.Router();
 
@@ -111,6 +113,12 @@ router.route("/exportProgress").get((req, res) => {
 
 router.route("/importProgress").get((req, res) => {
   res.json(importPercentage)
+})
+
+router.route("/generatePracticeDiffs").post(async (req, res) => {
+  const body: { collection: Collection, prefLength: number } = req.body
+  const diffs = await generatePracticeDiffs(body.collection, body.prefLength)
+  res.json(diffs)
 })
 
 export default router

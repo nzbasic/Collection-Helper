@@ -43,7 +43,7 @@ export const readBeatmap = async (beatmap: Beatmap, osuPath: string): Promise<Be
     copy.hitObjects = objects
 
     return copy;
-  } catch {
+  } catch (err) {
     log.warn("Could not load hitobjects of " + beatmap.setId + " " + beatmap.artist + " - " + beatmap.song + " [" + beatmap.difficulty + "]");
     beatmap.hitObjects = []
     return beatmap;
