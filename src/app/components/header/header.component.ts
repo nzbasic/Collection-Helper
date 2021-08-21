@@ -60,6 +60,14 @@ export class HeaderComponent implements OnInit {
       "Dark mode selection will persist when you close the app."
     ]})
 
+    this.dict.set(Display.PRACTICE_DIFF_GENERATOR, { title: "Practice Difficulty Generator", lines: [
+      "The practice difficulty generator automatically finds the hardest X seconds of a map and generates new maps with that section. It takes a collection as input and creates a practice difficulty for each map in the collection.",
+      "You can specify the preferred length of each practice difficulty by changing the length setting.",
+      "A new collection will be made with all of the new maps.",
+      "Difficulty is approximated, so some maps may not perfectly line up with the ppv2 implementation.",
+      "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
+    ]})
+
 
   }
 

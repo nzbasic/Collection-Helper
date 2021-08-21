@@ -10,6 +10,22 @@ import { convertMods } from './mods'
 let cacheInitialized: boolean = false
 let beatmapCache: Beatmap[] = []
 let previousFilter: Filter;
+const yearData = [
+  { year: 2008, setId: 540 }, 
+  { year: 2009, setId: 4545 },
+  { year: 2010, setId: 11810 },
+  { year: 2011, setId: 24313 },
+  { year: 2012, setId: 42234 },
+  { year: 2013, setId: 71801 },
+  { year: 2014, setId: 131682 },
+  { year: 2015, setId: 251391 },
+  { year: 2016, setId: 398976 },
+  { year: 2017, setId: 552667 },
+  { year: 2018, setId: 713576 },
+  { year: 2019, setId: 903055 },
+  { year: 2020, setId: 1086772 },
+  { year: 2021, setId: 1336424 },
+]
 
 /**
  * Get sorted beatmaps within a given range with an applied filter
@@ -241,6 +257,26 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
           }
 
           if (!applyStringFilter(typeFilter.operator, typeFilter.valueString, mapValue)) {
+            return false
+          }
+        } else if (typeFilter.type == "Year") {
+          const setId = map.setId
+          let year;
+
+          if (setId < yearData[0].setId) {
+            year = 2007;
+          } else if (setId > yearData[yearData.length-1].setId) {
+            year = yearData[yearData.length-1].year
+          } else {
+            for (let i = 0; i < yearData.length-1; i++) {
+              if (setId >= yearData[i].setId && setId <= yearData[i+1].setId) {
+                year = yearData[i].year
+                break;
+              }
+            }
+          }
+          
+          if (!applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, year)) {
             return false
           }
         }
