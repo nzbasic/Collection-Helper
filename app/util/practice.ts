@@ -30,7 +30,7 @@ interface Difficulty {
 export const generatePracticeDiffs = async (collection: Collection, prefLength: number) => {
   const osuPath = await getOsuPath();
 
-  const newName = collection.name + " spike difficulty 30s"
+  const newName = collection.name + " spike difficulty " + prefLength + "s"
   const found = collections.collections.find(collection => collection.name == newName)
   if (found) {
     await removeCollections([newName])
@@ -46,18 +46,19 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
         continue;
       }
 
-      const newDiffName = beatmap.difficulty + " spike window " + prefLength + "s"
-
+      const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
+      const diffNameBrackets = "[" + newDiffName + "]"
       const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
       const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
       const regex = new RegExp("\\[" + beatmap.difficulty.replace(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]+/g, "") + "\\].osu$", 'gi')
-      const newPath = path.replace(regex, "[" + newDiffName + "]") + ".osu"
+      const newPath = path.replace(regex, diffNameBrackets) + ".osu"
+      const fullPath = newPath.length < 240 ? newPath : (diffNameBrackets + ".osu")
       const contents = await practiceFileConstructor(path, window, newDiffName)
 
       const hashSum = crypto.createHash('md5')
       hashSum.update(contents)
       hashes.push(hashSum.digest('hex'))
-      fs.writeFile(newPath, contents, e => {
+      fs.writeFile(fullPath, contents, e => {
         if (e) {
           log.error(e)
         }
