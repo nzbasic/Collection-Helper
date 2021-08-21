@@ -5,29 +5,80 @@ import { readBeatmap } from "./parsing/hitobjects";
 import { Beatmap, HitObject } from "../../models/cache";
 import * as fs from 'fs'
 import { externalStorage } from "./load";
+import * as log from 'electron-log'
+import * as crypto from 'crypto'
+import { collections } from "./parsing/collections";
+import { addCollection, removeCollections } from "./collections";
+
+interface Shape {
+  objects: HitObject[],
+  bpms: number[],
+}
+
+interface Window {
+  startTime: number,
+  endTime: number,
+}
+
+interface Difficulty {
+  difficulty: number,
+  time: number
+}
 
 export const generatePracticeDiffs = async (collection: Collection, prefLength: number) => {
-
   const osuPath = await getOsuPath();
 
+  const newName = collection.name + " spike difficulty 30s"
+  const found = collections.collections.find(collection => collection.name == newName)
+  if (found) {
+    await removeCollections([newName])
+  }
+
+  const hashes: string[] = []
   for (const hash of collection.hashes) {
     const beatmap = beatmapMap.get(hash)
     if (beatmap) {
       const window = await calculateDifficultyWindow(beatmapMap.get(hash), prefLength, osuPath);
-      //console.log(window)
       const newDiffName = beatmap.difficulty + " spike window " + prefLength + "s"
 
       const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
       const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
       const regex = new RegExp("\\[" + beatmap.difficulty + "\\].osu$", 'gi')
       const newPath = path.replace(regex, "[" + newDiffName + "]") + ".osu"
-      const contents = await practiceFileConstructor(path, beatmap, window, newDiffName)
-      //fs.writeFile(newPath, contents, (err) => { if (err) return console.log(err) })
+      const contents = await practiceFileConstructor(path, window, newDiffName)
+
+      const hashSum = crypto.createHash('md5')
+      hashSum.update(contents)
+      hashes.push(hashSum.digest('hex'))
+
+      fs.access(newPath, fs.constants.F_OK, e => {
+        if (e) {
+          fs.writeFile(newPath, contents, e => {
+            if (e) {
+              log.error(e)
+            }
+          })
+        } else {
+          fs.rm(newPath, e => {
+            if (e) {
+              log.error(e)
+            } else {
+              fs.writeFile(newPath, contents, e => {
+                if (e) {
+                  log.error(e)
+                }
+              })
+            }
+          })
+        }
+      })
     }
   }
+
+  await addCollection(newName, hashes)
 }
 
-const practiceFileConstructor = async (path: string, beatmap: Beatmap, window: Window, diffName: string): Promise<string> => {
+const practiceFileConstructor = async (path: string, window: Window, diffName: string): Promise<string> => {
   let output = "";
   const contents = await fs.promises.readFile(path)
   const lines = contents.toString("utf8").split(/\r?\n/);
@@ -63,25 +114,11 @@ const practiceFileConstructor = async (path: string, beatmap: Beatmap, window: W
 
 const maxDist = Math.sqrt(512**2 + 384**2)
 
-interface Shape {
-  objects: HitObject[],
-  bpms: number[],
-}
-
-interface Window {
-  startTime: number,
-  endTime: number,
-  allItems: {
-    difficulty: number,
-    time: number
-  }[]
-}
 
 const addShapeToList = (shapes: Shape[], shape: Shape) => {
   if (shape.objects.length == 1) {
     return;
   }
-
   shapes.push(shape)
 }
 
@@ -96,7 +133,7 @@ const calculateDifficultyWindow = async (beatmap: Beatmap, windowSize: number, p
 
   const bpms = convertTimingBpm(beatmap.timingPoints);
 
-  const aimDifficulty = [];
+  const aimDifficulty: Difficulty[] = [];
   const shapes: Shape[] = [];
   let currentShape: Shape = { objects: [beatmap.hitObjects[0]], bpms: [bpms[0].bpm] };
 
@@ -133,138 +170,119 @@ const calculateDifficultyWindow = async (beatmap: Beatmap, windowSize: number, p
     }
   }
 
-  const shapeDifficulty = calculateStreamDifficulty(shapes)
-  const totalDifficulty = shapeDifficulty.concat(aimDifficulty).sort((a,b) => a.time - b.time)
+  const shapeDifficulty: Difficulty[] = calculateStreamDifficulty(shapes)
+  let totalDifficulty = shapeDifficulty.concat(aimDifficulty).sort((a,b) => a.time - b.time)
 
-  const list = { x: [], y: [] }
+  const output: Window = { startTime: 0, endTime: windowSize*1000 }
+  if (totalDifficulty.length < 2) {
+    return output
+  }
 
-  let window: Window = { startTime: 0, endTime: 0, allItems: [] }
-  let maxAverage = 0;
-  let maxWindow = window
-  for (const item of totalDifficulty) {
-
-    if (window.allItems.length == 0) {
-      window.allItems.push(item)
-      window.startTime = item.time
-      window.endTime = item.time
-      continue
+  // decrease weight on breaks
+  let lastObject = totalDifficulty[0];
+  const emptyToFill = []
+  const breakTime = 3000
+  for (let i = 1; i < totalDifficulty.length; i++) {
+    const currentObject = totalDifficulty[i];
+    if (currentObject.time - lastObject.time > breakTime) {
+      emptyToFill.push({ first: lastObject, second: currentObject })
     }
+    lastObject = currentObject
+  }
 
-    if (window.endTime - window.startTime == (windowSize*1000)) {
-      let total = 0
-      for (const item of window.allItems) {
-        total += item.difficulty
-      }
-      const average = total / window.allItems.length
-
-      list.x.push(window.startTime)
-      list.y.push(average)
-
-      if (average > maxAverage) {
-        maxAverage = average
-        maxWindow = JSON.parse(JSON.stringify(window))
-      }
-    }
-
-    window.allItems.push(item)
-    window.endTime = item.time
-
-    if ((window.endTime - window.startTime) > (windowSize * 1000)) {
-      window.startTime = window.endTime - (windowSize * 1000)
-
-      let shiftCount = 0
-      for (const item of window.allItems) {
-        if (item.time < window.startTime) {
-          shiftCount++;
-        } else {
-          break
-        }
-      }
-
-      for (let i = 0; i < shiftCount; i++) {
-        window.allItems.shift()
-      }
-
+  const gap = 100;
+  for (let i = 0; i < emptyToFill.length; i++) {
+    const first = emptyToFill[i].first;
+    const second = emptyToFill[i].second;
+    const total = Math.floor((second.time - first.time) / gap)
+    for (let i = 0; i < total; i++) {
+      totalDifficulty.push({ time: first.time + i*gap, difficulty: -100 })
     }
   }
 
-  // const windowWindowList = { x: [], y: [] }
-  // const windowWindow = { startTime: 0, endTime: 0, allItems: [] };
-  // let maxWindowAverage = 0
-  // let maxWindowWindow = windowWindow
-  // for (let i = 0; i < list.x.length; i++) {
-  //   if (windowWindow.allItems.length == 0) {
-  //     windowWindow.allItems.push({ time: list.x[i], average: list.y[i] })
-  //     continue;
-  //   }
+  totalDifficulty = totalDifficulty.sort((a,b) => a.time - b.time)
 
-  //   if (windowWindow.endTime - windowWindow.startTime == (windowSize*1000)) {
-  //     let total = 0
-  //     for (const item of windowWindow.allItems) {
-  //       total += item.average
-  //     }
-  //     const average = total / windowWindow.allItems.length
+  let window = smoothWindow(totalDifficulty)
+  const smoothNumber = 3
+  for (let i = 0; i < smoothNumber; i++) {
+    window = smoothWindow(window)
+  }
 
-  //     windowWindowList.x.push(windowWindow.startTime)
-  //     windowWindowList.y.push(average)
-
-  //     if (average > maxWindowAverage) {
-  //       maxWindowAverage = average
-  //       maxWindowWindow = JSON.parse(JSON.stringify(windowWindow))
-  //     }
-  //   }
-
-  //   windowWindow.allItems.push({ time: list.x[i], average: list.y[i] })
-  //   windowWindow.endTime = list.x[i]
-
-  //   if ((windowWindow.endTime - windowWindow.startTime) > (windowSize*1000)) {
-  //     windowWindow.startTime = windowWindow.endTime - (windowSize*1000)
-
-  //     let shiftCount = 0
-  //     for (const item of windowWindow.allItems) {
-  //       if (item.time < windowWindow.startTime) {
-  //         shiftCount++;
-  //       } else {
-  //         break
-  //       }
-  //     }
-
-  //     for (let i = 0; i < shiftCount; i++) {
-  //       windowWindow.allItems.shift()
-  //     }
-  //   }
+  // const data = { x: [], y: [] }
+  // for (let i = 0; i < window.length; i++) {
+  //   data.x.push(window[i].time)
+  //   data.y.push(window[i].difficulty)
   // }
 
-  const smoothedData = { x: [], y: [] }
-  const smoothWindowSize = Math.ceil(list.x.length * 0.05);
-  for (let i = 0; i < list.x.length; i++) {
-    let lowerBound = i
+  // fs.writeFile("yep.json", JSON.stringify(data), (err) => {})
+
+  if ((window[window.length-1].time - window[0].time) < (windowSize*1000)) {
+    output.startTime = window[0].time
+  } else {
+    let maxAverage = 0
+    for (const item of window) {
+      if ((item.difficulty > maxAverage)) {
+        maxAverage = item.difficulty
+        output.startTime = item.time
+      }
+    }
+
+    if (output.startTime > (window[window.length-1].time - windowSize*1000)) {
+      output.startTime = window[window.length-1].time - windowSize*1000
+    }
+
+    output.endTime = output.startTime + windowSize*1000
+
+    for (const shape of shapes) {
+      if (shape.objects[0].time <= output.startTime && shape.objects[shape.objects.length-1].time >= output.startTime) {
+        output.startTime = shape.objects[0].time
+      }
+
+      if (shape.objects[0].time <= output.endTime && shape.objects[shape.objects.length-1].time >= output.endTime) {
+        output.endTime = shape.objects[shape.objects.length-1].time
+      }
+    }
+
+  }
+
+  return output;
+}
+
+const smoothWindow = (difficultyArr: Difficulty[]): Difficulty[] => {
+  const smoothedData: Difficulty[] = []
+  const smoothWindowSize = Math.floor((((106-36) / (2134 - 235)) * (difficultyArr.length - 2134)) + 106)
+  for (let i = 0; i < difficultyArr.length; i++) {
     let upperBound = i + smoothWindowSize
-    if (upperBound > list.x.length-1) {
-      upperBound = list.x.length-1
+    if (upperBound > difficultyArr.length-1) {
+      upperBound = difficultyArr.length-1
+    }
+
+    let lowerBound = i - smoothWindowSize
+    if (lowerBound < 0) {
+      lowerBound = 0
+    }
+
+    // need to not punish sections for being placed after a break
+    if (difficultyArr[i].difficulty != -100) {
+      let newLowerBound = lowerBound
+      for (let j = lowerBound; j <= i; j++) {
+        if (difficultyArr[j].difficulty == -100) {
+          newLowerBound = j+1;
+        }
+      }
+      lowerBound = newLowerBound
     }
 
     let sum = 0
     for (let j = lowerBound; j <= upperBound; j++) {
-      sum += list.y[j]
+      sum += difficultyArr[j].difficulty
     }
-    const average = sum / smoothWindowSize
-    smoothedData.x.push(list.x[i] + (windowSize*1000))
-    smoothedData.y.push(average)
+
+    const average = sum / (upperBound - lowerBound + 1)
+    smoothedData.push({time: difficultyArr[i].time, difficulty: average})
   }
 
-  fs.writeFile("list.json", JSON.stringify(list), () => {})
-  fs.writeFile("list2.json", JSON.stringify(smoothedData), () => {})
-
-  for (const shape of shapes) {
-    if ((shape.objects[0].time < maxWindow.startTime) && (shape.objects[shape.objects.length-1].time > maxWindow.startTime)) {
-      maxWindow.startTime = shape.objects[0].time
-    } else if ((shape.objects[0].time < maxWindow.endTime) && (shape.objects[shape.objects.length-1].time > maxWindow.endTime)) {
-      maxWindow.endTime = shape.objects[shape.objects.length-1].time
-    }
-  }
-
-  return maxWindow;
+  return smoothedData
 }
 
 const isCircle = (obj: HitObject): boolean => {
