@@ -7,7 +7,7 @@ import { exportCollection, exportPercentage, importCollection, importPercentage 
 import { beatmapMap } from "../util/parsing/cache";
 import * as log from 'electron-log'
 import { Collection } from "../../models/collection";
-import { generatePracticeDiffs } from "../util/practice";
+import { generatePracticeDiffs, generationPercentage } from "../util/practice";
 
 const router = express.Router();
 
@@ -115,10 +115,14 @@ router.route("/importProgress").get((req, res) => {
   res.json(importPercentage)
 })
 
+router.route("/generationProgress").get((req, res) => {
+  res.json(generationPercentage)
+})
+
 router.route("/generatePracticeDiffs").post(async (req, res) => {
   const body: { collection: Collection, prefLength: number } = req.body
-  const diffs = await generatePracticeDiffs(body.collection, body.prefLength)
-  res.json(diffs)
+  await generatePracticeDiffs(body.collection, body.prefLength)
+  res.json()
 })
 
 export default router

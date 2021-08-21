@@ -10,6 +10,8 @@ import * as crypto from 'crypto'
 import { collections } from "./parsing/collections";
 import { addCollection, removeCollections } from "./collections";
 
+export let generationPercentage = 0
+
 interface Shape {
   objects: HitObject[],
   bpms: number[],
@@ -34,45 +36,35 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
     await removeCollections([newName])
   }
 
+  let i = 0;
   const hashes: string[] = []
   for (const hash of collection.hashes) {
     const beatmap = beatmapMap.get(hash)
     if (beatmap) {
       const window = await calculateDifficultyWindow(beatmapMap.get(hash), prefLength, osuPath);
+      if (window == null) {
+        continue;
+      }
+
       const newDiffName = beatmap.difficulty + " spike window " + prefLength + "s"
 
       const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
       const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
-      const regex = new RegExp("\\[" + beatmap.difficulty + "\\].osu$", 'gi')
+      const regex = new RegExp("\\[" + beatmap.difficulty.replace(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]+/g, "") + "\\].osu$", 'gi')
       const newPath = path.replace(regex, "[" + newDiffName + "]") + ".osu"
       const contents = await practiceFileConstructor(path, window, newDiffName)
 
       const hashSum = crypto.createHash('md5')
       hashSum.update(contents)
       hashes.push(hashSum.digest('hex'))
-
-      fs.access(newPath, fs.constants.F_OK, e => {
+      fs.writeFile(newPath, contents, e => {
         if (e) {
-          fs.writeFile(newPath, contents, e => {
-            if (e) {
-              log.error(e)
-            }
-          })
-        } else {
-          fs.rm(newPath, e => {
-            if (e) {
-              log.error(e)
-            } else {
-              fs.writeFile(newPath, contents, e => {
-                if (e) {
-                  log.error(e)
-                }
-              })
-            }
-          })
+          log.error(e)
         }
       })
     }
+    i++;
+    generationPercentage = (i / collection.hashes.length) * 100
   }
 
   await addCollection(newName, hashes)

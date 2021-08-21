@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Collection } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
 
@@ -6,14 +8,29 @@ import { CollectionsService } from '../../services/collections.service';
   selector: 'app-practice-diffs',
   templateUrl: './practice-diffs.component.html'
 })
-export class PracticeDiffsComponent implements OnInit {
+export class PracticeDiffsComponent implements OnInit, OnDestroy {
 
   public selected: Collection;
   public length = "30";
+  public percentage = 0
+  public generatingModal = false
+  public warning = false
+  private progressSubscription: Subscription
 
-  constructor(private collectionsService: CollectionsService) { }
+  public lines = [
+    "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
+  ];
+
+  constructor(private collectionsService: CollectionsService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.progressSubscription = this.collectionsService.progressCurrent.subscribe(percentage => {
+      this.percentage = percentage
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.progressSubscription.unsubscribe()
   }
 
   lengthChange(event) {
@@ -28,7 +45,15 @@ export class PracticeDiffsComponent implements OnInit {
   }
 
   async generate() {
-    this.collectionsService.generatePracticeDiffs(this.selected, parseInt(this.length));
+    this.generatingModal = true
+    await this.collectionsService.generatePracticeDiffs(this.selected, parseInt(this.length));
+    this.generatingModal = false
+    this.warning = true
+    this.toastr.success("Practice difficulties created!", "Success")
+  }
+
+  hideWarning(): void {
+    this.warning = false
   }
 
 }

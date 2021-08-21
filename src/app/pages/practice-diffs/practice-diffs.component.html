@@ -1,4 +1,10 @@
 <div class="flex flex-col p-4">
+  <span class="text-lg">The practice difficulty generator automatically finds the hardest X seconds of a map and generates new maps with that section.</span>
+  <span class="text-lg">It takes a collection as input and creates a practice difficulty for each map in the collection.</span>
+  <span class="text-lg">You can specify the preferred length of each practice difficulty by changing the length setting.</span>
+  <span class="text-lg">A new collection will be made with all of the new maps.</span>
+  <span class="text-lg my-4">Difficulty is approximated, so some maps may not perfectly line up with the ppv2 implementation.</span>
+  <span class="text-lg my-4">Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!.</span>
   <div class="flex flex-row items-center">
     <span>Collection:</span>
     <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected"></app-collection-dropdown>
@@ -10,3 +16,5 @@
   <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="mt-4 button w-24">Generate</button>
 </div>
 
+<app-loading-bar *ngIf="generatingModal" text="Generating Practice Difficulties..." mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>

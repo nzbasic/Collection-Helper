@@ -115,6 +115,12 @@ export class CollectionsService {
   }
 
   async generatePracticeDiffs(collection: Collection, prefLength: number) {
-    axios.post(fullIp + "/collections/generatePracticeDiffs", { collection: collection, prefLength: prefLength })
+    let progressInterval = setInterval(async () => {
+      let progress = await axios.get(fullIp + "/collections/generationProgress")
+      this.progressSource.next(progress.data)
+    }, 200)
+    await axios.post(fullIp + "/collections/generatePracticeDiffs", { collection: collection, prefLength: prefLength })
+    clearInterval(progressInterval)
+    this.progressSource.next(0)
   }
 }
