@@ -7,6 +7,7 @@ import { SelectCollection } from "../../components/collection-dropdown/collectio
 import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
 import { UtilService } from "../../services/util.service";
+import * as bytes from 'bytes'
 
 @Component({
   selector: "app-importexport",
@@ -14,7 +15,7 @@ import { UtilService } from "../../services/util.service";
 })
 export class ImportexportComponent implements OnInit, OnDestroy {
 
-  public selected: Collection
+  public selected: Collection[]
   private collections: Collection[]
   private percentageSubscription: Subscription
   public exportBeatmaps = true
@@ -59,7 +60,7 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   export(): void {
     this.exporting = true
-    this.collectionService.exportCollection(this.selected.name, this.exportBeatmaps, this.path).then((res) => {
+    this.collectionService.exportCollection(this.selected, this.exportBeatmaps, this.path).then((res) => {
       if (res) {
         this.toastr.success("Collection exported", "Success")
       }
@@ -83,18 +84,27 @@ export class ImportexportComponent implements OnInit, OnDestroy {
     })
   }
 
-  async onChange(selected: Collection) {
-    if (selected) {
-      this.estimatedSize = await this.collectionService.getEstimatedSize(selected, this.exportBeatmaps)
-    } else {
-      this.estimatedSize = ""
-    }
+  async onChange(selected: Collection[]) {
     this.selected = selected
+    this.calculateSize()
   }
 
   async selectExportBeatmaps() {
     this.exportBeatmaps = !this.exportBeatmaps
-    this.estimatedSize = await this.collectionService.getEstimatedSize(this.selected, this.exportBeatmaps)
+    this.calculateSize()
+  }
+
+  async calculateSize() {
+    if (this.selected.length) {
+      this.estimatedSize = ""
+      let size = 0;
+      for (const collection of this.selected) {
+        size += await this.collectionService.getEstimatedSize(collection, this.exportBeatmaps)
+      }
+      this.estimatedSize = bytes(size)
+    } else {
+      this.estimatedSize = ""
+    }
   }
 
   hideWarning(): void {

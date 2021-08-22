@@ -5,7 +5,7 @@ import { limitTextLength } from "../../util/processing";
 
 export interface SelectCollection {
   text: string;
-  value: string;
+  value: Collection;
   selected: boolean;
 }
 
@@ -15,8 +15,9 @@ export interface SelectCollection {
 })
 export class CollectionDropdownComponent implements OnInit {
 
-  @Output() emitter = new EventEmitter<Collection>()
+  @Output() emitter = new EventEmitter<Collection[]>()
   @Input() placeHolder!: string
+  @Input() multi!: boolean;
 
   private collection: Collection
   public collections: Collection[]
@@ -31,23 +32,21 @@ export class CollectionDropdownComponent implements OnInit {
     this.collectionItems = this.collections.map(item => {
       return {
         text: limitTextLength(item.name, 30),
-        value: item.name,
+        value: item,
         selected: false,
       }
     })
   }
 
   onChange() {
-    let selected = this.collectionItems.filter(item => item.selected).map(filter => filter.value)
-    if (selected.length) {
-      this.selected = selected[0]
-      this.collection = this.collections.find(item => item.name == this.selected)
+    const collections = this.collectionItems.filter(item => item.selected).map(filter => filter.value)
+    this.emitter.emit(collections)
 
+    if (collections.length) {
+      this.selected = collections.map(item => item.name).join(', ')
     } else {
-      this.collection = null
       this.selected = ""
     }
-    this.emitter.emit(this.collection)
   }
 
 }

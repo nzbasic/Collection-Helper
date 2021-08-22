@@ -3,7 +3,6 @@ import axios from "axios";
 import { BehaviorSubject } from "rxjs";
 import { Collection, Collections } from "../../../models/collection";
 import { fullIp } from "../app.component";
-import * as bytes from 'bytes'
 
 @Injectable({
   providedIn: "root",
@@ -60,18 +59,21 @@ export class CollectionsService {
     return this.collections.collections.find(collection => collection.name == name)
   }
 
-  async exportCollection(name: string, exportBeatmaps: boolean, path: string) {
-    let progressInterval = setInterval(async () => {
-      let progress = await axios.get(fullIp + "/collections/exportProgress")
-      this.progressSource.next(progress.data)
-    }, 200)
+  async exportCollection(collections: Collection[], exportBeatmaps: boolean, path: string) {
+    for (const collection of collections) {
+      let progressInterval = setInterval(async () => {
+        let progress = await axios.get(fullIp + "/collections/exportProgress")
+        this.progressSource.next(progress.data)
+      }, 200)
 
-    let dialogRes = (await axios.post(fullIp + "/collections/export", { name: name, exportBeatmaps: exportBeatmaps })).data
-    clearInterval(progressInterval)
-    this.progressSource.next(0)
-    if (dialogRes.canceled) {
-      return false
+      let dialogRes = (await axios.post(fullIp + "/collections/export", { name: collection.name, exportBeatmaps: exportBeatmaps })).data
+      clearInterval(progressInterval)
+      this.progressSource.next(0)
+      if (dialogRes.canceled) {
+        return false
+      }
     }
+
     return
   }
 
@@ -97,7 +99,7 @@ export class CollectionsService {
     return true
   }
 
-  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<string> {
+  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<number> {
     let size = 28672
     let setCount = (await axios.post(fullIp + "/collections/setCount", { hashes: collection.hashes })).data
 
@@ -111,7 +113,7 @@ export class CollectionsService {
       size = size + (setCount * 609)
     }
 
-    return bytes(size)
+    return size
   }
 
   async generatePracticeDiffs(collection: Collection, prefLength: number) {

@@ -5,7 +5,8 @@
       <span class="">Import</span>
     </div>
     <div class="flex flex-col m-4">
-      <span><a class="text-blue-400 cursor-pointer hover:underline" (click)="openCollectionsDrive()">Here</a> are some collections to download.</span>
+      <span class="mb-4">Importing a collection will create a new collection in game (and install any maps you don't have if they were included in the collection file)</span>
+      <span><a class="text-blue-400 cursor-pointer hover:underline" (click)="openCollectionsDrive()">Here</a> are some collections to download. (Stream, Farm, Loved, All Ranked)</span>
       <div class="flex flex-row w-full items-center mt-4">
         <span>Name for Imported Collection:</span>
         <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="newName">
@@ -26,9 +27,11 @@
       <span class="">Export</span>
     </div>
     <div class="flex flex-col z-0 m-4">
+      <span>You can export collections and share with others online. (e.g. via Google Drive)</span>
+      <span class="my-4">I recommend always exporting with beatmaps, if you do not you may have issues where the person importing doesn't have one of the maps.</span>
       <div class="flex flex-row w-full items-center">
-        <span>Select a Collection to Export</span>
-        <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected"></app-collection-dropdown>
+        <span>Select a Collection (or multiple) to Export</span>
+        <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected" [multi]="true"></app-collection-dropdown>
       </div>
       <div class="flex flex-row w-full items-center mt-4">
         <span>Export with Beatmap Files?</span>
