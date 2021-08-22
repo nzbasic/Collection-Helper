@@ -13,6 +13,9 @@ export class CollectionsService {
   private progressSource = new BehaviorSubject<number>(0)
   progressCurrent = this.progressSource.asObservable()
 
+  private multipleImportExportSource = new BehaviorSubject<number>(1)
+  multipleImportExport = this.multipleImportExportSource.asObservable()
+
   setCollections(collections: Collections): void {
     this.collections = collections
   }
@@ -59,21 +62,22 @@ export class CollectionsService {
     return this.collections.collections.find(collection => collection.name == name)
   }
 
-  async exportCollection(collections: Collection[], exportBeatmaps: boolean, path: string) {
-    for (const collection of collections) {
+  async exportCollection(collections: Collection[], exportBeatmaps: boolean) {
+    for (let i = 0; i < collections.length; i++) {
+      this.multipleImportExportSource.next(i+1)
+      const collection = collections[i]
       let progressInterval = setInterval(async () => {
         let progress = await axios.get(fullIp + "/collections/exportProgress")
         this.progressSource.next(progress.data)
       }, 200)
 
-      let dialogRes = (await axios.post(fullIp + "/collections/export", { name: collection.name, exportBeatmaps: exportBeatmaps })).data
+      let dialogRes = (await axios.post(fullIp + "/collections/export", { name: collection.name, exportBeatmaps: exportBeatmaps, multiple: collections.length > 1, last: i == collections.length-1 })).data
       clearInterval(progressInterval)
       this.progressSource.next(0)
       if (dialogRes.canceled) {
         return false
       }
     }
-
     return
   }
 

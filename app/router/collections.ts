@@ -54,14 +54,41 @@ router.route("/removeMaps").post(async (req, res) => {
   res.json(collections)
 })
 
+let multipleFolderPath = "";
 router.route("/export").post(async (req, res) => {
   //log.info("[API] /collections/export called " + JSON.stringify(req.body))
   let fileName: string = req.body.name
+  let multiple: boolean = req.body.multiple
+  let last = true
   fileName = fileName.replace(/[<>:"/\\|?*]/g, '_')
 
-  const dialogRes = await dialog.showSaveDialog(win, {defaultPath: fileName, filters: [{ name: 'Collection Database File', extensions: ['db']}]})
+  let dialogRes: any
+  if (multiple) {
+    last = req.body.last
+    if (multipleFolderPath == "") {
+      dialogRes = await dialog.showOpenDialog(win, { properties: ['openDirectory'] })
+    } else {
+      dialogRes = { canceled: false }
+    }
+  } else {
+    dialogRes = await dialog.showSaveDialog(win, {defaultPath: fileName, filters: [{ name: 'Collection Database File', extensions: ['db']}]})
+  }
+
+  let path: string
   if (!dialogRes.canceled) {
-    await exportCollection(req.body.name, req.body.exportBeatmaps, dialogRes.filePath)
+    if (multiple) {
+      if (multipleFolderPath == "") {
+        multipleFolderPath = dialogRes.filePaths[0]
+      }
+
+      path = multipleFolderPath
+      if (last) {
+        multipleFolderPath = ""
+      }
+    } else {
+      path = dialogRes.filePath
+    }
+    await exportCollection(req.body.name, req.body.exportBeatmaps, multiple, path, last)
   }
 
   res.json(dialogRes)

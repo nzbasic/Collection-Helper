@@ -18,14 +18,16 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   public selected: Collection[]
   private collections: Collection[]
   private percentageSubscription: Subscription
+  private multipleImportExportSubscription: Subscription
+  public multipleNumberProgress = 1;
   public exportBeatmaps = true
-  public path = ""
   public newName = ""
   public estimatedSize = ""
   public exporting = false
   public percentage = 0
   public warning = false
   public importing = false
+  public importMultiple = false;
 
   public lines = [
     "You will need to launch/relaunch osu! AND refresh cache in this client for new maps or new collections to load.",
@@ -48,10 +50,15 @@ export class ImportexportComponent implements OnInit, OnDestroy {
       this.exporting = progress != 0
       this.percentage = progress
     })
+
+    this.multipleImportExportSubscription = this.collectionService.multipleImportExport.subscribe(number => {
+      this.multipleNumberProgress = number
+    })
   }
 
   ngOnDestroy(): void {
     this.percentageSubscription.unsubscribe()
+    this.multipleImportExportSubscription.unsubscribe()
   }
 
   exists(): boolean {
@@ -60,7 +67,7 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   export(): void {
     this.exporting = true
-    this.collectionService.exportCollection(this.selected, this.exportBeatmaps, this.path).then((res) => {
+    this.collectionService.exportCollection(this.selected, this.exportBeatmaps).then((res) => {
       if (res) {
         this.toastr.success("Collection exported", "Success")
       }
@@ -90,7 +97,6 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   }
 
   async selectExportBeatmaps() {
-    this.exportBeatmaps = !this.exportBeatmaps
     this.calculateSize()
   }
 

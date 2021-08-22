@@ -4,17 +4,29 @@
     <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
       <span class="">Import</span>
     </div>
-    <div class="flex flex-col m-4">
+    <div class="flex flex-col m-4 text-lg">
       <span class="mb-4">Importing a collection will create a new collection in game (and install any maps you don't have if they were included in the collection file)</span>
       <span><a class="text-blue-400 cursor-pointer hover:underline" (click)="openCollectionsDrive()">Here</a> are some collections to download. (Stream, Farm, Loved, All Ranked)</span>
-      <div class="flex flex-row w-full items-center mt-4">
-        <span>Name for Imported Collection:</span>
-        <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="newName">
-        <span *ngIf="exists()" class="text-red-600 ml-4">Already Exists!</span>
+
+      <div class="flex flex-row items-center mt-2">
+        <span class="font-semibold">Are you importing multiple collections?</span>
+        <ui-switch class="ml-4" [(ngModel)]="importMultiple"></ui-switch>
       </div>
-      <div class="flex flex-row w-full items-center mt-4">
-        <span>Open a File: </span>
-        <button [disabled]="!newName.length || exists()" [ngClass]="!newName.length || exists() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="import()" class="ml-4 button">Import</button>
+
+      <div *ngIf="importMultiple">
+        <button class="button button-green-enabled mt-4">Import Multiple</button>
+      </div>
+
+      <div *ngIf="!importMultiple">
+        <div class="flex flex-row w-full items-center mt-4">
+          <span>Name for Imported Collection:</span>
+          <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="newName">
+          <span *ngIf="exists()" class="text-red-600 ml-4">Already Exists!</span>
+        </div>
+        <div class="flex flex-row w-full items-center mt-4">
+          <span>Open a File: </span>
+          <button [disabled]="!newName.length || exists()" [ngClass]="!newName.length || exists() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="import()" class="ml-4 button">Import</button>
+        </div>
       </div>
     </div>
   </div>
@@ -26,18 +38,19 @@
     <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
       <span class="">Export</span>
     </div>
-    <div class="flex flex-col z-0 m-4">
+    <div class="flex flex-col z-0 m-4 text-lg">
       <span>You can export collections and share with others online. (e.g. via Google Drive)</span>
       <span class="my-4">I recommend always exporting with beatmaps, if you do not you may have issues where the person importing doesn't have one of the maps.</span>
+      <span class="font-semibold mb-4">If you export multiple collections at once, you need to select the folder where you want all of the files to go. Otherwise, just set the file name you want.</span>
       <div class="flex flex-row w-full items-center">
         <span>Select a Collection (or multiple) to Export</span>
         <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected" [multi]="true"></app-collection-dropdown>
       </div>
-      <div class="flex flex-row w-full items-center mt-4">
+      <div class="flex flex-row w-full items-center mt-2">
         <span>Export with Beatmap Files?</span>
-        <input class="ml-4" type="checkbox" [checked]="exportBeatmaps" (change)="selectExportBeatmaps()">
+        <ui-switch class="ml-4" size="medium" (ngModelChange)="selectExportBeatmaps()" [(ngModel)]="exportBeatmaps"></ui-switch>
       </div>
-      <div class="mt-4 flex flex-row items-center">
+      <div class="mt-2 flex flex-row items-center">
         <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" class="button" (click)="export()">Export</button>
         <span class="ml-4" *ngIf="estimatedSize">Estimated output size {{estimatedSize}}</span>
       </div>
@@ -45,7 +58,7 @@
   </div>
 </div>
 
-<app-loading-bar *ngIf="exporting && percentage" [text]="exportBeatmaps ? 'Packing Beatmaps' : 'Exporting Collection'" [mode]="exportBeatmaps ? 'determinate' : 'indeterminate'" [percentage]="percentage"></app-loading-bar>
+<app-loading-bar *ngIf="exporting && percentage" [text]="exportBeatmaps ? 'Packing Beatmaps ' + multipleNumberProgress + '/' + selected.length : 'Exporting Collection'" [mode]="exportBeatmaps ? 'determinate' : 'indeterminate'" [percentage]="percentage"></app-loading-bar>
 <app-loading-bar *ngIf="importing && percentage" [text]="percentage == -1 ? 'Constructing temporary table' : 'Unpacking collection'" [mode]="percentage == -1 ? 'indeterminate' : 'determinate'" [percentage]="percentage"></app-loading-bar>
 <app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>
 

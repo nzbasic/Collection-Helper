@@ -15,9 +15,13 @@ import { externalStorage } from '../load'
 export let exportPercentage = 0
 export let importPercentage = 0
 
-export const exportCollection = async (name: string, exportBeatmaps: boolean, path: string) => {
+export const exportCollection = async (name: string, exportBeatmaps: boolean, multiple: boolean, path: string, last: boolean) => {
   exportPercentage = 0.01
   let collection = collections.collections.find(item => item.name === name)
+
+  if (multiple) {
+    path = path + "/" + name + ".db"
+  }
 
   try {
     await fs.promises.stat(path)
@@ -94,7 +98,10 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, pa
   await database.run("INSERT INTO collection (name, beatmaps, hashes) VALUES (?, ?, ?)", [name, exportBeatmaps, buf])
 
   database.close()
-  exportPercentage = 0
+
+  if (last) {
+    exportPercentage = 0
+  }
 }
 
 export const importCollection = async (path: string, name: string): Promise<void | string> => {
