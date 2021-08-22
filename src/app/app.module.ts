@@ -41,6 +41,7 @@ import { AddModalComponent } from './components/add-modal/add-modal.component';
 import { FilterSelectComponent } from './components/filter-select/filter-select.component';
 import { CollectionDropdownComponent } from './components/collection-dropdown/collection-dropdown.component';
 import { PracticeDiffsComponent } from './pages/practice-diffs/practice-diffs.component';
+import { BpmChangerComponent } from './pages/bpm-changer/bpm-changer.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -70,6 +71,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     FilterSelectComponent,
     CollectionDropdownComponent,
     PracticeDiffsComponent,
+    BpmChangerComponent,
   ],
   imports: [
     BrowserModule,

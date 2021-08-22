@@ -1,0 +1,17 @@
+<div class="flex flex-col p-4">
+  <span class="text-lg mb-4">Changes the BPM of every map in a collection to a set number by generating new maps.</span>
+  <span class="text-lg">The most common BPM of a map (seen in osu! in brackets) will be used, and every other timing point will be scaled accordingly.</span>
+  <span class="text-lg mb-4">A new collection will be created with all of the newly generated maps.</span>
+  <div class="flex flex-row items-center">
+    <span>Collection:</span>
+    <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected"></app-collection-dropdown>
+  </div>
+  <div class="flex flex-row items-center mt-4">
+    <span>BPM: </span>
+    <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="bpm" (keypress)="bpmChange($event)">
+  </div>
+  <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="mt-4 button w-24">Generate</button>
+</div>
+
+<app-loading-bar *ngIf="generatingModal" text="Generating Practice Difficulties..." mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>

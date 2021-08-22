@@ -123,4 +123,14 @@ export class CollectionsService {
     clearInterval(progressInterval)
     this.progressSource.next(0)
   }
+
+  async generateBPM(collection: Collection, bpm: number) {
+    let progressInterval = setInterval(async () => {
+      let progress = await axios.get(fullIp + "/collections/generationProgress")
+      this.progressSource.next(progress.data)
+    }, 200)
+    await axios.post(fullIp + "/collections/generateBPMChanges", { collection: collection, bpm: bpm })
+    clearInterval(progressInterval)
+    this.progressSource.next(0)
+  }
 }
