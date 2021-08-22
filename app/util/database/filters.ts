@@ -25,7 +25,7 @@ export const updateFilter = async (oldName: string, filter: CustomFilter, sameAs
     $3: filter.filter,
     $4: filter.getHitObjects,
     $5: sameAsOld,
-    $6: sameAsOld ? Buffer.from(JSON.stringify(filter.cache)) : Buffer.from(JSON.stringify([])),
+    $6: sameAsOld ? Buffer.from(JSON.stringify(filter.cache)??[]) : Buffer.from(JSON.stringify([])),
     $7: oldName
   })
 
@@ -51,7 +51,7 @@ export const readFilters = async (): Promise<CustomFilter[]> => {
 
   const output: CustomFilter[] = []
   rows.forEach(row => {
-    const text = JSON.parse(row.cache.toString())
+    const text = JSON.parse(row.cache.length > 0 ? row.cache.toString() : "[]")
     const number = text.length
     const getHitObjects = row.gethitobjects == 1
     const isCached = row.iscached == 1
