@@ -16,5 +16,5 @@
   </div>
 </div>
 
-<app-loading-bar *ngIf="generatingModal" text="Generating Practice Difficulties..." mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-loading-bar *ngIf="generatingModal" text="Generating New Audio..." mode="determinate" [percentage]="percentage"></app-loading-bar>
 <app-help *ngIf="warning" title="Warning:" [lines]="lines" (emitter)="hideWarning()"></app-help>

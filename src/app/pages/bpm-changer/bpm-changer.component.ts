@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Collection } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
 import * as bytes from 'bytes'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bpm-changer',
@@ -11,6 +12,7 @@ import * as bytes from 'bytes'
 export class BpmChangerComponent implements OnInit {
 
   public selected: Collection;
+  private progressSubscription: Subscription;
   public bpm = "240";
   public percentage = 0
   public generatingModal = false
@@ -24,9 +26,13 @@ export class BpmChangerComponent implements OnInit {
   constructor(private collectionsService: CollectionsService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.progressSubscription = this.collectionsService.progressCurrent.subscribe(progress => {
+      this.percentage = progress
+    })
   }
 
   ngOnDestroy(): void {
+    this.progressSubscription.unsubscribe()
   }
 
   bpmChange(event) {
