@@ -21,6 +21,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, mu
 
   if (multiple) {
     path = path + "/" + name + ".db"
+    path = path.replace(/[<>:"/\\|?*]/g, "")
   }
 
   try {
@@ -28,7 +29,14 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, mu
     await fs.promises.rm(path)
   } catch {}
 
-  const database = await open({ filename: path, driver: Sqlite3 });
+  let database: Database;
+  try {
+    database = await open({ filename: path, driver: Sqlite3 });
+  } catch (e) {
+    log.error(e)
+    return
+  }
+
   await database.run("CREATE TABLE IF NOT EXISTS collection (name TEXT PRIMARY KEY, beatmaps INTEGER, hashes BLOB)");
   await database.run("CREATE TABLE IF NOT EXISTS beatmaps (setId INTEGER, md5 TEXT PRIMARY KEY, folderName TEXT, zip BLOB)");
   await database.run("CREATE TABLE IF NOT EXISTS setidmap (md5 TEXT PRIMARY KEY, id INTEGER, setId INTEGER)")
