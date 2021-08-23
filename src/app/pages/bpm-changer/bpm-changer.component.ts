@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Collection } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
+import * as bytes from 'bytes'
 
 @Component({
   selector: 'app-bpm-changer',
@@ -14,6 +15,7 @@ export class BpmChangerComponent implements OnInit {
   public percentage = 0
   public generatingModal = false
   public warning = false
+  public estimateSize: string
 
   public lines = [
     "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
@@ -34,8 +36,14 @@ export class BpmChangerComponent implements OnInit {
     return result;
   }
 
-  onChange(selected: Collection) {
+  async onChange(selected: Collection) {
     this.selected = selected;
+    if (selected != null) {
+      const setCount = await this.collectionsService.getSetCount(selected.hashes)
+      this.estimateSize = bytes(setCount * 3000000)
+    } else {
+      this.estimateSize = null;
+    }
   }
 
   async generate() {

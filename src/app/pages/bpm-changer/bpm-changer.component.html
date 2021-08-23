@@ -10,7 +10,10 @@
     <span>BPM: </span>
     <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="bpm" (keypress)="bpmChange($event)">
   </div>
-  <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="mt-4 button w-24">Generate</button>
+  <div class="flex flex-row items-center mt-4 ">
+    <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="button w-24">Generate</button>
+    <span *ngIf="estimateSize" class="ml-4">Estimate Size Increase: {{estimateSize}}</span>
+  </div>
 </div>
 
 <app-loading-bar *ngIf="generatingModal" text="Generating Practice Difficulties..." mode="determinate" [percentage]="percentage"></app-loading-bar>
