@@ -2,7 +2,7 @@ import { Filter, GetBeatmapsReq, GetSelectedReq, PageResponse } from "../../mode
 import { Beatmap, IntDoublePair } from "../../models/cache";
 import { CustomFilter } from "../../models/filters";
 import { readFilters } from "./database/filters";
-import { beatmapMap } from "./parsing/cache";
+import { beatmapMap, parseBpm } from "./parsing/cache";
 import { collections } from "./parsing/collections";
 import * as log from 'electron-log'
 import { convertMods } from './mods'
@@ -11,7 +11,7 @@ let cacheInitialized: boolean = false
 let beatmapCache: Beatmap[] = []
 let previousFilter: Filter;
 const yearData = [
-  { year: 2008, setId: 540 }, 
+  { year: 2008, setId: 540 },
   { year: 2009, setId: 4545 },
   { year: 2010, setId: 11810 },
   { year: 2011, setId: 24313 },
@@ -275,7 +275,7 @@ const filterBeatmaps = async (filter: Filter, name: string, getCollection: boole
               }
             }
           }
-          
+
           if (!applyNumberFilter(typeFilter.operator, typeFilter.valueNumber, year)) {
             return false
           }

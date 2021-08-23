@@ -8,7 +8,7 @@ import { beatmapMap } from "../util/parsing/cache";
 import * as log from 'electron-log'
 import { Collection } from "../../models/collection";
 import { generatePracticeDiffs, generationPercentage } from "../util/practice";
-import { generateBPMChanges } from "../util/bpm";
+import { generateBPMChanges, generationBpmProgress } from "../util/bpm";
 
 const router = express.Router();
 
@@ -118,6 +118,10 @@ router.route("/importProgress").get((req, res) => {
 
 router.route("/generationProgress").get((req, res) => {
   res.json(generationPercentage)
+})
+
+router.route("/bpmGenerationProgress").get((req, res) => {
+  res.json(generationBpmProgress)
 })
 
 router.route("/generatePracticeDiffs").post(async (req, res) => {

@@ -9,35 +9,106 @@ import { externalStorage } from "./load";
 import * as pathToFfmpeg from 'ffmpeg-static'
 import * as fs from 'fs'
 import * as log from 'electron-log'
+import { addCollection } from "./collections";
+import { collections } from "./parsing/collections";
+import * as crypto from 'crypto'
 
 ffmpeg.setFfmpegPath(pathToFfmpeg)
 
+export let generationBpmProgress = 0
+
 export const generateBPMChanges = async (collection: Collection, bpm: number) => {
   const osuPath = await getOsuPath()
+  const setIdsGenerated = new Set<number>()
+  const successfulHashes: string[] = []
+  let numberComplete = -1;
   for (const hash of collection.hashes) {
+    numberComplete++;
     const beatmap = beatmapMap.get(hash)
     if (!beatmap) { continue; }
-    const newBeatmap = await calculateNewHitTimings(beatmap, bpm, osuPath)
+    const rateChange = bpm / beatmap.ogBpm
+    const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath)
 
     if (newBeatmap) {
+      const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+      const folderPath = songsPath + newBeatmap.folderName
+      const audioPath = folderPath + "/" + newBeatmap.audioFile
+      const filePath = folderPath + "/" + newBeatmap.fileName
+      const newAudioFile = "audio " + rateChange + "x speed.mp3"
+      const output = folderPath + "/" + newAudioFile
 
+      if (!setIdsGenerated.has(newBeatmap.setId)) {
+        ffmpeg().input(audioPath).audioFilters("atempo=" + rateChange).output(output).run()
+        setIdsGenerated.add(newBeatmap.setId)
+      }
+
+      const newDiffName = newBeatmap.difficulty + " " + bpm + "bpm"
+      const newPath = createNewFilePath(newDiffName, newBeatmap, filePath)
+      const contents = await bpmChangeFileConstructor(filePath, newBeatmap, newDiffName, newAudioFile)
+
+      fs.writeFile(newPath, contents, e => {
+        if (e) {
+          log.error(e)
+        }
+      })
+
+      const hashSum = crypto.createHash('md5')
+      hashSum.update(contents)
+      successfulHashes.push(hashSum.digest('hex'))
+      generationBpmProgress = (numberComplete / collection.hashes.length) * 100
     }
   }
+
+  let name = collection.name + " @ " + bpm + "bpm"
+  const found = collections.collections.find(collection => collection.name == newName)
+  if (found) {
+    await removeCollections([newName])
+  }
+
+  await addCollection(name, successfulHashes)
 }
 
-const calculateNewHitTimings = async (beatmap: Beatmap, bpm: number, path: string) => {
+const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path: string): Promise<Beatmap> => {
   beatmap = await readBeatmap(beatmap, path)
   if (beatmap.hitObjects.length == 0) { return null }
 
   const clonedBeatmap: Beatmap = JSON.parse(JSON.stringify(beatmap))
-  let rateChange = bpm / beatmap.bpm
   const inverseRateChange = 1/rateChange;
 
-  // atempo is limited to a 0.5-2 range
-  if (rateChange > 2) {
-    rateChange = 2
-  } else if (rateChange < 0.5) {
-    rateChange = 0.5
+  // calculate new AR. max = 10
+  // need to convert to hitTime, then back to ar
+  // formula is hitTime x 1/rateChange then convert hitTime to AR
+  // osu ar works differently between 0-4 and 5-10 for some reason
+  const ar = clonedBeatmap.ar
+  let hitTime: number
+  if (ar >= 5) {
+    hitTime = Math.abs(ar - 13) * 150 * inverseRateChange
+  } else {
+    hitTime = Math.abs(ar - 15) * 120 * inverseRateChange
+  }
+
+  if (hitTime >= 1200) {
+    clonedBeatmap.ar = 13 - (hitTime / 150)
+  } else {
+    clonedBeatmap.ar = 15 - (hitTime / 120)
+  }
+
+  if (clonedBeatmap.ar > 10) {
+    clonedBeatmap.ar = 10
+  } else if (clonedBeatmap.ar < 0) {
+    clonedBeatmap.ar = 0
+  }
+
+  // calculate new OD, max = 10
+  // same formula as above
+  const od = clonedBeatmap.od
+  const hitWindow = 79.5 - (od * 6)
+  clonedBeatmap.od = (79.5 - hitWindow * inverseRateChange)/6
+
+  if (clonedBeatmap.od > 10) {
+    clonedBeatmap.od = 10
+  } else if (clonedBeatmap.od < 0) {
+    clonedBeatmap.od = 0
   }
 
   for (let timingPoint of clonedBeatmap.timingPoints) {
@@ -47,26 +118,11 @@ const calculateNewHitTimings = async (beatmap: Beatmap, bpm: number, path: strin
     timingPoint.offset = Math.round(timingPoint.offset*inverseRateChange)
   }
 
-  const songsPath = externalStorage ? (externalStorage + "/") : (path + "/Songs/")
-  const folderPath = songsPath + clonedBeatmap.folderName
-  const audioPath = folderPath + "/" + clonedBeatmap.audioFile
-  const filePath = folderPath + "/" + clonedBeatmap.fileName
-  const newAudioFile = "audio " + rateChange + "x speed.mp3"
-  const output = folderPath + "/" + newAudioFile
-  ffmpeg().input(audioPath).audioFilters("atempo=" + rateChange).output(output).run()
-
   for (const hit of clonedBeatmap.hitObjects) {
     hit.time = Math.round(hit.time * inverseRateChange)
   }
 
-  const newDiffName = beatmap.difficulty + " " + bpm + "bpm"
-  const newPath = createNewFilePath(newDiffName, clonedBeatmap, filePath)
-  const contents = await bpmChangeFileConstructor(filePath, clonedBeatmap, newDiffName, newAudioFile)
-  fs.writeFile(newPath, contents, e => {
-    if (e) {
-      log.error(e)
-    }
-  })
+  return clonedBeatmap
 }
 
 const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName: string, audioFile: string): Promise<string> => {
@@ -115,6 +171,10 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
         output += "Version:" + diffName + "\n"
       } else if (line.startsWith("AudioFilename")) {
         output += "AudioFilename:" + audioFile + "\n"
+      } else if (line.startsWith("ApproachRate")) {
+        output += "ApproachRate:" + beatmap.ar + "\n"
+      } else if (line.startsWith("OverallDifficulty")) {
+        output += "OverallDifficulty:" + beatmap.od + "\n"
       } else {
         output += line + "\n"
       }
