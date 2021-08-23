@@ -20,8 +20,7 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, mu
   let collection = collections.collections.find(item => item.name === name)
 
   if (multiple) {
-    path = path + "/" + name + ".db"
-    path = path.replace(/[<>:"/\\|?*]/g, "")
+    path = path + "/" + name.replace(/[<>:"/\\|?*]/g, "") + ".db"
   }
 
   try {
