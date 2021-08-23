@@ -91,14 +91,16 @@ const practiceFileConstructor = async (path: string, window: Window, diffName: s
       const time = parseInt(contents[2]);
 
       if ((time >= window.startTime) && (time <= window.endTime)) {
-        output += line + "\n"
+        output += line + "\r\n"
       }
     } else {
 
       if (line.startsWith("Version")) {
-        output += "Version:" + diffName + "\n"
+        output += "Version:" + diffName + "\r\n"
+      } else if (line.startsWith("osu file format")) {
+        output += "osu file format v14\r\n"
       } else {
-        output += line + "\n"
+        output += line + "\r\n"
       }
     }
 
