@@ -1,5 +1,5 @@
 import { AddResponse } from './../../components/add-modal/add-modal.component';
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Component, ComponentFactoryResolver, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Collection } from "../../../../models/collection";
 import { TitleService } from "../../services/title.service";
 import { Columns, Config } from "ngx-easy-table";
@@ -147,13 +147,7 @@ export class HomeComponent implements OnInit {
     this.mergeModal = false
     if (res) {
       this.loading = true
-
-      const hashes: string[] = []
-      for (const name of this.selected) {
-        hashes.push(...this.collections.find(item => item.name == name).hashes)
-      }
-
-      await this.collectionsService.addCollection(res, hashes)
+      await this.collectionsService.mergeCollections(res, Array.from(this.selected))
       this.toastr.success('The selected collections have been merged into a new collection', 'Success')
       this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false

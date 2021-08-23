@@ -30,7 +30,7 @@ router.route("/rename").post(async (req, res) => {
 
 router.route("/merge").post(async (req, res) => {
   //log.info("[API] /collections/merge called " + JSON.stringify(req.body))
-  await mergeCollections(req.body)
+  await mergeCollections(req.body.newName, req.body.names)
   res.json(collections)
 })
 
