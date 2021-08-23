@@ -96,17 +96,25 @@ router.route("/export").post(async (req, res) => {
 
 router.route("/import").post(async (req, res) => {
   //log.info("[API] /collections/import called " + JSON.stringify(req.body))
-  const dialogRes = await dialog.showOpenDialog(win, {filters: [{ name: 'Collection Database File', extensions: ['db']}]})
-  let error: void | string
-  if (!dialogRes.canceled) {
-    error = await importCollection(dialogRes.filePaths[0], req.body.name)
+  const multiple = req.body.multiple
+  const options = {properties: [], filters: [{ name: 'Collection Database File', extensions: ['db']}]}
+  if (multiple) {
+    options.properties.push('multiSelections')
   }
 
-  if (typeof error === "string") {
-    res.json({ error: error })
-  } else {
-    res.json({ collections: collections })
+  const dialogRes = await dialog.showOpenDialog(win, options)
+  let error: void | string
+  const errors: string[] = []
+  if (!dialogRes.canceled) {
+    for (let i = 0; i < dialogRes.filePaths.length; i++) {
+      error = await importCollection(dialogRes.filePaths[i], req.body.name, multiple, i==(dialogRes.filePaths.length-1))
+      if (typeof error === "string") {
+        errors.push(error)
+      }
+    }
   }
+
+  res.json({ collections: collections, errors: errors })
 })
 
 router.route("/setCount").post((req, res) => {

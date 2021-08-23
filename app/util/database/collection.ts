@@ -104,8 +104,11 @@ export const exportCollection = async (name: string, exportBeatmaps: boolean, mu
   }
 }
 
-export const importCollection = async (path: string, name: string): Promise<void | string> => {
+let multipleSetId: Set<number> = new Set()
+export const importCollection = async (path: string, name: string, multiple: boolean, last: boolean): Promise<void | string> => {
   let database: Database
+
+  console.log(path)
 
   try {
     database = await open({ filename: path, driver: Sqlite3 });
@@ -127,6 +130,7 @@ export const importCollection = async (path: string, name: string): Promise<void
   const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
   const numberBeatmaps = await database.get("SELECT count(*) AS number FROM beatmaps")
   const collection = await database.get("SELECT * FROM collection")
+  console.log(collection)
 
   const number = numberBeatmaps.number
   const exportBeatmaps = collection.beatmaps == 1
@@ -157,16 +161,19 @@ export const importCollection = async (path: string, name: string): Promise<void
       const beatmaps = await database.all("SELECT md5, zip, folderName, setId FROM beatmaps WHERE NOT EXISTS ( SELECT hash FROM temp WHERE md5=hash ) LIMIT ? OFFSET ? ", [limit, offset])
 
       for (const beatmap of beatmaps) {
-        const buffer: Buffer = beatmap.zip
-        const randomHash = generateHash({length: 16})
-        if (beatmap.folderName == "undefined" || !beatmap.folderName) {
-          beatmap.folderName = randomHash
-        }
-        try {
-          await fs.promises.writeFile(songsPath + beatmap.folderName + ".osz", buffer)
-          missingMaps.add(beatmap.setId)
-        } catch(err) {
-          log.error("Error importing beatmap " + beatmap.folderName)
+        if (!multipleSetId.has(beatmap.setId)) {
+          multipleSetId.add(beatmap.setId)
+          const buffer: Buffer = beatmap.zip
+          const randomHash = generateHash({length: 16})
+          if (beatmap.folderName == "undefined" || !beatmap.folderName) {
+            beatmap.folderName = randomHash
+          }
+          try {
+            await fs.promises.writeFile(songsPath + beatmap.folderName + ".osz", buffer)
+            missingMaps.add(beatmap.setId)
+          } catch(err) {
+            log.error("Error importing beatmap " + beatmap.folderName)
+          }
         }
       }
 
@@ -193,9 +200,27 @@ export const importCollection = async (path: string, name: string): Promise<void
     await addMissingMaps(missingMaps)
   }
 
+  if (multiple) {
+    const names = path.split("\\")
+
+    let i = 0
+    while (true) {
+      const newName = names[names.length-1] + (i == 0 ? "" : (" (" + (i) + ")"))
+      if (!collections.collections.find(item => item.name == newName)) {
+        name = newName
+        break
+      }
+      i++;
+    }
+  }
+
+  if (last) {
+    multipleSetId = new Set()
+    importPercentage = 0
+  }
+
   await addCollection(name, hashes)
   database.close()
-  importPercentage = 0
 }
 
 const addMissingMaps = async (missingMaps: MissingMap[]) => {

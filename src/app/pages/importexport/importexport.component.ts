@@ -15,7 +15,7 @@ import * as bytes from 'bytes'
 })
 export class ImportexportComponent implements OnInit, OnDestroy {
 
-  public selected: Collection[]
+  public selected: Collection[] = []
   private collections: Collection[]
   private percentageSubscription: Subscription
   private multipleImportExportSubscription: Subscription
@@ -47,7 +47,6 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.percentageSubscription = this.collectionService.progressCurrent.subscribe(progress => {
-      this.exporting = progress != 0
       this.percentage = progress
     })
 
@@ -76,8 +75,9 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   }
 
   import(): void {
+    this.exporting = false
     this.importing = true
-    this.collectionService.importCollection(this.newName).then((res) => {
+    this.collectionService.importCollection(this.newName, this.importMultiple).then((res) => {
       if (typeof res === "string") {
         this.toastr.error(res, "Error")
       } else {

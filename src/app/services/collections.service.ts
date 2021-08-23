@@ -81,13 +81,13 @@ export class CollectionsService {
     return
   }
 
-  async importCollection(name: string): Promise<boolean | string> {
+  async importCollection(name: string, multiple: boolean): Promise<boolean | string> {
     let progressInterval = setInterval(async () => {
       let progress = await axios.get(fullIp + "/collections/importProgress")
       this.progressSource.next(progress.data)
     }, 200)
 
-    let res = (await axios.post(fullIp + "/collections/import", { name: name })).data
+    let res = (await axios.post(fullIp + "/collections/import", { name: name, multiple: multiple })).data
     clearInterval(progressInterval)
     this.progressSource.next(0)
 
