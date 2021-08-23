@@ -52,7 +52,7 @@
 </div>
 
 <app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Collection" text="Are you sure you want to remove the collection(s)? All of the data will be removed. This action CAN be undone if you restore your backup." confirmText="Remove"></app-confirm-modal>
-<app-confirm-modal *ngIf="mergeModal" (response)="mergeResponse($event)" title="Merge Collections" text="Are you sure you want to merge these collections? All of their maps will be combined. This action CAN be undone if you restore your backup." confirmText="Merge"></app-confirm-modal>
+<app-rename-modal *ngIf="mergeModal" (response)="mergeResponse($event)" title="Name for new collection" [list]="names" value="" action="Add"></app-rename-modal>
 <app-rename-modal *ngIf="renameModal" (response)="renameResponse($event)" title="Rename Collection" action="Rename" [list]="names" [value]="singleSelected.name"></app-rename-modal>
 <app-add-modal *ngIf="addModal" (response)="addResponse($event)" [list]="names"></app-add-modal>
 <app-loading-bar *ngIf="loading" mode="indeterminate" text="Loading..."></app-loading-bar>

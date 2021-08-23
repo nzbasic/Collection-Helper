@@ -143,12 +143,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  async mergeResponse(status: boolean) {
+  async mergeResponse(res: string) {
     this.mergeModal = false
-    if (status) {
+    if (res) {
       this.loading = true
-      await this.collectionsService.mergeCollections(Array.from(this.selected))
-      this.toastr.success('The selected collections have been merged', 'Success')
+
+      const hashes: string[] = []
+      for (const name of this.selected) {
+        hashes.push(...this.collections.find(item => item.name == name).hashes)
+      }
+
+      await this.collectionsService.addCollection(res, hashes)
+      this.toastr.success('The selected collections have been merged into a new collection', 'Success')
       this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
