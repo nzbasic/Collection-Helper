@@ -120,4 +120,8 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   openCollectionsDrive() {
     this.utilService.openUrl("https://drive.google.com/drive/folders/1PBtYMH5EmrAezc8wQdLd8cMiozddYhRZ?usp=sharing")
   }
+
+  openImportVideo() {
+    this.utilService.openUrl("https://www.youtube.com/watch?v=Su9Av0jSX_U")
+  }
 }
