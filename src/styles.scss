@@ -6,6 +6,9 @@
 @import "~@fontsource/open-sans";
 @import "~ngx-toastr/toastr";
 
+.switch small {
+  @apply border-2 dark:bg-black dark:border-white #{!important};
+}
 
 html,
 body {
