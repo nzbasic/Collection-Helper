@@ -22,11 +22,13 @@
     <app-sidebar-button text="Settings" [type]="Display.SETTINGS"></app-sidebar-button>
   </div>
 
-  <div class="flex flex-col">
-    <a (click)="openOsu()" class="text-white ml-2 pb-2 hover:underline cursor-pointer">osu!: YEP</a>
-    <a (click)="openGithub()" class="text-white ml-2 pb-2 hover:underline cursor-pointer">Github: nzbasic</a>
-    <a (click)="openTwitter()" class="text-white ml-2 pb-2 hover:underline cursor-pointer">Twitter: @nzbasic</a>
-    <span class="text-white ml-2 pb-2">Discord: basic#7373</span>
+  <div class="flex flex-col ml-2 mb-2 text-white space-y-2">
+    <a (click)="openVideo()" class="text-lg cursor-pointer hover:underline">Usage Guide Video</a>
+    <span>My Socials:</span>
+    <a (click)="openOsu()" class="hover:underline cursor-pointer">osu!: YEP</a>
+    <a (click)="openGithub()" class="hover:underline cursor-pointer">Github: nzbasic</a>
+    <a (click)="openTwitter()" class="hover:underline cursor-pointer">Twitter: @nzbasic</a>
+    <span class="">Discord: basic#7373</span>
   </div>
 
 </div>
