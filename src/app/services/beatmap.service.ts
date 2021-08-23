@@ -54,7 +54,7 @@ export class BeatmapService {
         if (type == "year" ) {
           filterDetail = { type: "Year", filtering: "setId", valueNumber: number, operator: symbol }
         }
-        
+
         filter.filters.push(filterDetail)
 
       } else if (word.match(/^\w*(==|=|!=)\w+$/g)) { // this line matches word operator word e.g. artist=xanthochroid
@@ -104,7 +104,6 @@ export class BeatmapService {
       }
     })
 
-    console.log(filter)
     filter.text = filter.text.trim()
     return filter
   }

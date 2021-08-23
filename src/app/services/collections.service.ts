@@ -97,9 +97,13 @@ export class CollectionsService {
     return true
   }
 
+  async getSetCount(hashes: string[]): Promise<number> {
+    return (await axios.post(fullIp + "/collections/setCount", { hashes: hashes })).data
+  }
+
   async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<string> {
     let size = 28672
-    let setCount = (await axios.post(fullIp + "/collections/setCount", { hashes: collection.hashes })).data
+    const setCount = await this.getSetCount(collection.hashes)
 
     if (exportBeatmaps) {
       // 21500 map sets = 207,660,670,976 bytes
@@ -126,7 +130,7 @@ export class CollectionsService {
 
   async generateBPM(collection: Collection, bpm: number) {
     let progressInterval = setInterval(async () => {
-      let progress = await axios.get(fullIp + "/collections/generationProgress")
+      let progress = await axios.get(fullIp + "/collections/bpmGenerationProgress")
       this.progressSource.next(progress.data)
     }, 200)
     await axios.post(fullIp + "/collections/generateBPMChanges", { collection: collection, bpm: bpm })
