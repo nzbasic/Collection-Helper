@@ -17,11 +17,57 @@ ffmpeg.setFfmpegPath(pathToFfmpeg)
 
 export let generationBpmProgress = 0
 
+const ffmpegSync = async (audioPath: string, atempo: string, output: string) => {
+  return new Promise<void>((resolve, reject) => {
+    if (!fs.existsSync(output)) {
+      ffmpeg().input(audioPath).audioFilters(atempo).output(output).on('end', () => resolve()).run();
+    } else {
+      resolve()
+    }
+  })
+}
+
+const calculateFullTempo = (rate: number): string => {
+  const total = []
+
+  let condition: (value: number) => boolean
+  let def: number;
+  if (rate > 2) {
+    def = 2;
+    condition = (value) => value/def > 1
+  } else if (rate < 0.5) {
+    def = 0.5;
+    condition = (value) => value/def < 1
+  } else {
+    return "atempo=" + rate
+  }
+
+  while (true) {
+    if (condition(rate)) {
+      total.push(def)
+      rate = rate/def
+    } else {
+      total.push(rate)
+      break
+    }
+  }
+
+  let output = ""
+  for (let i = 0; i < total.length; i++) {
+    output += "atempo=" + total[i]
+    if (i != total.length-1) {
+      output += ","
+    }
+  }
+
+  return output
+}
+
 export const generateBPMChanges = async (collection: Collection, bpm: number) => {
   const osuPath = await getOsuPath()
   const setIdsGenerated = new Set<number>()
   const successfulHashes: string[] = []
-  let numberComplete = -1;
+  let numberComplete = 0;
   for (const hash of collection.hashes) {
     numberComplete++;
     const beatmap = beatmapMap.get(hash)
@@ -34,15 +80,17 @@ export const generateBPMChanges = async (collection: Collection, bpm: number) =>
       const folderPath = songsPath + newBeatmap.folderName
       const audioPath = folderPath + "/" + newBeatmap.audioFile
       const filePath = folderPath + "/" + newBeatmap.fileName
-      const newAudioFile = "audio " + rateChange + "x speed.mp3"
+      const newAudioFile = "audio " + bpm + "bpm.mp3"
       const output = folderPath + "/" + newAudioFile
 
+      const atempo = calculateFullTempo(rateChange)
+
       if (!setIdsGenerated.has(newBeatmap.setId)) {
-        ffmpeg().input(audioPath).audioFilters("atempo=" + rateChange).output(output).run()
+        await ffmpegSync(audioPath, atempo, output)
         setIdsGenerated.add(newBeatmap.setId)
       }
 
-      const newDiffName = newBeatmap.difficulty + " " + bpm + "bpm"
+      const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + " " + bpm + "bpm"
       const newPath = createNewFilePath(newDiffName, newBeatmap, filePath)
       const contents = await bpmChangeFileConstructor(filePath, newBeatmap, newDiffName, newAudioFile)
 
@@ -60,9 +108,14 @@ export const generateBPMChanges = async (collection: Collection, bpm: number) =>
   }
 
   let name = collection.name + " @ " + bpm + "bpm"
-  const found = collections.collections.find(collection => collection.name == newName)
-  if (found) {
-    await removeCollections([newName])
+  let i = 0
+  while (true) {
+    const newName = name + (i == 0 ? "" : (" (" + (i) + ")"))
+    if (!collections.collections.find(item => item.name == newName)) {
+      name = newName
+      break
+    }
+    i++;
   }
 
   await addCollection(name, successfulHashes)
@@ -113,7 +166,7 @@ const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path
 
   for (let timingPoint of clonedBeatmap.timingPoints) {
     if (timingPoint.inherited) {
-      timingPoint.bpm = Math.round(timingPoint.bpm*inverseRateChange)
+      timingPoint.bpm = timingPoint.bpm*inverseRateChange
     }
     timingPoint.offset = Math.round(timingPoint.offset*inverseRateChange)
   }
@@ -152,7 +205,7 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
       const hitObject = beatmap.hitObjects[hitObjectIndex]
       if (hitObject) {
         contents[2] = hitObject.time + ""
-        output += contents.join(",") + "\n";
+        output += contents.join(",") + "\r\n";
         hitObjectIndex++
       }
     } else if (timingPointsFlag && line != "") {
@@ -163,20 +216,22 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
         }
         contents[0] = timingPoint.offset + ""
 
-        output += contents.join(",") + "\n";
+        output += contents.join(",") + "\r\n";
         timingPointIndex++
       }
     } else {
       if (line.startsWith("Version")) {
-        output += "Version:" + diffName + "\n"
+        output += "Version:" + diffName + "\r\n"
       } else if (line.startsWith("AudioFilename")) {
-        output += "AudioFilename:" + audioFile + "\n"
+        output += "AudioFilename: " + audioFile + "\r\n"
       } else if (line.startsWith("ApproachRate")) {
-        output += "ApproachRate:" + beatmap.ar + "\n"
+        output += "ApproachRate:" + Math.round(beatmap.ar * 10) / 10 + "\r\n"
       } else if (line.startsWith("OverallDifficulty")) {
-        output += "OverallDifficulty:" + beatmap.od + "\n"
+        output += "OverallDifficulty:" + Math.round(beatmap.od * 10) / 10 + "\r\n"
+      } else if (line.startsWith("osu file format")) {
+        output += "osu file format v14\r\n"
       } else {
-        output += line + "\n"
+        output += line + "\r\n"
       }
     }
 
