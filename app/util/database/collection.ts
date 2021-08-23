@@ -130,7 +130,6 @@ export const importCollection = async (path: string, name: string, multiple: boo
   const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
   const numberBeatmaps = await database.get("SELECT count(*) AS number FROM beatmaps")
   const collection = await database.get("SELECT * FROM collection")
-  console.log(collection)
 
   const number = numberBeatmaps.number
   const exportBeatmaps = collection.beatmaps == 1
