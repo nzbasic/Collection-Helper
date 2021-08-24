@@ -6,7 +6,6 @@
 @import "~@fontsource/open-sans";
 @import "~ngx-toastr/toastr";
 
-
 html,
 body {
   margin: 0;
@@ -26,6 +25,10 @@ input[type=checkbox]:checked:after {
   @apply text-black dark:text-white;
 }
 
+ngx-slider {
+  margin: 0 !important;
+}
+
 .ngx-form-checkbox {
   padding: .2rem .4rem .4rem 0rem !important;
 }
@@ -41,13 +44,13 @@ input[type=checkbox]:checked:after {
 }
 
 .modal {
-  margin-left: -15rem;
+  margin-left: -16rem;
   animation: fadeIn .5s;
   @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }
 
 .modal-help {
-  margin-left: -14rem;
+  margin-left: -15rem;
   animation: fadeIn .5s;
   @apply dark:bg-gray-700 dark:bg-opacity-70 top-0 z-20 w-screen h-screen bg-gray-400 bg-opacity-60 inline-flex flex-row items-center justify-center;
 }

@@ -14,6 +14,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DropdownListModule } from 'ngx-dropdown-list';
 import { UiSwitchModule } from 'ngx-ui-switch'
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -42,6 +43,7 @@ import { FilterSelectComponent } from './components/filter-select/filter-select.
 import { CollectionDropdownComponent } from './components/collection-dropdown/collection-dropdown.component';
 import { PracticeDiffsComponent } from './pages/practice-diffs/practice-diffs.component';
 import { BpmChangerComponent } from './pages/bpm-changer/bpm-changer.component';
+import { ValueOverrideSliderComponent } from './components/value-override-slider/value-override-slider.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -72,6 +74,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     CollectionDropdownComponent,
     PracticeDiffsComponent,
     BpmChangerComponent,
+    ValueOverrideSliderComponent,
   ],
   imports: [
     BrowserModule,
@@ -94,7 +97,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     DropdownListModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    UiSwitchModule
+    UiSwitchModule,
+    NgxSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
