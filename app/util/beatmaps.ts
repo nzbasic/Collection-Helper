@@ -314,6 +314,10 @@ const applyNumberFilter = (operator: string, filterValue: number, mapValue: numb
 
 const applyStringFilter = (operator: string, filterValue: string, mapValue: string): boolean => {
 
+  if (!mapValue) {
+    return false
+  }
+
   if (((operator == "=") || (operator == "==")) && (filterValue.toLowerCase() == mapValue.toLowerCase())) {
     return true
   } else if ((operator == "!=") && (filterValue.toLowerCase() != mapValue.toLowerCase())) {
