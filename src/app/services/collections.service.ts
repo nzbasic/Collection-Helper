@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import axios from "axios";
 import { BehaviorSubject } from "rxjs";
-import { Collection, Collections } from "../../../models/collection";
+import { BpmChangerOptions, Collection, Collections } from "../../../models/collection";
 import { fullIp } from "../app.component";
 import * as bytes from 'bytes'
 
@@ -128,12 +128,12 @@ export class CollectionsService {
     this.progressSource.next(0)
   }
 
-  async generateBPM(collection: Collection, bpm: number) {
+  async generateBPM(collection: Collection, options: BpmChangerOptions) {
     let progressInterval = setInterval(async () => {
       let progress = await axios.get(fullIp + "/collections/bpmGenerationProgress")
       this.progressSource.next(progress.data)
     }, 200)
-    await axios.post(fullIp + "/collections/generateBPMChanges", { collection: collection, bpm: bpm })
+    await axios.post(fullIp + "/collections/generateBPMChanges", { collection: collection, options: options })
     clearInterval(progressInterval)
     this.progressSource.next(0)
   }

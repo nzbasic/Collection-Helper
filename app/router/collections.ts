@@ -6,7 +6,7 @@ import { win } from '../main'
 import { exportCollection, exportPercentage, importCollection, importPercentage } from "../util/database/collection";
 import { beatmapMap } from "../util/parsing/cache";
 import * as log from 'electron-log'
-import { Collection } from "../../models/collection";
+import { BpmChangerOptions, Collection } from "../../models/collection";
 import { generatePracticeDiffs, generationPercentage } from "../util/practice";
 import { generateBPMChanges, generationBpmProgress } from "../util/bpm";
 
@@ -131,8 +131,8 @@ router.route("/generatePracticeDiffs").post(async (req, res) => {
 })
 
 router.route("/generateBPMChanges").post(async (req, res) => {
-  const body: { collection: Collection, bpm: number } = req.body
-  await generateBPMChanges(body.collection, body.bpm)
+  const body: { collection: Collection, options: BpmChangerOptions } = req.body
+  await generateBPMChanges(body.collection, body.options)
   res.json()
 })
 
