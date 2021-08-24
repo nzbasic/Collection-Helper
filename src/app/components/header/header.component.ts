@@ -68,7 +68,11 @@ export class HeaderComponent implements OnInit {
       "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
     ]})
 
-
+    this.dict.set(Display.BPM_CHANGER, { title: "Mass Difficulty Changer", lines: [
+      "The mass difficulty changer allows you to create large numbers of new difficulties of maps with the difficulty values you want.",
+      "Changing the bpm will generate new audio files for every beatmap set which could take a few minutes.",
+      "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
+    ]})
   }
 
   ngOnInit(): void {
