@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Collection } from '../../../../models/collection';
+import { BpmChangerOptions, Collection, Override } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
 import * as bytes from 'bytes'
 import { Subscription } from 'rxjs';
+import { TitleService } from '../../services/title.service';
 
 @Component({
   selector: 'app-bpm-changer',
@@ -13,17 +14,29 @@ export class BpmChangerComponent implements OnInit {
 
   public selected: Collection;
   private progressSubscription: Subscription;
-  public bpm = "240";
+  public inputValueBpm = "240";
   public percentage = 0
   public generatingModal = false
   public warning = false
   public estimateSize: string
+  public options: BpmChangerOptions = {
+    bpm: { value: 240, enabled: true },
+    ar: { value: 9.5, enabled: false },
+    od: { value: 9, enabled: false },
+    cs: { value: 4, enabled: false },
+    hp: { value: 8, enabled: false }
+  }
 
   public lines = [
     "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
   ];
 
-  constructor(private collectionsService: CollectionsService, private toastr: ToastrService) { }
+  constructor(private collectionsService: CollectionsService, private toastr: ToastrService, private titleService: TitleService) {
+    this.titleService.changeTitle({
+      title: "Mass Difficulty Changer",
+      subtitle: "Alter the difficulty settings of every map in a collection",
+    });
+  }
 
   ngOnInit(): void {
     this.progressSubscription = this.collectionsService.progressCurrent.subscribe(progress => {
@@ -35,6 +48,29 @@ export class BpmChangerComponent implements OnInit {
     this.progressSubscription.unsubscribe()
   }
 
+  inputBpmUpdate(): void {
+    this.options.bpm.value = parseInt(this.inputValueBpm)
+
+    if (!this.options.bpm.value) {
+      this.options.bpm.enabled = false
+      this.options.bpm.value = 0
+    }
+    this.updateEstimate()
+  }
+
+  async updateEstimate() {
+    if (this.selected != null) {
+      const setCount = await this.collectionsService.getSetCount(this.selected?.hashes??[])
+      if (this.options.bpm.enabled && this.options.bpm.value) {
+        this.estimateSize = bytes(setCount * 3000000)
+      } else {
+        this.estimateSize = bytes(this.selected?.hashes?.length??0 * 25000)
+      }
+    } else {
+      this.estimateSize = null;
+    }
+  }
+
   bpmChange(event) {
     const separator  = '^([0-9])';
     const maskSeparator =  new RegExp(separator , 'g');
@@ -44,17 +80,12 @@ export class BpmChangerComponent implements OnInit {
 
   async onChange(selected: Collection) {
     this.selected = selected;
-    if (selected != null) {
-      const setCount = await this.collectionsService.getSetCount(selected.hashes)
-      this.estimateSize = bytes(setCount * 3000000)
-    } else {
-      this.estimateSize = null;
-    }
+    this.updateEstimate()
   }
 
   async generate() {
     this.generatingModal = true
-    await this.collectionsService.generateBPM(this.selected, parseInt(this.bpm));
+    await this.collectionsService.generateBPM(this.selected, this.options);
     this.generatingModal = false
     this.warning = true
     this.toastr.success("Practice difficulties created!", "Success")
@@ -62,5 +93,20 @@ export class BpmChangerComponent implements OnInit {
 
   hideWarning(): void {
     this.warning = false
+  }
+
+  generationDisabled(): boolean {
+    if (!this.selected) {
+      return true
+    }
+
+    const overrides: Override[] = Object.values(this.options)
+    for (const override of overrides) {
+      if (override.enabled) {
+        return false
+      }
+    }
+
+    return true
   }
 }

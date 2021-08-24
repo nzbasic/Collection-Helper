@@ -75,6 +75,7 @@
     "lint": "ng lint"
   },
   "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "12.1.1",
     "@angular/cdk": "12.1.1",
     "@angular/common": "12.0.5",

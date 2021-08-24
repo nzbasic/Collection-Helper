@@ -1,17 +1,37 @@
 <div class="flex flex-col p-4">
-  <span class="text-lg mb-4">Changes the BPM of every map in a collection to a set number by generating new maps.</span>
-  <span class="text-lg">The most common BPM of a map (seen in osu! in brackets) will be used, and every other timing point will be scaled accordingly.</span>
-  <span class="text-lg mb-4">A new collection will be created with all of the newly generated maps.</span>
+  <span class="text-lg mb-4">For each map in a collection, a new one will be generated with your selected difficulty overrides.</span>
+  <span class="text-lg">If you choose to override BPM, new audio files will be generated.</span>
+  <span class="text-lg">If a map has multiple timing points, the most common BPM of a map (seen in osu! in brackets) will be used as a base, and every other timing point will be scaled accordingly.</span>
+  <span class="text-lg mt-4 mb-4">A new collection will be created with all of the newly generated maps.</span>
   <div class="flex flex-row items-center">
-    <span>Collection:</span>
+    <span class="w-32">Collection:</span>
+    <input type="checkbox" class="invisible">
     <app-collection-dropdown class="ml-4 z-10 w-96 h-10" (emitter)="onChange($event)" placeHolder="None Selected"></app-collection-dropdown>
   </div>
   <div class="flex flex-row items-center mt-4">
-    <span>BPM: </span>
-    <input class="ml-4 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="bpm" (keypress)="bpmChange($event)">
+    <span class="w-32">BPM Override</span>
+    <input type="checkbox" [(ngModel)]="options.bpm.enabled" (ngModelChange)="updateEstimate()">
+    <input class="ml-4 w-96 border border-gray-700 dark:bg-dark1 dark:border-black focus:outline-none" type="text" [(ngModel)]="inputValueBpm" (keypress)="bpmChange($event)" (ngModelChange)="inputBpmUpdate()">
   </div>
-  <div class="flex flex-row items-center mt-4 ">
-    <button [disabled]="!selected" [ngClass]="!selected ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="button w-24">Generate</button>
+  <div class="flex flex-row items-center mt-6">
+    <span class="w-32">AR Override</span>
+    <app-value-override-slider [(value)]="options.ar.value" [(enabled)]="options.ar.enabled"></app-value-override-slider>
+  </div>
+  <div class="flex flex-row items-center mt-6">
+    <span class="w-32">OD Override</span>
+    <app-value-override-slider [(value)]="options.od.value" [(enabled)]="options.od.enabled"></app-value-override-slider>
+  </div>
+  <div class="flex flex-row items-center mt-6">
+    <span class="w-32">HP Override</span>
+    <app-value-override-slider [(value)]="options.hp.value" [(enabled)]="options.hp.enabled"></app-value-override-slider>
+  </div>
+  <div class="flex flex-row items-center mt-6">
+    <span class="w-32">CS Override</span>
+    <app-value-override-slider [(value)]="options.cs.value" [(enabled)]="options.cs.enabled"></app-value-override-slider>
+  </div>
+
+  <div class="flex flex-row items-center mt-6">
+    <button [disabled]="generationDisabled()" [ngClass]="generationDisabled() ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="generate()" class="button w-24">Generate</button>
     <span *ngIf="estimateSize" class="ml-4">Estimate Size Increase: {{estimateSize}}</span>
   </div>
 </div>
