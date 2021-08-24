@@ -135,6 +135,7 @@ export class EditComponent implements OnInit, OnDestroy {
     } else if ($event.event == "onOrder") {
       this.ordering.header = $event.value.key.toLowerCase()
       this.ordering.order = $event.value.order
+      this.pageNumber = 1
       this.updateCurrentlyShown(true)
     }
   }
