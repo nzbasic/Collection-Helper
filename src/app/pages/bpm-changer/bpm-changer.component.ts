@@ -49,7 +49,7 @@ export class BpmChangerComponent implements OnInit {
   }
 
   inputBpmUpdate(): void {
-    this.options.bpm.value = parseInt(this.inputValueBpm)
+    this.options.bpm.value = parseInt(this.inputValueBpm, 10)
 
     if (!this.options.bpm.value) {
       this.options.bpm.enabled = false

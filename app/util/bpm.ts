@@ -276,9 +276,9 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
     if (hitObjectsFlag && line != "") {
       const hitObject = beatmap.hitObjects[hitObjectIndex]
       if (hitObject) {
-        const type = parseInt(contents[3])
+        const type = parseInt(contents[3], 10)
         if ((type & (1<<3)) != 0) {
-          const endSpinner = parseInt(contents[5])
+          const endSpinner = parseInt(contents[5], 10)
           if (rateChange != 0) {
             contents[5] = (endSpinner * 1/rateChange) + ""
           }
