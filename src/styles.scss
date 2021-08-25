@@ -10,6 +10,14 @@
   @apply border-2 dark:bg-black dark:border-white #{!important};
 }
 
+.ngx-slider-bar {
+  @apply dark:bg-black #{!important};
+}
+
+.ngx-slider[disabled] .ngx-slider-pointer {
+  @apply dark:bg-black #{!important};
+}
+
 html,
 body {
   margin: 0;
