@@ -108,7 +108,7 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
             atempo = calculateFullTempo(rateChange)
           }
 
-          const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + (options.bpm.enabled ? (" " + bpm + "bpm") : "")
+          const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + getAddonName(options).replace(/[<>:"/\\|?*]/g, "")
           const newPath = createNewFilePath(newDiffName, newBeatmap, filePath)
 
           newBeatmap.difficulty = newDiffName
@@ -116,9 +116,6 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
 
           const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
           fs.writeFile(newPath, contents, e => {
-            if (e) {
-              log.error(e)
-            }
           })
 
           const hashSum = crypto.createHash('md5')
@@ -157,15 +154,7 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
     })
   }
 
-  let addon = " ("
-  for (const key of Object.keys(options)) {
-    if (options[key].enabled) {
-      addon += key + ": " + options[key].value + " "
-    }
-  }
-  addon = addon.slice(0, -1) + ")"
-
-  let name = collection.name + addon
+  let name = collection.name + getAddonName(options)
   let i = 0
   while (true) {
     const newName = name + (i == 0 ? "" : (" (" + (i) + ")"))
@@ -177,6 +166,16 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
   }
 
   await addCollection(name, successfulHashes)
+}
+
+const getAddonName = (options: BpmChangerOptions): string => {
+  let addon = " ("
+  for (const key of Object.keys(options)) {
+    if (options[key].enabled) {
+      addon += key + ": " + options[key].value + " "
+    }
+  }
+  return addon.slice(0, -1) + ")"
 }
 
 const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path: string, options: BpmChangerOptions): Promise<Beatmap> => {
@@ -198,6 +197,8 @@ const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path
   }
 
   if (options.bpm.enabled && options.bpm.value) {
+    clonedBeatmap.previewTime = Math.round(clonedBeatmap.previewTime * inverseRateChange)
+
     for (let timingPoint of clonedBeatmap.timingPoints) {
       if (timingPoint.inherited) {
         timingPoint.bpm = timingPoint.bpm*inverseRateChange
@@ -275,29 +276,31 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChan
 
   let hitObjectsFlag = false
   let timingPointsFlag = false
+  let eventsFlag = false
   let hitObjectIndex = 0
   let timingPointIndex = 0
-
   const toUpdate = [
     { name: "ApproachRate:", value: "ar", needRounding: true },
     { name: "OverallDifficulty:", value: "od", needRounding: true },
     { name: "HPDrainRate:", value: "hp", needRounding: true },
     { name: "CircleSize:", value: "cs", needRounding: true },
+    { name: "PreviewTime:", value: "previewTime", needRounding: true },
     { name: "Version:", value: "difficulty" },
     { name: "AudioFilename:", value: "audioFile" }
   ]
 
   for (const line of lines) {
     let contents: string[]
-    if (hitObjectsFlag || timingPointsFlag) {
+    if (hitObjectsFlag || timingPointsFlag || eventsFlag) {
       if (line == "") {
         hitObjectsFlag = false
         timingPointsFlag = false
+        eventsFlag = false
       }
 
       contents = line.split(",");
-      if (contents.length < 4) {
-        return;
+      if (contents.length < 3) {
+        continue;
       }
     }
 
@@ -308,7 +311,7 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChan
         if ((type & (1<<3)) != 0) {
           const endSpinner = parseInt(contents[5], 10)
           if (rateChange != 0) {
-            contents[5] = (endSpinner * 1/rateChange) + ""
+            contents[5] = Math.round((endSpinner * 1/rateChange)) + ""
           }
         }
         contents[2] = hitObject.time + ""
@@ -326,12 +329,18 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChan
         output += contents.join(",") + "\r\n";
         timingPointIndex++
       }
+    } else if (eventsFlag && line != "") {
+      if (contents[0] == "2") {
+        contents[1] = Math.round((parseInt(contents[1]) * 1/rateChange)) + ""
+        contents[2] = Math.round((parseInt(contents[2]) * 1/rateChange)) + ""
+        output += contents.join(",") + "\r\n";
+      }
     } else {
 
       let flag = true
       for (const item of toUpdate) {
         if (line.startsWith(item.name)) {
-          const value = item.needRounding ? oneDpRounder(beatmap[item.value]) : item.value
+          const value = item.needRounding ? oneDpRounder(beatmap[item.value]) : beatmap[item.value]
           output += item.name + value + "\r\n"
           flag = false
         }
@@ -350,6 +359,8 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChan
       hitObjectsFlag = true
     } else if (line == "[TimingPoints]") {
       timingPointsFlag = true
+    } else if (line == "[Events]") {
+      eventsFlag = true
     }
   }
 
