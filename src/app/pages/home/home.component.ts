@@ -148,7 +148,7 @@ export class HomeComponent implements OnInit {
       this.loading = true
       await this.collectionsService.mergeCollections(res, Array.from(this.selected))
       this.toastr.success('The selected collections have been merged into a new collection', 'Success')
-      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
+      this.setCollections()
       this.loading = false
     }
     this.selected = new Set<string>()

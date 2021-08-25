@@ -107,7 +107,7 @@ export class CollectionsService {
     return (await axios.post(fullIp + "/collections/setCount", { hashes: hashes })).data
   }
 
-  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<string> {
+  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<number> {
     let size = 28672
     const setCount = await this.getSetCount(collection.hashes)
 
