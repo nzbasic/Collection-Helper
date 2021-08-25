@@ -47,19 +47,17 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
       }
 
       const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
-      const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
+      const songPath = songsPath + beatmap.folderName
+      const filePath = songPath + "/" + beatmap.fileName
       const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
-      const fullPath = createNewFilePath(newDiffName, beatmap, path)
-      const contents = await practiceFileConstructor(path, window, newDiffName)
+      const fullPath = createNewFilePath(newDiffName, songPath)
+      const contents = await practiceFileConstructor(filePath, window, newDiffName)
 
       const hashSum = crypto.createHash('md5')
       hashSum.update(contents)
       hashes.push(hashSum.digest('hex'))
-      fs.writeFile(fullPath, contents, e => {
-        if (e) {
-          log.error(e)
-        }
-      })
+
+      await fs.promises.writeFile(fullPath, contents)
     }
     i++;
     generationPercentage = (i / collection.hashes.length) * 100
@@ -68,12 +66,9 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
   await addCollection(newName, hashes)
 }
 
-export const createNewFilePath = (newDiffName: string, beatmap: Beatmap, path: string): string => {
-  const diffNameBrackets = "[" + newDiffName + "]"
-  const regex = new RegExp("\\[" + beatmap.difficulty.replace(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]+/g, "") + "\\].osu$", 'gi')
-  const newPath = path.replace(regex, diffNameBrackets) + ".osu"
-  const fullPath = newPath.length < 240 ? newPath : (diffNameBrackets + ".osu")
-  return fullPath
+export const createNewFilePath = (newDiffName: string, songPath: string): string => {
+  const path = songPath + "/" + "collection helper [" + newDiffName + "]"
+  return path.slice(0,240) + ".osu"
 }
 
 const practiceFileConstructor = async (path: string, window: Window, diffName: string): Promise<string> => {
