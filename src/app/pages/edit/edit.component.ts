@@ -34,6 +34,7 @@ export class EditComponent implements OnInit, OnDestroy {
   private numberSubscription: Subscription
   public selectedCollection: Collection = {name: "", numberMaps: 0, hashes: []}
   public selectedFilters: string[] = []
+  public names: Set<string>
 
   public filterNumber = 0
   public isCollectionShown = true
@@ -47,6 +48,7 @@ export class EditComponent implements OnInit, OnDestroy {
   public isChangingCollection = false
   public customApplied = false
   private lastSearchTerm = ""
+  public newCollection = false
 
   constructor(private toastr: ToastrService,
     private filterService: FilterService,
@@ -75,6 +77,8 @@ export class EditComponent implements OnInit, OnDestroy {
     this.numberSubscription = this.filterService.filterNumber.subscribe((filterNumber: number) => {
       this.filterNumber = filterNumber
     })
+
+    this.names = new Set(this.collectionsService.getCollections().map(collection => collection.name.toLowerCase()))
 
     this.beatmapColumns = [
       { key: 'song', title: 'Song', width: '15%' },
@@ -206,5 +210,18 @@ export class EditComponent implements OnInit, OnDestroy {
 
   openUrl(setId: number): void {
     this.utilService.openUrl("https://osu.ppy.sh/beatmapsets/" + setId)
+  }
+
+  createNewCollectionWithSelected() {
+    this.newCollection = true
+  }
+
+  async newCollectionResponse(res: string) {
+    this.newCollection = false
+    if (res) {
+      await this.collectionsService.addCollection(res, Array.from(this.selected))
+      this.toastr.success('A new collection has been created from the selected maps', 'Success')
+      this.names.add(res.toLowerCase())
+    }
   }
 }

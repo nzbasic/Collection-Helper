@@ -11,6 +11,7 @@
       <button *ngIf="isCollectionShown" (click)="showRemoveModal()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-red-disabled' : 'button-red-enabled'" class="ml-4 button">Remove from Collection</button>
       <app-filter-select [ngClass]="filterNumber ? 'w-52' : ''" class="ml-4 text-sm z-10" (emitter)="changeSelected($event)"></app-filter-select>
       <span class="ml-4 text-lg">{{selected.size}} Maps Selected</span>
+      <button *ngIf="selected.size" (click)="createNewCollectionWithSelected()" class="ml-4 button button-green-enabled">Add Selected to New Collection</button>
     </div>
   </div>
 
@@ -73,5 +74,6 @@
 
 <app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Map(s)" text="Are you sure you want to remove the map(s) from the collection(s)? This action CAN be undone if you restore your backup." confirmText="Remove"></app-confirm-modal>
 <app-loading-bar *ngIf="isChangingCollection" text="Writing Collection..." mode="indeterminate"></app-loading-bar>
+<app-rename-modal *ngIf="newCollection" (response)="newCollectionResponse($event)" title="Name for new collection" [list]="names" value="" action="Add"></app-rename-modal>
 
 
