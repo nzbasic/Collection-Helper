@@ -331,8 +331,8 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChan
       }
     } else if (eventsFlag && line != "") {
       if (contents[0] == "2") {
-        contents[1] = Math.round((parseInt(contents[1]) * 1/rateChange)) + ""
-        contents[2] = Math.round((parseInt(contents[2]) * 1/rateChange)) + ""
+        contents[1] = Math.round((parseInt(contents[1], 10) * 1/rateChange)) + ""
+        contents[2] = Math.round((parseInt(contents[2], 10) * 1/rateChange)) + ""
         output += contents.join(",") + "\r\n";
       }
     } else {
