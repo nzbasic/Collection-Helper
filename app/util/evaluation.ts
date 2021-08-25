@@ -71,7 +71,7 @@ export const testFilter = async (filter: string, getHitObjects: boolean, name: s
     filteredText = filtered
   } else {
     try {
-      filteredText = JSON.stringify(filtered.map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
+      filteredText = JSON.stringify(filtered.filter(item => item).map(({artist, song, creator, difficulty, bpm}) => ({artist, song, creator, difficulty, bpm})), null, 2)
     } catch(error) {
       filteredText = error.message
     }

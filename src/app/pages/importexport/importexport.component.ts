@@ -7,6 +7,7 @@ import { SelectCollection } from "../../components/collection-dropdown/collectio
 import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
 import { UtilService } from "../../services/util.service";
+import * as bytes from 'bytes'
 
 @Component({
   selector: "app-importexport",
@@ -14,17 +15,19 @@ import { UtilService } from "../../services/util.service";
 })
 export class ImportexportComponent implements OnInit, OnDestroy {
 
-  public selected: Collection
+  public selected: Collection[] = []
   private collections: Collection[]
   private percentageSubscription: Subscription
+  private multipleImportExportSubscription: Subscription
+  public multipleNumberProgress = 1;
   public exportBeatmaps = true
-  public path = ""
   public newName = ""
   public estimatedSize = ""
   public exporting = false
   public percentage = 0
   public warning = false
   public importing = false
+  public importMultiple = false;
 
   public lines = [
     "You will need to launch/relaunch osu! AND refresh cache in this client for new maps or new collections to load.",
@@ -44,13 +47,17 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.percentageSubscription = this.collectionService.progressCurrent.subscribe(progress => {
-      this.exporting = progress != 0
       this.percentage = progress
+    })
+
+    this.multipleImportExportSubscription = this.collectionService.multipleImportExport.subscribe(number => {
+      this.multipleNumberProgress = number
     })
   }
 
   ngOnDestroy(): void {
     this.percentageSubscription.unsubscribe()
+    this.multipleImportExportSubscription.unsubscribe()
   }
 
   exists(): boolean {
@@ -59,7 +66,7 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   export(): void {
     this.exporting = true
-    this.collectionService.exportCollection(this.selected.name, this.exportBeatmaps, this.path).then((res) => {
+    this.collectionService.exportCollection(this.selected, this.exportBeatmaps).then((res) => {
       if (res) {
         this.toastr.success("Collection exported", "Success")
       }
@@ -68,8 +75,9 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   }
 
   import(): void {
+    this.exporting = false
     this.importing = true
-    this.collectionService.importCollection(this.newName).then((res) => {
+    this.collectionService.importCollection(this.newName, this.importMultiple).then((res) => {
       if (typeof res === "string") {
         this.toastr.error(res, "Error")
       } else {
@@ -83,18 +91,26 @@ export class ImportexportComponent implements OnInit, OnDestroy {
     })
   }
 
-  async onChange(selected: Collection) {
-    if (selected) {
-      this.estimatedSize = await this.collectionService.getEstimatedSize(selected, this.exportBeatmaps)
-    } else {
-      this.estimatedSize = ""
-    }
+  async onChange(selected: Collection[]) {
     this.selected = selected
+    this.calculateSize()
   }
 
   async selectExportBeatmaps() {
-    this.exportBeatmaps = !this.exportBeatmaps
-    this.estimatedSize = await this.collectionService.getEstimatedSize(this.selected, this.exportBeatmaps)
+    this.calculateSize()
+  }
+
+  async calculateSize() {
+    if (this.selected.length) {
+      this.estimatedSize = ""
+      let size = 0;
+      for (const collection of this.selected) {
+        size += await this.collectionService.getEstimatedSize(collection, this.exportBeatmaps)
+      }
+      this.estimatedSize = bytes(size)
+    } else {
+      this.estimatedSize = ""
+    }
   }
 
   hideWarning(): void {
@@ -103,5 +119,9 @@ export class ImportexportComponent implements OnInit, OnDestroy {
 
   openCollectionsDrive() {
     this.utilService.openUrl("https://drive.google.com/drive/folders/1PBtYMH5EmrAezc8wQdLd8cMiozddYhRZ?usp=sharing")
+  }
+
+  openImportVideo() {
+    this.utilService.openUrl("https://www.youtube.com/watch?v=Su9Av0jSX_U")
   }
 }

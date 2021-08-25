@@ -31,7 +31,7 @@ router.route("/rename").post(async (req, res) => {
 
 router.route("/merge").post(async (req, res) => {
   //log.info("[API] /collections/merge called " + JSON.stringify(req.body))
-  await mergeCollections(req.body)
+  await mergeCollections(req.body.newName, req.body.names)
   res.json(collections)
 })
 
@@ -55,14 +55,41 @@ router.route("/removeMaps").post(async (req, res) => {
   res.json(collections)
 })
 
+let multipleFolderPath = "";
 router.route("/export").post(async (req, res) => {
   //log.info("[API] /collections/export called " + JSON.stringify(req.body))
   let fileName: string = req.body.name
+  let multiple: boolean = req.body.multiple
+  let last = true
   fileName = fileName.replace(/[<>:"/\\|?*]/g, '_')
 
-  const dialogRes = await dialog.showSaveDialog(win, {defaultPath: fileName, filters: [{ name: 'Collection Database File', extensions: ['db']}]})
+  let dialogRes: any
+  if (multiple) {
+    last = req.body.last
+    if (multipleFolderPath == "") {
+      dialogRes = await dialog.showOpenDialog(win, { properties: ['openDirectory'] })
+    } else {
+      dialogRes = { canceled: false }
+    }
+  } else {
+    dialogRes = await dialog.showSaveDialog(win, {defaultPath: fileName, filters: [{ name: 'Collection Database File', extensions: ['db']}]})
+  }
+
+  let path: string
   if (!dialogRes.canceled) {
-    await exportCollection(req.body.name, req.body.exportBeatmaps, dialogRes.filePath)
+    if (multiple) {
+      if (multipleFolderPath == "") {
+        multipleFolderPath = dialogRes.filePaths[0]
+      }
+
+      path = multipleFolderPath
+      if (last) {
+        multipleFolderPath = ""
+      }
+    } else {
+      path = dialogRes.filePath
+    }
+    await exportCollection(req.body.name, req.body.exportBeatmaps, multiple, path, last)
   }
 
   res.json(dialogRes)
@@ -70,17 +97,25 @@ router.route("/export").post(async (req, res) => {
 
 router.route("/import").post(async (req, res) => {
   //log.info("[API] /collections/import called " + JSON.stringify(req.body))
-  const dialogRes = await dialog.showOpenDialog(win, {filters: [{ name: 'Collection Database File', extensions: ['db']}]})
-  let error: void | string
-  if (!dialogRes.canceled) {
-    error = await importCollection(dialogRes.filePaths[0], req.body.name)
+  const multiple = req.body.multiple
+  const options = {properties: [], filters: [{ name: 'Collection Database File', extensions: ['db']}]}
+  if (multiple) {
+    options.properties.push('multiSelections')
   }
 
-  if (typeof error === "string") {
-    res.json({ error: error })
-  } else {
-    res.json({ collections: collections })
+  const dialogRes = await dialog.showOpenDialog(win, options)
+  let error: void | string
+  const errors: string[] = []
+  if (!dialogRes.canceled) {
+    for (let i = 0; i < dialogRes.filePaths.length; i++) {
+      error = await importCollection(dialogRes.filePaths[i], req.body.name, multiple, i==(dialogRes.filePaths.length-1))
+      if (typeof error === "string") {
+        errors.push(error)
+      }
+    }
   }
+
+  res.json({ collections: collections, errors: errors })
 })
 
 router.route("/setCount").post((req, res) => {

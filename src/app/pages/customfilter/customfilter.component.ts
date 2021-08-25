@@ -171,7 +171,11 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     this.componentService.changeComponent(Display.FILTERS)
   }
 
-  onCollectionChange(selected: Collection) {
-    this.selected = selected
+  onCollectionChange(selected: Collection[]) {
+    if (selected.length) {
+      this.selected = selected[0]
+    } else {
+      this.selected = null
+    }
   }
 }

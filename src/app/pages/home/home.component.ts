@@ -1,5 +1,5 @@
 import { AddResponse } from './../../components/add-modal/add-modal.component';
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Component, ComponentFactoryResolver, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Collection } from "../../../../models/collection";
 import { TitleService } from "../../services/title.service";
 import { Columns, Config } from "ngx-easy-table";
@@ -142,13 +142,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  async mergeResponse(status: boolean) {
+  async mergeResponse(res: string) {
     this.mergeModal = false
-    if (status) {
+    if (res) {
       this.loading = true
-      await this.collectionsService.mergeCollections(Array.from(this.selected))
-      this.toastr.success('The selected collections have been merged', 'Success')
-      this.setCollections( false)
+      await this.collectionsService.mergeCollections(res, Array.from(this.selected))
+      this.toastr.success('The selected collections have been merged into a new collection', 'Success')
+      this.setCollections(this.collectionsService.getCollections(this.inputValue, this.pageNumber))
       this.loading = false
     }
     this.selected = new Set<string>()

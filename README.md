@@ -78,6 +78,7 @@ The key features of **Collection Helper**:
 - Ability to create custom filters using javascript
 - Inbuilt stream and farm filters
 - Backup your collections
+- Automatically generate practice difficulties with configurable length
 
 </td>
 </tr>

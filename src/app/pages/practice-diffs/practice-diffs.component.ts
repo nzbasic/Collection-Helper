@@ -46,8 +46,12 @@ export class PracticeDiffsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  onChange(selected: Collection) {
-    this.selected = selected;
+  onChange(selected: Collection[]) {
+    if (selected.length) {
+      this.selected = selected[0];
+    } else {
+      this.selected = null;
+    }
   }
 
   async generate() {

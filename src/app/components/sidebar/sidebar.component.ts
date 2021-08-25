@@ -43,4 +43,8 @@ export class SidebarComponent implements OnInit {
   openTwitter() {
     this.utilService.openUrl("https://twitter.com/nzbasic")
   }
+
+  openVideo() {
+    this.utilService.openUrl("https://www.youtube.com/watch?v=gafuDhsAIC0")
+  }
 }

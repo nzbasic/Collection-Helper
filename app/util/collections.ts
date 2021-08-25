@@ -26,27 +26,18 @@ export const removeCollections = async (names: string[]) => {
   await writeCollections()
 }
 
-export const mergeCollections = async (names: string[]) => {
+export const mergeCollections = async (newName: string, names: string[]) => {
 
-  let toMerge: Collection[] = [];
-
+  const newHashes: Set<string> = new Set()
   for (const collection of collections.collections) {
     if (names.includes(collection.name)) {
-      toMerge.push(collection);
+      for (const hash of collection.hashes) {
+        newHashes.add(hash)
+      }
     }
   }
 
-  if (toMerge.length >=2) {
-    let original = toMerge[0]
-    for (let i = 1; i < toMerge.length; i++) {
-      original.hashes = original.hashes.concat(toMerge[i].hashes)
-    }
-    original.hashes = Array.from(new Set(original.hashes))
-    original.numberMaps = original.hashes.length
-    toMerge.shift()
-  }
-
-  removeCollections(toMerge.map(a => a.name))
+  await addCollection(newName, Array.from(newHashes))
 }
 
 export const addCollection = async (name: string, hashes: string[]) => {
