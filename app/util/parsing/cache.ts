@@ -231,7 +231,7 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   delete beatmap.modified;
   delete beatmap.onlineOffset;
   delete beatmap.osz2;
-  delete beatmap.previewTime;
+  //delete beatmap.previewTime;
   //delete beatmap.scrollSpeed;
   //delete beatmap.sliderVelocity;
   //delete beatmap.songSource;
