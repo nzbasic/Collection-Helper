@@ -211,7 +211,7 @@ export const importCollection = async (path: string, name: string, multiple: boo
 
     let i = 0
     while (true) {
-      const newName = names[names.length-1] + (i == 0 ? "" : (" (" + (i) + ")"))
+      const newName = names[names.length-1].slice(0, -3) + (i == 0 ? "" : (" (" + (i) + ")"))
       if (!collections.collections.find(item => item.name == newName)) {
         name = newName
         break
