@@ -110,7 +110,11 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
 
           const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + (options.bpm.enabled ? (" " + bpm + "bpm") : "")
           const newPath = createNewFilePath(newDiffName, newBeatmap, filePath)
-          const contents = await bpmChangeFileConstructor(filePath, newBeatmap, newDiffName, newAudioFile, rateChange)
+
+          newBeatmap.difficulty = newDiffName
+          newBeatmap.audioFile = newAudioFile
+
+          const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
           fs.writeFile(newPath, contents, e => {
             if (e) {
               log.error(e)
@@ -260,7 +264,11 @@ const calculateNewAr = (ar: Override, originalAr: number, inverseRateChange: num
 
 }
 
-const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName: string, audioFile: string, rateChange: number): Promise<string> => {
+const oneDpRounder = (value: number): number => {
+  return Math.round(value * 10) / 10
+}
+
+const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, rateChange: number): Promise<string> => {
   let output = "";
   const contents = await fs.promises.readFile(path)
   const lines = contents.toString("utf8").split(/\r?\n/);
@@ -269,7 +277,17 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
   let timingPointsFlag = false
   let hitObjectIndex = 0
   let timingPointIndex = 0
-  lines.forEach((line) => {
+
+  const toUpdate = [
+    { name: "ApproachRate:", value: "ar", needRounding: true },
+    { name: "OverallDifficulty:", value: "od", needRounding: true },
+    { name: "HPDrainRate:", value: "hp", needRounding: true },
+    { name: "CircleSize:", value: "cs", needRounding: true },
+    { name: "Version:", value: "difficulty" },
+    { name: "AudioFilename:", value: "audioFile" }
+  ]
+
+  for (const line of lines) {
     let contents: string[]
     if (hitObjectsFlag || timingPointsFlag) {
       if (line == "") {
@@ -309,22 +327,22 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
         timingPointIndex++
       }
     } else {
-      if (line.startsWith("Version")) {
-        output += "Version:" + diffName + "\r\n"
-      } else if (line.startsWith("AudioFilename")) {
-        output += "AudioFilename: " + audioFile + "\r\n"
-      } else if (line.startsWith("ApproachRate")) {
-        output += "ApproachRate:" + Math.round(beatmap.ar * 10) / 10 + "\r\n"
-      } else if (line.startsWith("OverallDifficulty")) {
-        output += "OverallDifficulty:" + Math.round(beatmap.od * 10) / 10 + "\r\n"
-      } else if (line.startsWith("HPDrainRate")) {
-        output += "HPDrainRate:" + Math.round(beatmap.hp * 10) / 10 + "\r\n"
-      } else if (line.startsWith("CircleSize")) {
-        output += "CircleSize:" + Math.round(beatmap.cs * 10) / 10 + "\r\n"
-      } else if (line.startsWith("osu file format")) {
-        output += "osu file format v14\r\n"
-      } else {
-        output += line + "\r\n"
+
+      let flag = true
+      for (const item of toUpdate) {
+        if (line.startsWith(item.name)) {
+          const value = item.needRounding ? oneDpRounder(beatmap[item.value]) : item.value
+          output += item.name + value + "\r\n"
+          flag = false
+        }
+      }
+
+      if (flag) {
+        if (line.startsWith("osu file format")) {
+          output += "osu file format v14\r\n"
+        } else {
+          output += line + "\r\n"
+        }
       }
     }
 
@@ -333,7 +351,7 @@ const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName
     } else if (line == "[TimingPoints]") {
       timingPointsFlag = true
     }
-  });
+  }
 
   return output
 }
