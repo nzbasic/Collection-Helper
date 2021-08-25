@@ -90,7 +90,7 @@ export class BpmChangerComponent implements OnInit {
 
   async generate() {
     this.generatingModal = true
-    await this.collectionsService.generateBPM(this.selected[0], this.options);
+    await this.collectionsService.generateBPM(this.selected, this.options);
     this.generatingModal = false
     this.warning = true
     this.toastr.success("Practice difficulties created!", "Success")
