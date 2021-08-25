@@ -14,3 +14,15 @@ export interface MissingMap {
   setId: number;
   md5: string
 }
+
+export interface Override {
+  value: number;
+  enabled: boolean
+}
+export interface BpmChangerOptions {
+  bpm: Override
+  ar: Override
+  hp: Override
+  cs: Override
+  od: Override
+}

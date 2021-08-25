@@ -170,28 +170,31 @@ const parseSr = (beatmap: Beatmap): number => {
 /**
  * Calculate beatmap most common bpm
  */
-const parseBpm = (beatmap: Beatmap): number => {
-  let timingMap = new Map<number, number>();
+export const parseBpm = (beatmap: Beatmap): number => {
+  const timingMap = new Map<number, number>();
   let lastTimingPoint: TimingPoint;
-  let firstFlag = false;
 
-  if (!beatmap.timingPoints.filter((point) => point.inherited).length) return 0;
+  const timingPoints = beatmap.timingPoints.filter(item => item.inherited)
+  if (!timingPoints.length) return 0;
 
-  beatmap.timingPoints.forEach((point, index) => {
-    if (point.inherited) {
-      if (!firstFlag) {
-        firstFlag = true;
-        lastTimingPoint = point;
-      } else {
-        timingMap.set(lastTimingPoint.bpm, timingMap.get(lastTimingPoint.bpm)??0 + point.offset - lastTimingPoint.offset)
-      }
-      lastTimingPoint = point;
+  if (timingPoints.length == 1) return Math.round(60000 / (timingPoints[0].bpm + Number.EPSILON))
+
+  lastTimingPoint = timingPoints[0]
+  for (let i = 1; i < timingPoints.length; i++) {
+    const timingPoint = timingPoints[i];
+    let time: number;
+
+    if (i == timingPoints.length - 1) {
+      time = beatmap.time - lastTimingPoint.offset
+    } else {
+      time = timingPoint.offset - lastTimingPoint.offset;
     }
 
-    if (index == beatmap.timingPoints.length - 1) {
-      timingMap.set(lastTimingPoint.bpm, timingMap.get(lastTimingPoint.bpm)??0 + beatmap.time - lastTimingPoint.offset)
-    }
-  });
+    const bpm = Math.round(60000 / (lastTimingPoint.bpm + Number.EPSILON))
+    lastTimingPoint = timingPoint;
+    const old = timingMap.get(bpm)??0
+    timingMap.set(bpm, time + old);
+  }
 
   let maxCount = 0;
   let mostCommonBpm = 0;
@@ -206,7 +209,7 @@ const parseBpm = (beatmap: Beatmap): number => {
     return 0
   }
 
-  return Math.ceil(60000 / mostCommonBpm);
+  return mostCommonBpm
 };
 
 /**
@@ -228,7 +231,7 @@ const deleteFields = (beatmap: Beatmap): Beatmap => {
   delete beatmap.modified;
   delete beatmap.onlineOffset;
   delete beatmap.osz2;
-  delete beatmap.previewTime;
+  //delete beatmap.previewTime;
   //delete beatmap.scrollSpeed;
   //delete beatmap.sliderVelocity;
   //delete beatmap.songSource;

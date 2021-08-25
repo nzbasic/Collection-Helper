@@ -46,13 +46,10 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
         continue;
       }
 
-      const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
-      const diffNameBrackets = "[" + newDiffName + "]"
       const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
       const path = songsPath + beatmap.folderName + "/" + beatmap.fileName
-      const regex = new RegExp("\\[" + beatmap.difficulty.replace(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]+/g, "") + "\\].osu$", 'gi')
-      const newPath = path.replace(regex, diffNameBrackets) + ".osu"
-      const fullPath = newPath.length < 240 ? newPath : (diffNameBrackets + ".osu")
+      const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
+      const fullPath = createNewFilePath(newDiffName, beatmap, path)
       const contents = await practiceFileConstructor(path, window, newDiffName)
 
       const hashSum = crypto.createHash('md5')
@@ -71,6 +68,14 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
   await addCollection(newName, hashes)
 }
 
+export const createNewFilePath = (newDiffName: string, beatmap: Beatmap, path: string): string => {
+  const diffNameBrackets = "[" + newDiffName + "]"
+  const regex = new RegExp("\\[" + beatmap.difficulty.replace(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]+/g, "") + "\\].osu$", 'gi')
+  const newPath = path.replace(regex, diffNameBrackets) + ".osu"
+  const fullPath = newPath.length < 240 ? newPath : (diffNameBrackets + ".osu")
+  return fullPath
+}
+
 const practiceFileConstructor = async (path: string, window: Window, diffName: string): Promise<string> => {
   let output = "";
   const contents = await fs.promises.readFile(path)
@@ -86,14 +91,16 @@ const practiceFileConstructor = async (path: string, window: Window, diffName: s
       const time = parseInt(contents[2]);
 
       if ((time >= window.startTime) && (time <= window.endTime)) {
-        output += line + "\n"
+        output += line + "\r\n"
       }
     } else {
 
       if (line.startsWith("Version")) {
-        output += "Version:" + diffName + "\n"
+        output += "Version:" + diffName + "\r\n"
+      } else if (line.startsWith("osu file format")) {
+        output += "osu file format v14\r\n"
       } else {
-        output += line + "\n"
+        output += line + "\r\n"
       }
     }
 

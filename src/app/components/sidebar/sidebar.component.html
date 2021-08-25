@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full bg-one dark:bg-black w-56 text-two items-left justify-between">
+<div class="flex flex-col h-full bg-one dark:bg-black w-60 text-two items-left justify-between">
 
   <div class="flex flex-col ">
     <!-- title -->
@@ -14,6 +14,7 @@
     <app-sidebar-button style="text-indent: 15px" text="Custom Filter" *ngIf="buttonSelected == Display.FILTERS || buttonSelected == Display.CUSTOM_FILTERS" [type]="Display.CUSTOM_FILTERS"></app-sidebar-button>
     <app-sidebar-button text="Import/Export"  [type]="Display.IMPORT_EXPORT"></app-sidebar-button>
     <app-sidebar-button text="Practice Diff Generator" [type]="Display.PRACTICE_DIFF_GENERATOR"></app-sidebar-button>
+    <app-sidebar-button text="Mass Difficulty Changer" [type]="Display.BPM_CHANGER"></app-sidebar-button>
 
     <!-- buttons -->
     <app-sidebar-button *ngIf="collectionSelected" [text]="limitTextLength(collectionSelected, 15)" [type]="Display.EDIT" ></app-sidebar-button>

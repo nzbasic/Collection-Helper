@@ -1,0 +1,8 @@
+<div class="flex flex-row items-center">
+  <input type="checkbox" [(ngModel)]="on" (change)="onChangeDisabled()">
+  <div class="w-96 ml-4">
+    <ngx-slider [(value)]="value" [options]="options" (valueChange)="change($event)"></ngx-slider>
+  </div>
+  <span *ngIf="on" class="ml-4">{{value}}</span>
+</div>
+

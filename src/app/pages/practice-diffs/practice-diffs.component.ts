@@ -1,3 +1,4 @@
+import { TitleService } from './../../services/title.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -21,7 +22,12 @@ export class PracticeDiffsComponent implements OnInit, OnDestroy {
     "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
   ];
 
-  constructor(private collectionsService: CollectionsService, private toastr: ToastrService) { }
+  constructor(private collectionsService: CollectionsService, private toastr: ToastrService, private titleService: TitleService) {
+    this.titleService.changeTitle({
+      title: "Practice Difficulty Generator",
+      subtitle: "Automatically generate practice difficulties",
+    });
+   }
 
   ngOnInit(): void {
     this.progressSubscription = this.collectionsService.progressCurrent.subscribe(percentage => {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import axios from "axios";
 import { BehaviorSubject } from "rxjs";
-import { Collection, Collections } from "../../../models/collection";
+import { BpmChangerOptions, Collection, Collections } from "../../../models/collection";
 import { fullIp } from "../app.component";
 
 @Injectable({
@@ -103,9 +103,13 @@ export class CollectionsService {
     return true
   }
 
-  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<number> {
+  async getSetCount(hashes: string[]): Promise<number> {
+    return (await axios.post(fullIp + "/collections/setCount", { hashes: hashes })).data
+  }
+
+  async getEstimatedSize(collection: Collection, exportBeatmaps: boolean): Promise<string> {
     let size = 28672
-    let setCount = (await axios.post(fullIp + "/collections/setCount", { hashes: collection.hashes })).data
+    const setCount = await this.getSetCount(collection.hashes)
 
     if (exportBeatmaps) {
       // 21500 map sets = 207,660,670,976 bytes
@@ -126,6 +130,16 @@ export class CollectionsService {
       this.progressSource.next(progress.data)
     }, 200)
     await axios.post(fullIp + "/collections/generatePracticeDiffs", { collection: collection, prefLength: prefLength })
+    clearInterval(progressInterval)
+    this.progressSource.next(0)
+  }
+
+  async generateBPM(collection: Collection, options: BpmChangerOptions) {
+    let progressInterval = setInterval(async () => {
+      let progress = await axios.get(fullIp + "/collections/bpmGenerationProgress")
+      this.progressSource.next(progress.data)
+    }, 200)
+    await axios.post(fullIp + "/collections/generateBPMChanges", { collection: collection, options: options })
     clearInterval(progressInterval)
     this.progressSource.next(0)
   }
