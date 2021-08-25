@@ -81,6 +81,11 @@ export class CollectionsService {
     return
   }
 
+  async exportCollectionDetails(collections: Collection[]) {
+    const dialogRes = (await axios.post(fullIp + "/collections/exportDetails", { collections: collections })).data
+    return !dialogRes.canceled
+  }
+
   async importCollection(name: string, multiple: boolean): Promise<boolean | string> {
     let progressInterval = setInterval(async () => {
       let progress = await axios.get(fullIp + "/collections/importProgress")

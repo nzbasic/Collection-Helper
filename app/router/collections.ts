@@ -1,6 +1,6 @@
 import { dialog } from "electron";
 import * as express from "express";
-import { addCollection, addMaps, mergeCollections, removeCollections, removeMaps, renameCollection } from "../util/collections";
+import { addCollection, addMaps, exportCollectionDetails, mergeCollections, removeCollections, removeMaps, renameCollection } from "../util/collections";
 import { collections } from "../util/parsing/collections";
 import { win } from '../main'
 import { exportCollection, exportPercentage, importCollection, importPercentage } from "../util/database/collection";
@@ -53,6 +53,18 @@ router.route("/removeMaps").post(async (req, res) => {
   const body: { name: string, hashes: string[] } = req.body
   await removeMaps(body.name, body.hashes)
   res.json(collections)
+})
+
+router.route("/exportDetails").post(async (req, res) => {
+
+  const fileName = "collection-details"
+  const dialogRes = await dialog.showSaveDialog(win, {defaultPath: fileName, filters: [{ name: 'Collection Details', extensions: ['txt']}]})
+
+  if (!dialogRes.canceled) {
+    await exportCollectionDetails(req.body.collections, dialogRes.filePath)
+  }
+
+  res.json(dialogRes)
 })
 
 let multipleFolderPath = "";

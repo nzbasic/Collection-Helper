@@ -1,5 +1,8 @@
+import { Beatmap } from "../../models/cache";
 import { Collection } from "../../models/collection";
+import { beatmapMap } from "./parsing/cache";
 import { collections, writeCollections } from "./parsing/collections";
+import * as fs from 'fs'
 
 export const renameCollection = async (oldName: string, newName: string) => {
 
@@ -72,6 +75,32 @@ export const removeMaps = async (name: string, hashes: string[]) => {
     collection.hashes = newHashes
     collection.numberMaps = newHashes.length
     await writeCollections()
+  }
+}
+
+export const exportCollectionDetails = async (exporting: Collection[], path: string) => {
+
+  let output = "Collection Details as of " + new Date().toISOString().replace(/:/g, '-') + "\n\n"
+
+  const toExport = exporting.length == 0 ? collections.collections : exporting
+
+  for (const collection of toExport) {
+    output += collection.name + "\n"
+    const formatted = collection.hashes.map(hash => formatBeatmap(hash)).sort((a,b) => a.localeCompare(b))
+    formatted.forEach(item => output += "- " + item + "\n")
+    output += "\n"
+  }
+
+  fs.writeFile(path, output, () => {})
+}
+
+const formatBeatmap = (hash: string): string => {
+  const beatmap = beatmapMap.get(hash)
+
+  if (!beatmap) {
+    return "Unknown hash: " + hash
+  } else {
+    return beatmap.artist + " - " + beatmap.song + " [" + beatmap.difficulty + "]"
   }
 }
 
