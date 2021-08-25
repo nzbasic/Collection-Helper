@@ -182,49 +182,8 @@ const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path
   const clonedBeatmap: Beatmap = JSON.parse(JSON.stringify(beatmap))
   const inverseRateChange = 1/rateChange;
 
-  if (options.ar.enabled) {
-    clonedBeatmap.ar = options.ar.value
-  } else {
-    // calculate new AR. max = 10
-    // need to convert to hitTime, then back to ar
-    // formula is hitTime x 1/rateChange then convert hitTime to AR
-    // osu ar works differently between 0-4 and 5-10 for some reason
-    const ar = clonedBeatmap.ar
-    let hitTime: number
-    if (ar >= 5) {
-      hitTime = Math.abs(ar - 13) * 150 * inverseRateChange
-    } else {
-      hitTime = Math.abs(ar - 15) * 120 * inverseRateChange
-    }
-
-    if (hitTime <= 1200) {
-      clonedBeatmap.ar = 13 - (hitTime / 150)
-    } else {
-      clonedBeatmap.ar = 15 - (hitTime / 120)
-    }
-
-    if (clonedBeatmap.ar > 10) {
-      clonedBeatmap.ar = 10
-    } else if (clonedBeatmap.ar < 0) {
-      clonedBeatmap.ar = 0
-    }
-  }
-
-  if (options.od.enabled) {
-    clonedBeatmap.od = options.od.value
-  } else {
-    // calculate new OD, max = 10
-    // same formula as above
-    const od = clonedBeatmap.od
-    const hitWindow = 79.5 - (od * 6)
-    clonedBeatmap.od = (79.5 - hitWindow * inverseRateChange)/6
-
-    if (clonedBeatmap.od > 10) {
-      clonedBeatmap.od = 10
-    } else if (clonedBeatmap.od < 0) {
-      clonedBeatmap.od = 0
-    }
-  }
+  clonedBeatmap.ar = calculateNewAr(options.ar, clonedBeatmap.ar, inverseRateChange)
+  clonedBeatmap.od = calculateNewOd(options.od, clonedBeatmap.od, inverseRateChange)
 
   if (options.hp.enabled) {
     clonedBeatmap.hp = options.hp.value
@@ -248,6 +207,57 @@ const calculateNewHitTimings = async (beatmap: Beatmap, rateChange: number, path
   }
 
   return clonedBeatmap
+}
+
+const calculateNewOd = (od: Override, originalOd: number, inverseRateChange: number): number => {
+  if (od.enabled) {
+    return od.value
+  } else {
+    let newOd: number
+    const hitWindow = 79.5 - (originalOd * 6)
+    newOd = (79.5 - hitWindow * inverseRateChange)/6
+
+    if (newOd > 10) {
+      newOd = 10
+    } else if (newOd < 0) {
+      newOd = 0
+    }
+
+    return newOd
+  }
+}
+
+const calculateNewAr = (ar: Override, originalAr: number, inverseRateChange: number): number => {
+  if (ar.enabled) {
+    return ar.value
+  } else {
+    // calculate new AR. max = 10
+    // need to convert to hitTime, then back to ar
+    // formula is hitTime x 1/rateChange then convert hitTime to AR
+    // osu ar works differently between 0-4 and 5-10 for some reason
+    let newAr: number
+    let hitTime: number
+    if (originalAr >= 5) {
+      hitTime = Math.abs(originalAr - 13) * 150 * inverseRateChange
+    } else {
+      hitTime = Math.abs(originalAr - 15) * 120 * inverseRateChange
+    }
+
+    if (hitTime <= 1200) {
+      newAr = 13 - (hitTime / 150)
+    } else {
+      newAr = 15 - (hitTime / 120)
+    }
+
+    if (newAr > 10) {
+      newAr = 10
+    } else if (newAr < 0) {
+      newAr = 0
+    }
+
+    return newAr
+  }
+
 }
 
 const bpmChangeFileConstructor = async (path: string, beatmap: Beatmap, diffName: string, audioFile: string, rateChange: number): Promise<string> => {
