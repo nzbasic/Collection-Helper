@@ -6,18 +6,17 @@ import { readBeatmap } from "./parsing/hitobjects";
 import { createNewFilePath } from "./practice";
 import { externalStorage } from "./load";
 import * as fs from 'fs'
-import * as log from 'electron-log'
 import { addCollection } from "./collections";
 import { collections } from "./parsing/collections";
 import * as crypto from 'crypto'
-import { Worker } from "worker_threads";
+import * as ffmpeg from 'fluent-ffmpeg'
+import * as pathToFfmpeg from 'ffmpeg-static'
+import { serve } from "../main";
+import { app } from "electron";
+import * as path from 'path'
+import * as log from 'electron-log'
 
-const pageSize = 20;
-const workers: Worker[] = [];
-for (let i = 0; i < pageSize; i++) {
-  workers.push(new Worker(__dirname + "/bpmworker.js"))
-}
-
+const pageSize = 20
 export let generationBpmProgress = 0
 
 const calculateFullTempo = (rate: number): string => {
@@ -56,102 +55,121 @@ const calculateFullTempo = (rate: number): string => {
   return output
 }
 
-// I wrote this drunk its a mess ill fix it later
+const generateAudio = (audioPath: string, atempo: string, output: string) => {
+  return new Promise<void>((res, rej) => {
+    if (!fs.existsSync(output)) {
+      try {
+        ffmpeg()
+          .input(audioPath)
+          .audioFilters(atempo)
+          .output(output)
+          .on("end", () => {
+            res()
+          })
+          .run();
+      } catch (e) {
+        console.log(e)
+        res()
+      }
+    } else {
+      res()
+    }
+  })
+}
+
+const check = (index: number, size: number, resolve) => {
+  if (index == size) {
+    resolve()
+  }
+}
+
 export const generateBPMChanges = async (collection: Collection, options: BpmChangerOptions) => {
+
+  if (serve) {
+    ffmpeg.setFfmpegPath(pathToFfmpeg);
+  } else {
+    const ffmpegPath = path.join(app.getAppPath(), 'node_modules/ffmpeg-static/ffmpeg.exe').replace('app.asar', 'app.asar.unpacked')
+    ffmpeg.setFfmpegPath(ffmpegPath)
+  }
+
   const osuPath = await getOsuPath()
-  const setIdsGenerated = new Set<number>()
   const successfulHashes: string[] = []
-  let numberComplete = 0;
   const bpm = options.bpm.enabled ? options.bpm.value : 0
-
-  // serially running ffmpeg is like. really slow. really really slow.
-  // here i will launch a load of worker threads which will launch a bunch of ffmpegs in parallel
-  // now the audio processing will only be limited by IO speed :sunglasses:
-  // what follows is based asynchronous multi-threading
-
+  let numberComplete = 0
   const pages = Math.ceil(collection.hashes.length / pageSize)
   for (let page = 0; page < pages; page++) {
-    let success = 0
-
     const lowerBound = page*pageSize
     let upperBound = (page+1)*pageSize > collection.hashes.length ? collection.hashes.length : (page+1)*pageSize
+    const size = upperBound - lowerBound
+    // the strategy is: ffmpeg is slow
+    // but we can run multiple at once
+    // but node worker threads and typescript and electron dont mix very well
+    // so we will take a page, calculate all the audio first, then do all the beatmaps
 
-    // this promise will resolve when all mp3s have finished (or failed)
-    await new Promise<void>(async (res, rej) => {
+    await new Promise<void>((resolve, reject) => {
       let i = 0;
       for (let hashIndex = lowerBound; hashIndex < upperBound; hashIndex++) {
-        numberComplete++;
-        const currentPageSize = upperBound - lowerBound
         const hash = collection.hashes[hashIndex]
         const beatmap = beatmapMap.get(hash)
-
         if (!beatmap) {
-          success++
-          if (success == currentPageSize) {
-            res()
-          };
+          i++
+          check(i, size, resolve)
           continue;
         }
 
-        const rateChange = bpm / beatmap.ogBpm
-        const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath, options)
-
-        if (newBeatmap) {
-          const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
-          const folderPath = songsPath + newBeatmap.folderName
-          const audioPath = folderPath + "/" + newBeatmap.audioFile
-          const filePath = folderPath + "/" + newBeatmap.fileName
-          const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : newBeatmap.audioFile
-          const output = folderPath + "/" + newAudioFile
-          let atempo
-          if (options.bpm.enabled) {
-            atempo = calculateFullTempo(rateChange)
-          }
-
-          const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + getAddonName(options).replace(/[<>:"/\\|?*]/g, "")
-          const newPath = createNewFilePath(newDiffName, newBeatmap, filePath)
-
-          newBeatmap.difficulty = newDiffName
-          newBeatmap.audioFile = newAudioFile
-
-          const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
-          fs.writeFile(newPath, contents, e => {
-          })
-
-          const hashSum = crypto.createHash('md5')
-          hashSum.update(contents)
-          successfulHashes.push(hashSum.digest('hex'))
-
-          if (bpm != 0 && options.bpm.enabled) {
-            if (!setIdsGenerated.has(newBeatmap.setId)) {
-              workers[i].postMessage({ audioPath: audioPath, atempo: atempo, output: output })
-              workers[i].removeAllListeners()
-              workers[i].on("message", (m) => {
-                generationBpmProgress = (numberComplete / collection.hashes.length) * 100
-                success++
-                if (success == currentPageSize) {
-                  res()
-                }
-              })
-
-              i++
-              setIdsGenerated.add(newBeatmap.setId)
-            } else {
-              success++;
-            }
-          } else if (hashIndex == upperBound - 1) {
-            generationBpmProgress = (numberComplete / collection.hashes.length) * 100
-            res()
-          }
-        } else {
-          success++
+        const rateChange = bpm / beatmap.bpm
+        let atempo: string
+        if (options.bpm.enabled) {
+          atempo = calculateFullTempo(rateChange)
         }
 
-        if (success == currentPageSize) {
-          res()
-        }
+        const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+        const folderPath = songsPath + beatmap.folderName
+        const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : beatmap.audioFile
+        const output = folderPath + "/" + newAudioFile
+        const audioPath = folderPath + "/" + beatmap.audioFile
+
+        generateAudio(audioPath, atempo, output).then(res => {
+          i++
+          check(i, size, resolve)
+        })
       }
     })
+
+    for (let hashIndex = lowerBound; hashIndex < upperBound; hashIndex++) {
+      const hash = collection.hashes[hashIndex]
+      const beatmap = beatmapMap.get(hash)
+
+      if (!beatmap) {
+        continue;
+      }
+
+      const rateChange = bpm / beatmap.ogBpm
+      const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath, options)
+
+      if (newBeatmap) {
+        const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+        const folderPath = songsPath + newBeatmap.folderName
+        const filePath = folderPath + "/" + newBeatmap.fileName
+        const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : newBeatmap.audioFile
+
+        const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + getAddonName(options).replace(/[<>:"/\\|?*]/g, "")
+        const newPath = createNewFilePath(newDiffName, folderPath)
+
+        newBeatmap.difficulty = newDiffName
+        newBeatmap.audioFile = newAudioFile
+
+        const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
+        await fs.promises.writeFile(newPath, contents)
+
+        const hashSum = crypto.createHash('md5')
+        hashSum.update(contents)
+        successfulHashes.push(hashSum.digest('hex'))
+      }
+    }
+
+    numberComplete += size
+    generationBpmProgress = numberComplete / collection.hashes.length * 100
   }
 
   let name = collection.name + getAddonName(options)
