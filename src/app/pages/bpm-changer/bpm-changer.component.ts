@@ -12,7 +12,7 @@ import { TitleService } from '../../services/title.service';
 })
 export class BpmChangerComponent implements OnInit {
 
-  public selected: Collection;
+  public selected: Collection
   private progressSubscription: Subscription;
   public inputValueBpm = "240";
   public percentage = 0
@@ -59,12 +59,12 @@ export class BpmChangerComponent implements OnInit {
   }
 
   async updateEstimate() {
-    if (this.selected != null) {
-      const setCount = await this.collectionsService.getSetCount(this.selected?.hashes??[])
+    if (this.selected) {
+      const setCount = await this.collectionsService.getSetCount(this.selected.hashes)
       if (this.options.bpm.enabled && this.options.bpm.value) {
         this.estimateSize = bytes(setCount * 3000000)
       } else {
-        this.estimateSize = bytes(this.selected?.hashes?.length??0 * 25000)
+        this.estimateSize = bytes(this.selected.hashes?.length??0 * 25000)
       }
     } else {
       this.estimateSize = null;
@@ -78,14 +78,19 @@ export class BpmChangerComponent implements OnInit {
     return result;
   }
 
-  async onChange(selected: Collection) {
-    this.selected = selected;
+  async onChange(selected: Collection[]) {
+    if (selected.length) {
+      this.selected = selected[0];
+    } else {
+      this.selected = null
+    }
+
     this.updateEstimate()
   }
 
   async generate() {
     this.generatingModal = true
-    await this.collectionsService.generateBPM(this.selected, this.options);
+    await this.collectionsService.generateBPM(this.selected[0], this.options);
     this.generatingModal = false
     this.warning = true
     this.toastr.success("Practice difficulties created!", "Success")
