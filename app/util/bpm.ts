@@ -16,10 +16,15 @@ import { app } from "electron";
 import * as path from 'path'
 import * as log from 'electron-log'
 
-const pageSize = 20
+const pageSize = 10
 export let generationBpmProgress = 0
 
 const calculateFullTempo = (rate: number): string => {
+
+  if (rate == Infinity) {
+    return "atempo=1"
+  }
+
   const total = []
 
   let condition: (value: number) => boolean
@@ -57,7 +62,9 @@ const calculateFullTempo = (rate: number): string => {
 
 const generateAudio = (audioPath: string, atempo: string, output: string) => {
   return new Promise<void>((res, rej) => {
+    //console.log('checking if exits ' + audioPath)
     if (!fs.existsSync(output)) {
+      //console.log(audioPath)
       try {
         ffmpeg()
           .input(audioPath)
@@ -108,9 +115,12 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
 
     await new Promise<void>((resolve, reject) => {
       let i = 0;
+
       for (let hashIndex = lowerBound; hashIndex < upperBound; hashIndex++) {
         const hash = collection.hashes[hashIndex]
         const beatmap = beatmapMap.get(hash)
+
+
         if (!beatmap) {
           i++
           check(i, size, resolve)
@@ -119,6 +129,7 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
 
         const rateChange = bpm / beatmap.bpm
         let atempo: string
+
         if (options.bpm.enabled) {
           atempo = calculateFullTempo(rateChange)
         }
@@ -128,7 +139,6 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
         const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : beatmap.audioFile
         const output = folderPath + "/" + newAudioFile
         const audioPath = folderPath + "/" + beatmap.audioFile
-
         generateAudio(audioPath, atempo, output).then(res => {
           i++
           check(i, size, resolve)
