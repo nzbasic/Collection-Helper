@@ -62,14 +62,16 @@ const calculateFullTempo = (rate: number): string => {
 
 const generateAudio = (audioPath: string, atempo: string, output: string) => {
   return new Promise<void>((res, rej) => {
-    //console.log('checking if exits ' + audioPath)
     if (!fs.existsSync(output)) {
-      //console.log(audioPath)
       try {
         ffmpeg()
           .input(audioPath)
           .audioFilters(atempo)
           .output(output)
+          .on("err", (err) => {
+            log.error("FFMPEG: " + err)
+            res()
+          })
           .on("end", () => {
             res()
           })
