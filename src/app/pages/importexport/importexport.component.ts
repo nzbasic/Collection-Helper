@@ -7,7 +7,7 @@ import { SelectCollection } from "../../components/collection-dropdown/collectio
 import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
 import { UtilService } from "../../services/util.service";
-import * as bytes from 'bytes'
+import bytes from 'bytes';
 
 @Component({
   selector: "app-importexport",

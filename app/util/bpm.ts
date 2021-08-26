@@ -15,6 +15,7 @@ import { serve } from "../main";
 import { app } from "electron";
 import * as path from 'path'
 import * as log from 'electron-log'
+import PromisePool = require('@supercharge/promise-pool')
 
 const pageSize = 10
 export let generationBpmProgress = 0
@@ -61,35 +62,34 @@ const calculateFullTempo = (rate: number): string => {
 }
 
 const generateAudio = (audioPath: string, atempo: string, output: string) => {
-  return new Promise<void>((res, rej) => {
-    if (!fs.existsSync(output) && fs.existsSync(audioPath)) {
+  return new Promise<boolean>((res, rej) => {
+
+    if (!fs.existsSync(audioPath)) {
+      res(false)
+      return
+    }
+
+    if (!fs.existsSync(output)) {
       try {
         ffmpeg()
           .input(audioPath)
           .audioFilters(atempo)
           .output(output)
-          .on("err", (err) => {
+          .on("error", (err) => {
             log.error("FFMPEG: " + err)
-            res()
+            res(false)
           })
           .on("end", () => {
-            res()
+            res(true)
           })
           .run();
       } catch (e) {
-        console.log(e)
-        res()
+        res(false)
       }
     } else {
-      res()
+      res(true)
     }
   })
-}
-
-const check = (index: number, size: number, resolve) => {
-  if (index == size) {
-    resolve()
-  }
 }
 
 export const generateBPMChanges = async (collection: Collection, options: BpmChangerOptions) => {
@@ -105,95 +105,64 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
   const successfulHashes: string[] = []
   const bpm = options.bpm.enabled ? options.bpm.value : 0
   let numberComplete = 0
-  const pages = Math.ceil(collection.hashes.length / pageSize)
-  for (let page = 0; page < pages; page++) {
-    const lowerBound = page*pageSize
-    let upperBound = (page+1)*pageSize > collection.hashes.length ? collection.hashes.length : (page+1)*pageSize
-    const size = upperBound - lowerBound
-    // the strategy is: ffmpeg is slow
-    // but we can run multiple at once
-    // but node worker threads and typescript and electron dont mix very well
-    // so we will take a page, calculate all the audio first, then do all the beatmaps
+  const failedHashes = new Set<string>()
 
-    await new Promise<void>((resolve, reject) => {
-      let i = 0;
-
-      for (let hashIndex = lowerBound; hashIndex < upperBound; hashIndex++) {
-        const hash = collection.hashes[hashIndex]
-        const beatmap = beatmapMap.get(hash)
-
-
-        if (!beatmap) {
-          i++
-          check(i, size, resolve)
-          continue;
-        }
-
-        const rateChange = bpm / beatmap.bpm
-
-        if (rateChange == Infinity) {
-          i++
-          check(i, size, resolve)
-          continue;
-        }
-
-        let atempo: string
-
-        if (options.bpm.enabled) {
-          atempo = calculateFullTempo(rateChange)
-        }
-
-        const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
-        const folderPath = songsPath + beatmap.folderName
-        const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : beatmap.audioFile
-        const output = folderPath + "/" + newAudioFile
-        const audioPath = folderPath + "/" + beatmap.audioFile
-        generateAudio(audioPath, atempo, output).then(res => {
-          i++
-          check(i, size, resolve)
-        })
+  await PromisePool
+    .withConcurrency(15)
+    .for(collection.hashes)
+    .process(async (hash) => {
+      const beatmap = beatmapMap.get(hash)
+      if (!beatmap || (beatmap.bpm == 0)) {
+        failedHashes.add(hash)
+        return false;
       }
+
+      const rateChange = bpm / beatmap.bpm
+      let atempo: string
+      if (options.bpm.enabled) {
+        atempo = calculateFullTempo(rateChange)
+      }
+
+      const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+      const folderPath = songsPath + beatmap.folderName
+      const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : beatmap.audioFile
+      const output = folderPath + "/" + newAudioFile
+      const audioPath = folderPath + "/" + beatmap.audioFile
+      const success = await generateAudio(audioPath, atempo, output)
+      console.log(hash + " " + success)
+      if (!success) failedHashes.add(hash)
+      generationBpmProgress = numberComplete++ / collection.hashes.length * 100
+      return true
     })
 
-    for (let hashIndex = lowerBound; hashIndex < upperBound; hashIndex++) {
-      const hash = collection.hashes[hashIndex]
-      const beatmap = beatmapMap.get(hash)
-
-      if (!beatmap) {
-        continue;
-      }
-
-      const rateChange = bpm / beatmap.ogBpm
-
-      if (rateChange == Infinity) {
-        continue;
-      }
-
-      const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath, options)
-
-      if (newBeatmap) {
-        const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
-        const folderPath = songsPath + newBeatmap.folderName
-        const filePath = folderPath + "/" + newBeatmap.fileName
-        const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : newBeatmap.audioFile
-
-        const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + getAddonName(options).replace(/[<>:"/\\|?*]/g, "")
-        const newPath = createNewFilePath(newDiffName, folderPath)
-
-        newBeatmap.difficulty = newDiffName
-        newBeatmap.audioFile = newAudioFile
-
-        const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
-        await fs.promises.writeFile(newPath, contents)
-
-        const hashSum = crypto.createHash('md5')
-        hashSum.update(contents)
-        successfulHashes.push(hashSum.digest('hex'))
-      }
+  for (const hash of collection.hashes) {
+    if (failedHashes.has(hash)) {
+      continue
     }
 
-    numberComplete += size
-    generationBpmProgress = numberComplete / collection.hashes.length * 100
+    const beatmap = beatmapMap.get(hash)
+    const rateChange = bpm / beatmap.bpm
+    const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath, options)
+
+    if (newBeatmap) {
+      const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+      const folderPath = songsPath + newBeatmap.folderName
+      const filePath = folderPath + "/" + newBeatmap.fileName
+      const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : newBeatmap.audioFile
+
+      const newDiffName = newBeatmap.difficulty.replace(/[<>:"/\\|?*]/g, "") + getAddonName(options).replace(/[<>:"/\\|?*]/g, "")
+      const newPath = createNewFilePath(newDiffName, folderPath)
+
+      newBeatmap.difficulty = newDiffName
+      newBeatmap.audioFile = newAudioFile
+
+      const contents = await bpmChangeFileConstructor(filePath, newBeatmap, rateChange)
+      await fs.promises.writeFile(newPath, contents)
+
+      const hashSum = crypto.createHash('md5')
+      hashSum.update(contents)
+      successfulHashes.push(hashSum.digest('hex'))
+    }
   }
 
   let name = collection.name + getAddonName(options)
@@ -206,6 +175,8 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
     }
     i++;
   }
+
+  //console.log(failedHashes)
 
   await addCollection(name, successfulHashes)
 }

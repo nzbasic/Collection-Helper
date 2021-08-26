@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { BpmChangerOptions, Collection, Override } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
-import * as bytes from 'bytes'
+import bytes from 'bytes';
 import { Subscription } from 'rxjs';
 import { TitleService } from '../../services/title.service';
 
