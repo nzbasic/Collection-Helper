@@ -128,6 +128,13 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
         }
 
         const rateChange = bpm / beatmap.bpm
+
+        if (rateChange == Infinity) {
+          i++
+          check(i, size, resolve)
+          continue;
+        }
+
         let atempo: string
 
         if (options.bpm.enabled) {
@@ -155,6 +162,11 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
       }
 
       const rateChange = bpm / beatmap.ogBpm
+
+      if (rateChange == Infinity) {
+        continue;
+      }
+
       const newBeatmap = await calculateNewHitTimings(beatmap, rateChange, osuPath, options)
 
       if (newBeatmap) {
