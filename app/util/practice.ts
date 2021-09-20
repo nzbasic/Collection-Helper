@@ -41,23 +41,27 @@ export const generatePracticeDiffs = async (collection: Collection, prefLength: 
   for (const hash of collection.hashes) {
     const beatmap = beatmapMap.get(hash)
     if (beatmap) {
-      const window = await calculateDifficultyWindow(beatmapMap.get(hash), prefLength, osuPath);
-      if (window == null) {
-        continue;
+      try {
+        const window = await calculateDifficultyWindow(beatmapMap.get(hash), prefLength, osuPath);
+        if (window == null) {
+          continue;
+        }
+
+        const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
+        const songPath = songsPath + beatmap.folderName
+        const filePath = songPath + "/" + beatmap.fileName
+        const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
+        const fullPath = createNewFilePath(newDiffName, songPath)
+        const contents = await practiceFileConstructor(filePath, window, newDiffName)
+
+        const hashSum = crypto.createHash('md5')
+        hashSum.update(contents)
+        hashes.push(hashSum.digest('hex'))
+
+        await fs.promises.writeFile(fullPath, contents)
+      } catch(err) {
+        log.error(err)
       }
-
-      const songsPath = externalStorage ? (externalStorage + "/") : (osuPath + "/Songs/")
-      const songPath = songsPath + beatmap.folderName
-      const filePath = songPath + "/" + beatmap.fileName
-      const newDiffName =  beatmap.difficulty + " spike window " + prefLength + "s"
-      const fullPath = createNewFilePath(newDiffName, songPath)
-      const contents = await practiceFileConstructor(filePath, window, newDiffName)
-
-      const hashSum = crypto.createHash('md5')
-      hashSum.update(contents)
-      hashes.push(hashSum.digest('hex'))
-
-      await fs.promises.writeFile(fullPath, contents)
     }
     i++;
     generationPercentage = (i / collection.hashes.length) * 100

@@ -188,8 +188,18 @@ export const importCollection = async (path: string, name: string, multiple: boo
       }
     }
 
-    await database.run("DROP TABLE temp")
-    await removeMissingMaps(missingMaps)
+    try {
+      await database.run("DROP TABLE temp")
+    } catch(err) {
+      log.error(err)
+    }
+
+    try {
+      await removeMissingMaps(missingMaps)
+    } catch(err) {
+      log.error("error removing missing maps from db")
+    }
+
   } else { // need to report missing sets
     importPercentage = 0.01
     const missingMaps: MissingMap[] = []
@@ -215,6 +225,10 @@ export const importCollection = async (path: string, name: string, multiple: boo
       if (!collections.collections.find(item => item.name == newName)) {
         name = newName
         break
+      } else if (i == 500) {
+        log.error("Could not set collection name properly, using random string")
+        name = (Math.random() + 1).toString(36).substring(2);
+        break
       }
       i++;
     }
@@ -225,42 +239,60 @@ export const importCollection = async (path: string, name: string, multiple: boo
     importPercentage = 0
   }
 
-  await addCollection(name, hashes)
+  try {
+    await addCollection(name, hashes)
+  } catch(err) {
+    log.error("error adding collection " + name)
+  }
+
   database.close()
 }
 
 const addMissingMaps = async (missingMaps: MissingMap[]) => {
-  const database = await getDb()
-  const currentMissing = await database.all("SELECT * FROM missingmaps")
-  const currentMissingSet = new Set(currentMissing.map(item => item.setId))
+  try {
+    const database = await getDb()
+    const currentMissing = await database.all("SELECT * FROM missingmaps")
+    const currentMissingSet: Set<number> = new Set(currentMissing.map(item => item.setId))
 
-  for (const missingMap of missingMaps) {
-    if (!currentMissingSet.has(missingMap)) {
-      await database.run("INSERT INTO missingmaps (md5, setId) VALUES (?, ?)", [missingMap.md5, missingMap.setId])
+    for (const missingMap of missingMaps) {
+      if (!currentMissingSet.has(missingMap.setId)) {
+        currentMissingSet.add(missingMap.setId)
+        await database.run("INSERT INTO missingmaps (md5, setId) VALUES (?, ?)", [missingMap.md5, missingMap.setId])
+      }
     }
+  } catch(err) {
+    log.error(err)
   }
 }
 
 export const removeMissingMaps = async (mapSet: Set<number>) => {
-  const database = await getDb()
-  const currentMissing = await database.all("SELECT * FROM missingMaps")
-  const currentMissingSet = new Set(currentMissing.map(item => item.setId))
+  try {
+    const database = await getDb()
+    const currentMissing = await database.all("SELECT * FROM missingMaps")
+    const currentMissingSet = new Set(currentMissing.map(item => item.setId))
 
-  for (const missingMap of currentMissingSet) {
-    if (mapSet.has(missingMap)) {
-      await database.run("DELETE FROM missingmaps WHERE setId = ?", [missingMap])
+    for (const missingMap of currentMissingSet) {
+      if (mapSet.has(missingMap)) {
+        await database.run("DELETE FROM missingmaps WHERE setId = ?", [missingMap])
+      }
     }
+  } catch(err) {
+    log.error(err)
   }
 }
 
 export const getMissingMaps = async (): Promise<MissingMap[]> => {
-  const database = await getDb()
-  const missingMaps = await database.all("SELECT * FROM missingmaps")
-  return missingMaps.map(item => {
-    let missingMap: MissingMap = {
-      setId: item.setId,
-      md5: item.md5
-    };
-    return missingMap
-  })
+  try {
+    const database = await getDb()
+    const missingMaps = await database.all("SELECT * FROM missingmaps")
+    return missingMaps.map(item => {
+      let missingMap: MissingMap = {
+        setId: item.setId,
+        md5: item.md5
+      };
+      return missingMap
+    })
+  } catch(err) {
+    log.error(err)
+  }
 }

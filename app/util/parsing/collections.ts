@@ -4,6 +4,7 @@ import * as fs from "fs";
 import { getOsuPath } from "../database/settings";
 import { readNameUtf8, writeNameUtf8 } from "./utf8";
 import { stringToUtf8ByteArray } from 'utf8-string-bytes'
+import * as log from 'electron-log'
 
 export let collections: Collections;
 
@@ -42,21 +43,28 @@ export const readCollections = async (path: string) => {
 export const writeCollections = async (initialBackup?: boolean, newBackup?: boolean) => {
 
   const osuPath = await getOsuPath()
-  const length = calculateLength();
-  const arrayBuffer = new ArrayBuffer(length);
-  const writer = new OsuWriter(arrayBuffer);
+  let writer: OsuWriter;
 
-  writer.writeInt32(collections.version);
-  writer.writeInt32(collections.numberCollections);
+  try {
+    const length = calculateLength();
+    const arrayBuffer = new ArrayBuffer(length);
+    writer = new OsuWriter(arrayBuffer);
 
-  collections.collections.forEach((collection) => {
-    writeNameUtf8(writer, collection.name);
-    writer.writeInt32(collection.numberMaps);
+    writer.writeInt32(collections.version);
+    writer.writeInt32(collections.numberCollections);
 
-    collection.hashes.forEach((hash) => {
-      writer.writeString(hash);
+    collections.collections.forEach((collection) => {
+      writeNameUtf8(writer, collection.name);
+      writer.writeInt32(collection.numberMaps);
+
+      collection.hashes.forEach((hash) => {
+        writer.writeString(hash);
+      });
     });
-  });
+
+  } catch(err) {
+    log.error(err)
+  }
 
   const buffer = Buffer.from(writer.buff);
 
