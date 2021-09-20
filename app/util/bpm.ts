@@ -17,7 +17,6 @@ import * as path from 'path'
 import * as log from 'electron-log'
 import PromisePool = require('@supercharge/promise-pool')
 
-const pageSize = 10
 export let generationBpmProgress = 0
 
 const calculateFullTempo = (rate: number): string => {
@@ -61,15 +60,24 @@ const calculateFullTempo = (rate: number): string => {
   return output
 }
 
-const generateAudio = (audioPath: string, atempo: string, output: string) => {
-  return new Promise<boolean>((res, rej) => {
+const exists = async (path: string) => {
+  try {
+    await fs.promises.access(path)
+    return true
+  } catch {
+    return false
+  }
+}
 
-    if (!fs.existsSync(audioPath)) {
+const generateAudio = (audioPath: string, atempo: string, output: string) => {
+  return new Promise<boolean>(async (res, rej) => {
+
+    if (!(await exists(audioPath))) {
       res(false)
       return
     }
 
-    if (!fs.existsSync(output)) {
+    if (!(await exists(output))) {
       try {
         ffmpeg()
           .input(audioPath)
@@ -128,10 +136,10 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
       const newAudioFile = options.bpm.enabled ? "audio " + bpm + "bpm.mp3" : beatmap.audioFile
       const output = folderPath + "/" + newAudioFile
       const audioPath = folderPath + "/" + beatmap.audioFile
+
       const success = await generateAudio(audioPath, atempo, output)
-      console.log(hash + " " + success)
       if (!success) failedHashes.add(hash)
-      generationBpmProgress = numberComplete++ / collection.hashes.length * 100
+      generationBpmProgress = numberComplete++ / collection.hashes.length * 100 / 2
       return true
     })
 
@@ -162,6 +170,8 @@ export const generateBPMChanges = async (collection: Collection, options: BpmCha
       const hashSum = crypto.createHash('md5')
       hashSum.update(contents)
       successfulHashes.push(hashSum.digest('hex'))
+
+      generationBpmProgress = numberComplete++ / collection.hashes.length * 100 / 2
     }
   }
 
