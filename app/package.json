@@ -1,6 +1,6 @@
 {
   "name": "collection-helper",
-  "version": "1.4.5",
+  "version": "1.4.4",
   "description": "Standalone, beautiful, feature rich collection manager for osu!",
   "homepage": "https://github.com/nzbasic/Collection-Helper-Electron",
   "author": {
@@ -38,6 +38,7 @@
     "fetch-installed-software": "0.0.6",
     "ffmpeg-static": "^4.4.0",
     "fluent-ffmpeg": "^2.1.2",
+    "fs.promises.exists": "^1.0.0",
     "is-reachable": "^5.0.0",
     "osu-buffer": "^2.0.2",
     "random-hash": "^4.0.1",

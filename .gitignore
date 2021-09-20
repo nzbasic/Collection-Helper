@@ -58,4 +58,7 @@ e2e
 .editorconfig
 electron-builder.yml
 
+*.json
+snipetool.ts
+
 !tailwind.config.js
