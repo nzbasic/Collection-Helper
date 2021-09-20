@@ -4,6 +4,7 @@ import { readCache } from "./parsing/cache";
 import * as username from 'username'
 import * as fs from 'fs'
 import * as log from 'electron-log'
+import { exportIds } from './snipetool'
 
 export let externalStorage: string
 
@@ -13,6 +14,8 @@ export const loadFiles = async () => {
   await readCollections(path);
   await writeCollections(true);
   await readCache(path);
+
+  //await exportIds()
 };
 
 const findExternalBeatmapStorage = async (path: string): Promise<string> => {
