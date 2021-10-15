@@ -1,12 +1,327 @@
 {
+  "SIDEBAR": {
+    "COLLECTIONS": "Collections",
+    "FILTERS": "Filters",
+    "CUSTOM_FILTER": "Custom Filter",
+    "IMPORTEXPORT": "Import/Export",
+    "PRACTICE": "Practice Diff Generator",
+    "MASS_DIFF_CHANGER": "Mass Difficulty Changer",
+    "SETTINGS": "Settings",
+    "USAGE_VIDEO_LINK": "Usage Guide Video",
+    "MY_SOCIALS": "My Socials",
+    "REFRESH_CACHE": "Refresh Cache",
+    "HELP": "Help"
+  },
+  "BUTTONS": {
+    "MERGE": "Merge",
+    "ADD": "Add",
+    "REMOVE": "Remove",
+    "ADD_COLLECTION": "+ Add new collection",
+    "EDIT": "Edit",
+    "ADD_FILTER": "+ Add new filter",
+    "RENAME": "Rename",
+    "CANCEL": "Cancel",
+    "BROWSE": "Browse",
+    "SET": "Set",
+    "YES": "Yes",
+    "NO": "No",
+    "GENERATE": "Generate",
+    "ADD_CUSTOM_FILTER": "Add Filter",
+    "SAVE_CUSTOM_FILTER": "Save Filter",
+    "TEST_FILTER": "Test Filter",
+    "ADD_TO_COLLECTION": "Add to Collection",
+    "REMOVE_FROM_COLLECTION": "Remove from Collection",
+    "ADD_SELECTED": "Add Selected to New Collection",
+    "GENERATE_CACHE": "Generate Cache",
+    "MULTIPLE": "Import Multiple",
+    "IMPORT": "Import",
+    "EXPORT": "Export",
+    "EXPORT_DETAILS": "Export Collection Details (.txt)",
+    "CHANGE_PATH": "Change Path",
+    "CREATE_BACKUP": "Create Backup",
+    "CHANGE": "Change"
+  },
+  "TABLES": {
+    "NAME": "Name",
+    "NUMBERMAPS": "Number of Maps",
+    "ACTION": "Action",
+    "SONG": "Song",
+    "ARTIST": "Artist",
+    "CREATOR": "Mapper",
+    "DIFFICULTY": "Difficulty",
+    "DRAIN": "Drain",
+    "ISCACHED": "Cached",
+    "DESCRIPTION": "Description"
+  },
+  "MISC": {
+    "PATH": "Path:",
+    "EXPERIMENTAL": "Warning: This feature is experimental and may not work perfectly. Some maps may fail to load.",
+    "ESTIMATE_OUTPUT": "Estimated output size {{value}}",
+    "VIDEO_GUIDE": "Video Guide",
+    "HERE": "Here",
+    "SELECTED": "{{value}} Selected",
+    "WARNING": "Warning:",
+    "WARNING_TEXT": "You will need to launch/relaunch osu! AND refresh cache in this client for new maps or new collections to load.",
+    "SEARCH": "Search:",
+    "COLLECTION": "Collection:",
+    "DESCRIPTION": "Description:",
+    "LOADING": "Loading",
+    "EXISTS": "Already Exists!",
+    "NO_RESULTS": "No Results",
+    "NONE_SELECTED": "None Selected",
+    "CUSTOM_FILTERS": "Custom Filters",
+    "NAME": "Name:",
+    "FILTER": "Filter:",
+    "SET": "Set",
+    "SETTINGS_MODAL": {
+      "PATH": "Path:",
+      "HELP_TEXT": "Enter the path to your osu! instllation",
+      "INVALID_PATH": "Invalid Path"
+    },
+    "UPDATE_MODAL": {
+      "AVAILABLE": "Update Available!",
+      "DOWNLOADING": "Downloading...",
+      "UPDATE": "Would you like to update now?"
+    }
+  },
+  "PAGINATION": {
+    "TEXT": "Found {{value}} Result(s)"
+  },
+  "HELP": {
+    "HOME": {
+      "NAME": "Collections",
+      "LINES": {
+        "ONE": "You can select multiple collections to merge/remove by clicking the checkboxes.",
+        "TWO": "Merging collections will remove the selected collections and create a new collection with the combined maps.",
+        "THREE":"Click on the name of a collection or the edit button to edit the maps in the collection"
+      }
+    },
+    "FILTERS": {
+      "NAME": "Filters",
+      "LINES": {
+        "ONE": "Filters run on all of your beatmaps. If a filter requires hit objects to be parsed (e.g. beatmaps) then calculating the filter will take a long time. For me this is about 20 minutes for 87000 maps.",
+        "TWO": "A filter must be cached before it can be used in the collection edit beatmap list. You can cache multiple filters at a time by using the checkboxes and clicking cache at the top of the table.",
+        "THREE": "Filter cache is saved, so unless you edit the filter, the only reason to generate the cache again is if you have downloaded more maps.",
+        "FOUR": "Caching multiple filters is recommended as the most expensive part is getting the beatmap data and if you cache multiple it only needs to get the data once for every filter.",
+        "FIVE": "You can create your own filters on the custom filter screen."
+      }
+    },
+    "CUSTOM_FILTERS": {
+      "NAME": "Custom Filters",
+      "LINES": {
+        "ONE": "Here you can make your own filters in javascript. You will need to look at the documentation linked on the component to write a filter.",
+        "TWO": "You must at some point resolve() the function otherwise it will run forever.",
+        "THREE": "The basic idea of the filter system is you are passed a list of beatmaps as 'beatmaps' and you must filter these and resolve the filtered list of beatmaps.",
+        "FOUR": "ONLY CHECK GET HIT OBJECTS IF YOU NEED THEM, IT INCREASES THE COMPUTATION TIME GREATLY!",
+        "FIVE": "Test your filter before you save it. It will run on 1000 random maps you have."
+      }
+    },
+    "EDIT": {
+      "NAME": "Edit Collection",
+      "LINES": {
+        "ONE": "This is where you edit the maps in your collection. By default the maps in your collection are shown, to see the list of all maps not in the collection you must click the green button to swap views",
+        "TWO": "You can apply any cached custom filters via selecting them in the dropdown and clicking apply cache. Click clear cache to revert to normal",
+        "THREE": "You can use any of osu!'s in-game filters to filter the beatmap list by typing them in the search. This implementation is less refined than the official one.",
+        "FOUR": "I recommend applying any custom filter and writing some in-game filter e.g. (mode=0, status=r stars>5) and then using select all to add all filtered maps to a collection."
+      }
+    },
+    "IMPORT_EXPORT": {
+      "NAME": "Import / Export",
+      "LINES": {
+        "ONE": "Ideally, you should only import one collection at a time, then open osu!, wait for the maps to process, and then refresh the cache in collection helper.",
+        "TWO": "I recommend exporting and importing collections with beatmaps included so you avoid missing beatmaps."
+      }
+    },
+    "SETTINGS": {
+      "NAME": "Settings",
+      "LINES": {
+        "ONE": "Change application settings here.",
+        "TWO": "Dark mode selection will persist when you close the app."
+      }
+    },
+    "PRACTICE": {
+      "NAME": "Practice Difficulty Generator",
+      "LINES": {
+        "ONE": "The practice difficulty generator automatically finds the hardest X seconds of a map and generates new maps with that section. It takes a collection as input and creates a practice difficulty for each map in the collection.",
+        "TWO": "You can specify the preferred length of each practice difficulty by changing the length setting.",
+        "THREE": "A new collection will be made with all of the new maps.",
+        "FOUR": "Difficulty is approximated, so some maps may not perfectly line up with the ppv2 implementation.",
+        "FIVE": "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
+      }
+    },
+    "DIFF_CHANGER": {
+      "NAME": "Mass Difficulty Changer",
+      "LINES": {
+        "ONE": "The mass difficulty changer allows you to create large numbers of new difficulties of maps with the difficulty values you want.",
+        "TWO": "Changing the bpm will generate new audio files for every beatmap set which could take a few minutes.",
+        "THREE": "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
+      }
+    }
+  },
   "PAGES": {
-      "HOME": {
-          "TITLE": "App works !",
-          "GO_TO_DETAIL": "Go to Detail"
+    "HOME": {
+      "TITLE": "Collections",
+      "SUBTITLE": "Your collections",
+      "WELCOME": "Welcome to Collection Helper!",
+      "MODALS": {
+        "REMOVE": {
+          "TITLE": "Remove collection",
+          "TEXT": "Are you sure you want to remove the collection(s)? All of the data will be removed. This action CAN be undone if you restore your backup."
+        },
+        "MERGE": {
+          "TITLE": "Merge collections"
+        },
+        "RENAME": {
+          "TITLE": "Rename collection"
+        },
+        "ADD": {
+          "TITLE": "Add new collection",
+          "SEARCH_HINT": "Use filters e.g. +DT stars>5 length<120 sotarks",
+          "RESULT": "Result: {{value}} maps",
+          "ADVANCED": "Advanced Options",
+          "DESCRIPTION": "If you use the search/filters below, the collection will be made with any matching maps already in it."
+        },
+        "LAUNCH": {
+          "ONE": "I have included some help text for each component of Collection Helper, if you are confused please use the help button on the top right.",
+          "TWO": "I made some videos to explain basic usage and custom filter creation which can be found on the github page.",
+          "THREE": "A backup of your collection.db file will be created when you set your osu! path. To restore it, go to your osu! path, and replace your collection.db file with collectionBackup.db. You can make extra backups in the settings menu."
+        }
+      }
+    },
+    "DIFF_CHANGER": {
+      "TITLE": "Mass Difficulty Changer",
+      "SUBTITLE": "Alter the difficulty settings of every map in a collection",
+      "TIPS": {
+        "ONE": "For each map in a collection, a new one will be generated with your selected difficulty overrides.",
+        "TWO": "If you choose to override BPM, new audio files will be generated.",
+        "THREE": "If a map has multiple timing points, the most common BPM of a map (seen in osu! in brackets) will be used as a base, and every other timing point will be scaled accordingly.",
+        "FOUR": "A new collection will be created with all of the newly generated maps.",
+        "FIVE": "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
       },
-      "DETAIL": {
-        "TITLE": "Detail page !",
-        "BACK_TO_HOME": "Back to Home"
+      "ESTIMATE": "Estimate Size Increase: {{estimateSize}}",
+      "LOADING": "Generating New Audio..."
+    },
+    "CUSTOM_FILTER": {
+      "TITLE": "Custom Filter",
+      "SUBTITLE": "Write a custom filter in JavaScript",
+      "GET_OBJECTS": "Get Hit Objects?",
+      "TIPS": {
+        "ONE": "Write a JavaScript function to filter your beatmaps. See",
+        "TWO": "documentation",
+        "THREE": "or the",
+        "FOUR": "video guide",
+        "FIVE": "After you have created a filter, you should generate its cache in the filters menu to use it."
+      },
+      "PLACEHOLDER": "Collection to test filter on (optional)",
+      "NOT_TESTED": "Filter not tested!",
+      "NAME_REQUIRED": "Filter name required!",
+      "NAME_EXISTS": "Name already exists!",
+      "RESULT": "Test Result: {{value}}",
+      "FAILED": "Failed",
+      "LOADING": "Getting Beatmap Data..."
+    },
+    "EDIT": {
+      "TITLE": "Edit",
+      "SUBTITLE": "Edit maps in your collection",
+      "TABLE1": "Maps in your collection",
+      "TABLE2": "Your maps",
+      "SWAP_MAPS": "Swap to All Maps View",
+      "SWAP_COLLECTION": "Swap to Collection Maps View",
+      "SELECTED": "{{value}} Maps Selected",
+      "MAP_MISSING": "Map Missing {{value}}",
+      "LOADING_COLLECTION": "Loading maps in collection...",
+      "LOADING_CACHE": "Loading all cached maps...",
+      "NO_MAPS_COLLECTION": "No maps in this collection! Swap to all maps view to add maps",
+      "LOADING_WRITE": "Writing Collection...",
+      "SEARCH_HINT": "Search using regular osu! filters... e.g. stars>5 bpm<200 length<120. Apply mods with +HR etc to change SR and difficulty settings.",
+      "MODALS": {
+        "REMOVE": {
+          "TITLE": "Remove Map(s)",
+          "TEXT": "Are you sure you want to remove the map(s) from the collection(s)? This action CAN be undone if you restore your backup."
+        },
+        "RENAME": {
+          "TITLE": "Name for new collection"
+        }
+      }
+    },
+    "FILTERS": {
+      "TITLE": "Filters",
+      "SUBTITLE": "Your filters. You must generate a filters cache before using it.",
+      "TIPS": {
+        "ONE": "These custom filters allow for more advanced beatmap filtering. You can create your own by clicking the new filter button.",
+        "TWO": "Before you can use a filter to find maps, you need to generate its cache.",
+        "THREE": "The stream filter may take minutes to run as it needs to read the hit objects of every map, while the farm filter takes seconds.",
+        "FOUR": "You only need to generate the cache once. It will be saved and instantly applied whenever you use it in the app."
+      },
+      "LOADING": "Generating Cache...",
+      "MODALS": {
+        "REMOVE": {
+          "TITLE": "Remove Filter",
+          "TEXT": "Are you sure you want to remove the filter(s)?"
+        }
+      }
+    },
+    "IMPORT_EXPORT": {
+      "TITLE": "Import / Export",
+      "SUBTITLE": "Import and export collections"
+    },
+    "IMPORT": {
+      "TITLE": "Import",
+      "TIPS": {
+        "ONE": "Importing a collection will create a new collection in game (and install any maps you don't have if they were included in the collection file)",
+        "TWO": "Here are some collections to download. (Stream, Farm, Loved, All Ranked) -"
+      },
+      "MULTIPLE": "Are you importing multiple collections? Collections will be automatically named.",
+      "NAME": "Name for Imported Collection:",
+      "OPEN": "Open a File:",
+      "LOADING": "Constructing temporary table",
+      "UNPACKING": "Unpacking collection"
+    },
+    "EXPORT": {
+      "TITLE": "Export",
+      "TIPS": {
+        "ONE": "You can export collections and share with others online. (e.g. via Google Drive)",
+        "TWO": "I recommend always exporting with beatmaps, if you do not you may have issues where the person importing doesn't have one of the maps.",
+        "THREE": "Export Collection Details (.txt) will create a new text file with information about the collection. If no collections are selected, the file will contain details of all collections, otherwise it will just be those that are selected.",
+        "FOUR": "If you export multiple collections at once, you need to select the folder where you want all of the files to go. Otherwise, just set the file name you want."
+      },
+      "SELECT": "Select a Collection (or multiple) to Export",
+      "EXPORT_WITH": "Export with Beatmap Files?",
+      "PACKING": "Packing Beatmaps",
+      "LOADING": "Exporting Collection"
+
+    },
+    "SETTINGS": {
+      "TITLE": "Settings",
+      "SUBTITLE": "Application settings",
+      "PATH": "Path: {{value}}",
+      "DARK": "Dark Mode:",
+      "BACKUP": "Backup Collections:",
+      "LANGUAGE": "Language:"
+    },
+    "PRACTICE": {
+      "TITLE": "Practice Difficulty Generator",
+      "SUBTITLE": "Automatically generate practice difficulties",
+      "TIPS": {
+        "ONE": "The practice difficulty generator automatically finds the hardest X seconds of a map and generates new maps with that section.",
+        "TWO": "It takes a collection as input and creates a practice difficulty for each map in the collection.",
+        "THREE": "You can specify the preferred length of each practice difficulty by changing the length setting.",
+        "FOUR": "A new collection will be made with all of the new maps.",
+        "FIVE": "Difficulty is approximated, so some maps may not perfectly line up with the ppv2 implementation.",
+        "SIX": "Note: If the generated maps do not appear in game, you will have to refresh your maps by pressing F5 in osu!."
+      },
+      "COLLECTION": "Collection:",
+      "PREFERRED": "Preferred Length (seconds):",
+      "LOADING": "Generating Practice Difficulties..."
+
+    },
+    "LOADING": {
+      "TITLE": "Loading",
+      "SUBTITLE": "Loading cache..."
+    },
+    "SETUP": {
+      "TITLE": "Language",
+      "TEXT": "Select a language to use"
     }
   }
 }

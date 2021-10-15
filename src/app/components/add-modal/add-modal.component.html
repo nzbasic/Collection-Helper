@@ -1,36 +1,35 @@
 <div class="fixed modal">
 
   <div class="bg-white dark:bg-dark1 rounded-md flex flex-col w-add shadow-sm">
-    <div class="mx-8 mt-8 text-xl">Add a new Collection</div>
+    <div translate class="mx-8 mt-8 text-xl">PAGES.HOME.MODALS.ADD.TITLE</div>
     <div class="mx-8 mt-4 flex flex-row text-center items-center">
-      <span>Name:</span>
+      <span translate>MISC.NAME</span>
       <input class="mx-4 rounded-sm border border-gray-500 dark:border-black dark:bg-dark1 h-8 w-full focus:outline-none" (keyup)="textChange($event)"/>
     </div>
     <div class="flex items-center mt-4">
       <div class="flex-grow bg bg-gray-300 dark:bg-black h-0.5"></div>
-      <span class="flex-grow-0 mx-5 text dark:text-white ">Advanced Options</span>
+      <span translate class="flex-grow-0 mx-5 text dark:text-white ">PAGES.HOME.MODALS.ADD.ADVANCED</span>
       <div class="flex-grow bg bg-gray-300 dark:bg-black h-0.5"></div>
     </div>
     <div class="mt-2 mx-8">
-      <span>If you use the search/filters below, the collection will be made with any matching maps already in it.</span>
+      <span translate>PAGES.HOME.MODALS.ADD.DESCRIPTION</span>
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
-      <span class="mr-3">Search: </span>
-      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none dark:text-white" (keyup)="searchChange($event)" placeholder="Use filters e.g. +DT stars>5 length<120 sotarks"/>
+      <span translate class="mr-3">MISC.SEARCH</span>
+      <input class="z-0 pl-4 mt-2 mb-m4 search search-add w-full rounded-sm h-8 focus:outline-none dark:text-white" (keyup)="searchChange($event)" [placeholder]="'PAGES.HOME.MODALS.ADD.SEARCH_HINT' | translate"/>
     </div>
     <div class="mx-8 flex flex-row mt-2 items-center">
-      <span class="mr-6">Filter: </span>
+      <span translate class="mr-6">MISC.FILTER</span>
       <app-filter-select (emitter)="changeSelected($event)" [ngClass]="filterNumber ? 'w-52' : ''"></app-filter-select>
-      <span class="ml-4">Result: {{result}} maps</span>
+      <span class="ml-4">{{'PAGES.HOME.MODALS.ADD.RESULT' | translate:({value: result})}}</span>
     </div>
     <div class="w-full text-center mt-6">
-      <span *ngIf="list.has(res.name.toLowerCase())" class="text-red-600">Already exists!</span>
+      <span translate *ngIf="list.has(res.name.toLowerCase())" class="text-red-600">MISC.EXISTS</span>
     </div>
 
-
     <div class="my-4 mt-8 flex flex-row justify-center w-full">
-      <button (click)="cancel()" class="button button-red-enabled button-large">Cancel</button>
-      <button [disabled]="list.has(res.name.toLowerCase()) || res.name == ''" [ngClass]="list.has(res.name.toLowerCase()) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button button-large">Add</button>
+      <button translate (click)="cancel()" class="button button-red-enabled button-large">BUTTONS.CANCEL</button>
+      <button translate [disabled]="list.has(res.name.toLowerCase()) || res.name == ''" [ngClass]="list.has(res.name.toLowerCase()) || res.name == '' ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="ml-8 button button-large">BUTTONS.ADD</button>
     </div>
   </div>
 

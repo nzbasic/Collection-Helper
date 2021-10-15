@@ -50,3 +50,19 @@ export const getDarkMode = async () => {
   const row = await database.get("SELECT * FROM darkmode");
   return row?.mode??false
 }
+
+export const getLanguage = async () => {
+  const database = await getDb();
+  const row = await database.get("SELECT * FROM language");
+  return row?.code??'en'
+}
+
+export const setLanguage = async (code: string) => {
+  const database = await getDb();
+  const rows = await database.get("SELECT * FROM language")
+  if (!rows) {
+    await database.run("INSERT INTO language (code) VALUES (?)", [code])
+  } else {
+    await database.run("UPDATE language SET code = ?", [code])
+  }
+}

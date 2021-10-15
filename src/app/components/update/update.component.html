@@ -1,11 +1,11 @@
 <div class="fixed bottom-10 right-10 z-10 bg-transparent inline-flex flex-row items-center justify-center">
 
   <div class="bg-gray-700 text-white rounded-md flex flex-col max-w-120 shadow-md">
-    <div class="mx-8 mt-8 text-xl">Update Available!</div>
-    <div class="mx-8" [ngClass]="{'mb-8': !downloaded ? true : false}">{{downloaded ? "Would you like to update now?" : "Downloading..."}}</div>
+    <div translate class="mx-8 mt-8 text-xl">MISC.UPDATE_MODAL.AVAILABLE</div>
+    <div class="mx-8" [ngClass]="{'mb-8': !downloaded ? true : false}">{{downloaded ? ('MISC.UPDATE_MODAL.AVAILABLE' | translate) : ('MISC.UPDATE_MODAL.DOWNLOADING' | translate)}}</div>
     <div *ngIf="downloaded" class="my-4 px-12 mt-4 flex flex-row justify-between w-full">
-      <button (click)="yes()" class="button button-blue-enabled button-large">Yes</button>
-      <button (click)="no()" class="ml-8 button button-red-enabled button-large">No</button>
+      <button translate (click)="yes()" class="button button-blue-enabled button-large">BUTTONS.YES</button>
+      <button translate (click)="no()" class="ml-8 button button-red-enabled button-large">BUTTONS.NO</button>
     </div>
   </div>
 

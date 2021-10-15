@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { TitleService } from "../../services/title.service";
 
 @Component({
@@ -7,10 +8,7 @@ import { TitleService } from "../../services/title.service";
 })
 export class LoadingComponent implements OnInit {
   constructor(private titleService: TitleService) {
-    this.titleService.changeTitle({
-      title: "Loading",
-      subtitle: "Loading cache...",
-    });
+    this.titleService.changeTitle('PAGES.LOADING');
   }
 
   ngOnInit(): void {}

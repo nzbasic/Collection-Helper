@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import axios from "axios";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
@@ -49,12 +50,9 @@ export class CustomfilterComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private filterService: FilterService,
     private componentService: ComponentService,
-    private utilService: UtilService) {
-
-    this.titleService.changeTitle({
-      title: "Custom Filter",
-      subtitle: "Write a custom filter in JavaScript",
-    });
+    private utilService: UtilService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.CUSTOM_FILTER');
   }
 
   ngOnInit(): void {

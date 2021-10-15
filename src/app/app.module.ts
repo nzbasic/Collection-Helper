@@ -17,7 +17,7 @@ import { UiSwitchModule } from 'ngx-ui-switch'
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 // NG Translate
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 import { AppComponent } from "./app.component";
@@ -44,6 +44,7 @@ import { CollectionDropdownComponent } from './components/collection-dropdown/co
 import { PracticeDiffsComponent } from './pages/practice-diffs/practice-diffs.component';
 import { BpmChangerComponent } from './pages/bpm-changer/bpm-changer.component';
 import { ValueOverrideSliderComponent } from './components/value-override-slider/value-override-slider.component';
+import { LanguageDropdownComponent } from './components/language-dropdown/language-dropdown.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -75,6 +76,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     PracticeDiffsComponent,
     BpmChangerComponent,
     ValueOverrideSliderComponent,
+    LanguageDropdownComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,6 +86,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     SharedModule,
     AppRoutingModule,
     TranslateModule.forRoot({
+      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: httpLoaderFactory,
@@ -100,7 +103,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     UiSwitchModule,
     NgxSliderModule,
   ],
-  providers: [],
+  providers: [TranslateService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

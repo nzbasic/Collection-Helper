@@ -1,16 +1,22 @@
 <div class="fixed modal ">
 
   <div class="bg-white dark:bg-dark1 rounded-md flex flex-col max-w-120 shadow-sm">
-    <div class="mx-8 mt-8 text-xl">Enter the path to your osu! installation</div>
-    <div class="mx-8 mt-4 flex flex-row text-center items-center">
-      <span>Path:</span>
-      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="path" (keyup)="textChange($event)"/>
-      <button (click)="openBrowseDialog()" class="button button-blue-enabled">Browse</button>
+    <div translate class="mx-8 mt-8 text-xl">MISC.SETTINGS_MODAL.HELP_TEXT</div>
+    <div *ngIf="mode == 'new'" class="mx-8 mt-4 flex items-center">
+      <span translate>PAGES.SETTINGS.LANGUAGE</span>
+      <div class="w-72 ml-4">
+        <app-language-dropdown></app-language-dropdown>
+      </div>
     </div>
-    <span class="text-red-600 text-center" *ngIf="invalid">Invalid Path</span>
+    <div class="mx-8 mt-4 flex flex-row text-center items-center">
+      <span translate>MISC.PATH</span>
+      <input class="mx-4 rounded-sm border border-gray-500 h-8 w-full focus:outline-none" [value]="path" (keyup)="textChange($event)"/>
+      <button translate (click)="openBrowseDialog()" class="button button-blue-enabled">BUTTONS.BROWSE</button>
+    </div>
+    <span translate class="text-red-600 text-center" *ngIf="invalid">MISC.SETTINGS_MODAL.INVALID_PATH</span>
     <div class="my-4 mt-4 flex flex-row justify-center w-full">
-      <button (click)="cancel()" *ngIf="mode=='edit'" class="button button-red-enabled button-large mr-4">Cancel</button>
-      <button [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button button-large">Set</button>
+      <button translate (click)="cancel()" *ngIf="mode=='edit'" class="button button-red-enabled button-large mr-4">BUTTONS.CANCEL</button>
+      <button translate [disabled]="!path.length" [ngClass]="!path.length ? 'button-blue-disabled' : 'button-blue-enabled'" (click)="confirm()" class="button button-large">BUTTONS.SET</button>
     </div>
   </div>
 </div>

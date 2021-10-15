@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { Collection } from '../../../../models/collection';
 import { CollectionsService } from '../../services/collections.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-practice-diffs',
@@ -22,11 +23,11 @@ export class PracticeDiffsComponent implements OnInit, OnDestroy {
     "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
   ];
 
-  constructor(private collectionsService: CollectionsService, private toastr: ToastrService, private titleService: TitleService) {
-    this.titleService.changeTitle({
-      title: "Practice Difficulty Generator",
-      subtitle: "Automatically generate practice difficulties",
-    });
+  constructor(private collectionsService: CollectionsService,
+    private toastr: ToastrService,
+    private titleService: TitleService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.PRACTICE');
    }
 
   ngOnInit(): void {

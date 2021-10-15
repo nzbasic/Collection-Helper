@@ -41,12 +41,7 @@ export class CollectionDropdownComponent implements OnInit {
   onChange() {
     const collections = this.collectionItems.filter(item => item.selected).map(filter => filter.value)
     this.emitter.emit(collections)
-
-    if (collections.length) {
-      this.placeHolder = limitTextLength(collections.map(item => item.name).join(', '), 30)
-    } else {
-      this.placeHolder = "None Selected"
-    }
+    this.placeHolder = limitTextLength(collections.map(item => item.name).join(', '), 30)
   }
 
 }

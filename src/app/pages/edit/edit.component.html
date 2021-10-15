@@ -1,22 +1,22 @@
 <div class="flex flex-col align-center shadow-md">
 
   <div class="m-4 flex justify-between text-lg">
-    <span>{{isCollectionShown ? 'Maps in Your Collection' : 'All (Your) Maps'}}</span>
+    <span>{{isCollectionShown ? ('PAGES.EDIT.TABLE1' | translate) : ('PAGES.EDIT.TABLE2' | translate)}}</span>
   </div>
 
   <div class="w-full top-bar z-10 h-16">
     <div class="flex flex-row items-center h-full text-xl pl-4 pt-2">
-      <button (click)="changeView()" class="button button-green-enabled">{{isCollectionShown ? 'Swap to All Maps View': 'Swap to Collection Maps View'}}</button>
-      <button *ngIf="!isCollectionShown" (click)="addMaps()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-blue-disabled' : 'button-blue-enabled'" class="ml-4 button">Add to Collection</button>
-      <button *ngIf="isCollectionShown" (click)="showRemoveModal()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-red-disabled' : 'button-red-enabled'" class="ml-4 button">Remove from Collection</button>
+      <button (click)="changeView()" class="button button-green-enabled">{{isCollectionShown ? ('PAGES.EDIT.SWAP_MAPS' | translate): ('PAGES.EDIT.SWAP_COLLECTION' | translate)}}</button>
+      <button translate *ngIf="!isCollectionShown" (click)="addMaps()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-blue-disabled' : 'button-blue-enabled'" class="ml-4 button">BUTTONS.ADD_TO_COLLECTION</button>
+      <button translate *ngIf="isCollectionShown" (click)="showRemoveModal()" [disabled]="selected.size < 1" [ngClass]="selected.size < 1 ? 'button-red-disabled' : 'button-red-enabled'" class="ml-4 button">BUTTONS.REMOVE_FROM_COLLECTION</button>
       <app-filter-select [ngClass]="filterNumber ? 'w-52' : ''" class="ml-4 text-sm z-10" (emitter)="changeSelected($event)"></app-filter-select>
-      <span class="ml-4 text-lg">{{selected.size}} Maps Selected</span>
-      <button *ngIf="selected.size" (click)="createNewCollectionWithSelected()" class="ml-4 button button-green-enabled">Add Selected to New Collection</button>
+      <span class="ml-4 text-lg">{{'PAGES.EDIT.SELECTED' | translate:({value: selected.size})}}</span>
+      <button translate *ngIf="selected.size" (click)="createNewCollectionWithSelected()" class="ml-4 button button-green-enabled">BUTTONS.ADD_SELECTED</button>
     </div>
   </div>
 
   <div>
-    <input class="z-0 pl-4 mt-2 mb-m4 search w-full rounded-sm h-8 focus:outline-none" (input)="onChange($event)" placeholder="Search using regular osu! filters... e.g. stars>5 bpm<200 length<120. Apply mods with +HR etc to change SR and difficulty settings."/>
+    <input class="z-0 pl-4 mt-2 mb-m4 search w-full rounded-sm h-8 focus:outline-none" (input)="onChange($event)" [placeholder]="'PAGES.EDIT.SEARCH_HINT' | translate"/>
   </div>
 
   <ngx-table
@@ -39,7 +39,7 @@
           </div>
         </td>
         <td>
-          <a *ngIf="!row.song" (click)="openUrl(row.setId)" class="text-blue-400 cursor-pointer hover:underline">Map Missing {{row.setId}}</a>
+          <a *ngIf="!row.song" (click)="openUrl(row.setId)" class="text-blue-400 cursor-pointer hover:underline">{{'PAGES.EDIT.MAP_MISSING' | translate:({value: row.setId})}}</a>
           <span *ngIf="row.song">{{limitTextLength(row.song, 20)}}</span>
         </td>
         <td>{{limitTextLength(row?.artist??"", 10)}}</td>
@@ -62,18 +62,18 @@
 
 <ng-template #loadingTemplate>
   <td [attr.colspan]="beatmapColumns.length">
-    <div class="my-4 text-center">{{isCollectionShown ? "Loading collection maps..." : "Loading all cached maps..."}}</div>
+    <div class="my-4 text-center">{{isCollectionShown ? ('PAGES.EDIT.LOADING_COLLECTION' | translate) : ('PAGES.EDIT.LOADING_CACHE' | translate)}}</div>
   </td>
 </ng-template>
 
 <ng-template #noResultsTemplate>
   <td [attr.colspan]="beatmapColumns.length">
-    <span class="p-2">{{(isCollectionShown && !selectedCollection.numberMaps) ? "No maps in this collection! Swap to all maps view to add maps" : "No results"}}</span>
+    <span class="p-2">{{(isCollectionShown && !selectedCollection.numberMaps) ? ('PAGES.EDIT.NO_MAPS_COLLECTION' | translate) : ('MISC.NO_RESULTS' | translate)}}</span>
   </td>
 </ng-template>
 
-<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Map(s)" text="Are you sure you want to remove the map(s) from the collection(s)? This action CAN be undone if you restore your backup." confirmText="Remove"></app-confirm-modal>
-<app-loading-bar *ngIf="isChangingCollection" text="Writing Collection..." mode="indeterminate"></app-loading-bar>
-<app-rename-modal *ngIf="newCollection" (response)="newCollectionResponse($event)" title="Name for new collection" [list]="names" value="" action="Add"></app-rename-modal>
+<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" [title]="'PAGES.EDIT.MODALS.REMOVE.TITLE' | translate" [text]="'PAGES.EDIT.MODALS.TEXT' | translate" [confirmText]="'BUTTONS.REMOVE' | translate"></app-confirm-modal>
+<app-loading-bar *ngIf="isChangingCollection" [text]="'PAGES.EDIT.LOADING_WRITE' | translate" mode="indeterminate"></app-loading-bar>
+<app-rename-modal *ngIf="newCollection" (response)="newCollectionResponse($event)" [title]="'PAGES.EDIT.MODALS.RENAME.TITLE' | translate" [list]="names" value="" [action]="'BUTTONS.ADD' | translate"></app-rename-modal>
 
 

@@ -9,23 +9,23 @@
 
 
     <!-- home -->
-    <app-sidebar-button text="Collections"  [type]="Display.COLLECTIONS"></app-sidebar-button>
-    <app-sidebar-button text="Filters"  [type]="Display.FILTERS" ></app-sidebar-button>
-    <app-sidebar-button style="text-indent: 15px" text="Custom Filter" *ngIf="buttonSelected == Display.FILTERS || buttonSelected == Display.CUSTOM_FILTERS" [type]="Display.CUSTOM_FILTERS"></app-sidebar-button>
-    <app-sidebar-button text="Import/Export"  [type]="Display.IMPORT_EXPORT"></app-sidebar-button>
-    <app-sidebar-button text="Practice Diff Generator" [type]="Display.PRACTICE_DIFF_GENERATOR"></app-sidebar-button>
-    <app-sidebar-button text="Mass Difficulty Changer" [type]="Display.BPM_CHANGER"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.COLLECTIONS' | translate"  [type]="Display.COLLECTIONS"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.FILTERS' | translate"  [type]="Display.FILTERS" ></app-sidebar-button>
+    <app-sidebar-button style="text-indent: 15px" [text]="'SIDEBAR.CUSTOM_FILTER' | translate" *ngIf="buttonSelected == Display.FILTERS || buttonSelected == Display.CUSTOM_FILTERS" [type]="Display.CUSTOM_FILTERS"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.IMPORTEXPORT' | translate"  [type]="Display.IMPORT_EXPORT"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.PRACTICE' | translate" [type]="Display.PRACTICE_DIFF_GENERATOR"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.MASS_DIFF_CHANGER' | translate" [type]="Display.BPM_CHANGER"></app-sidebar-button>
 
     <!-- buttons -->
     <app-sidebar-button *ngIf="collectionSelected" [text]="limitTextLength(collectionSelected, 15)" [type]="Display.EDIT" ></app-sidebar-button>
 
     <!-- settings -->
-    <app-sidebar-button text="Settings" [type]="Display.SETTINGS"></app-sidebar-button>
+    <app-sidebar-button [text]="'SIDEBAR.SETTINGS' | translate" [type]="Display.SETTINGS"></app-sidebar-button>
   </div>
 
   <div class="flex flex-col ml-2 mb-2 text-white space-y-2">
-    <a (click)="openVideo()" class="text-lg cursor-pointer hover:underline">Usage Guide Video</a>
-    <span>My Socials:</span>
+    <a (click)="openVideo()" class="text-lg cursor-pointer hover:underline">{{ 'SIDEBAR.USAGE_VIDEO_LINK' | translate }}</a>
+    <span>{{ 'SIDEBAR.MY_SOCIALS' | translate }}</span>
     <a (click)="openOsu()" class="hover:underline cursor-pointer">osu!: YEP</a>
     <a (click)="openGithub()" class="hover:underline cursor-pointer">Github: nzbasic</a>
     <a (click)="openTwitter()" class="hover:underline cursor-pointer">Twitter: @nzbasic</a>

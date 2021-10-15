@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { Columns, Config } from "ngx-easy-table";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
@@ -34,15 +35,15 @@ export class FiltersComponent implements OnInit, OnDestroy {
   private toRemove: string[]
   public limitTextLength = limitTextLength
 
-  constructor(private toastr: ToastrService, private titleService: TitleService, private filterService: FilterService, private componentService: ComponentService) {
-    this.titleService.changeTitle({
-      title: "Filters",
-      subtitle: "Your filters. You must generate a filters cache before using it.",
-    });
+  constructor(private toastr: ToastrService,
+    private titleService: TitleService,
+    private filterService: FilterService,
+    private componentService: ComponentService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.FILTERS');
   }
 
   ngOnInit(): void {
-
     this.progressSubscription = this.filterService.progressCurrent.subscribe(percentage => {
       this.percentage = percentage
     })
@@ -53,6 +54,13 @@ export class FiltersComponent implements OnInit, OnDestroy {
       { key: 'description', title: 'Description', width: '55%' },
       { key: 'action', title: 'Action', cellTemplate: this.actionTpl, width: '30%'}
     ]
+
+    const translateCols = ['name', 'isCached', 'description', 'action']
+    this.translateService.get('TABLES').subscribe(res => {
+      for (const col of translateCols) {
+        this.columns.find(c => c.key === col).title = res[col.toUpperCase()]
+      }
+    })
 
     this.configuration.orderEnabled = false
     this.filters = this.filterService.getFilters("", 1)

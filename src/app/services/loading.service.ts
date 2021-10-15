@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import axios from "axios";
 import { ToastrService } from "ngx-toastr";
 import { BehaviorSubject } from "rxjs";
@@ -17,6 +18,7 @@ export class LoadingService {
     private filterService: FilterService,
     private componentService: ComponentService,
     private collectionsService: CollectionsService,
+    private translationService: TranslateService,
     private toastr: ToastrService
   ) {}
 
@@ -53,6 +55,10 @@ export class LoadingService {
       await this.loadData()
     } else {
       this.componentService.changeComponent(Display.SETUP);
+    }
+
+    if (settings.code) {
+      this.translationService.use(settings.code)
     }
   }
 

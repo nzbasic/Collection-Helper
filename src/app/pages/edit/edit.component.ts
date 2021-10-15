@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import axios from "axios";
 import { fullIp } from "../../app.component";
 import { UtilService } from "../../services/util.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-edit",
@@ -56,12 +57,9 @@ export class EditComponent implements OnInit, OnDestroy {
     private selectedService: SelectedService,
     private beatmapService: BeatmapService,
     private collectionsService: CollectionsService,
-    private utilService: UtilService) {
-
-    this.titleService.changeTitle({
-      title: "Edit",
-      subtitle: "Edit maps in your collection",
-    });
+    private utilService: UtilService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.EDIT');
   }
 
   ngOnDestroy(): void {
@@ -93,6 +91,13 @@ export class EditComponent implements OnInit, OnDestroy {
       { key: 'cs', title: 'CS', width: '5%' },
       { key: 'drain', title: 'Drain', width: '5%' }
     ]
+
+    const translateCols = ['song', 'artist', 'creator', 'difficulty', 'drain']
+    this.translateService.get('TABLES').subscribe(res => {
+      for (const col of translateCols) {
+        this.beatmapColumns.find(c => c.key === col).title = res[col.toUpperCase()]
+      }
+    })
 
     this.updateCurrentlyShown(true)
   }

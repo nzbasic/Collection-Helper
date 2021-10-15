@@ -51,6 +51,7 @@ const setupDb = async () => {
   await database.run("CREATE TABLE IF NOT EXISTS osupath (path TEXT PRIMARY KEY)");
   await database.run("CREATE TABLE IF NOT EXISTS missingmaps (md5 TEXT PRIMARY KEY, setId INTEGER)")
   await database.run("CREATE TABLE IF NOT EXISTS darkmode (mode INTEGER)")
+  await database.run("CREATE TABLE IF NOT EXISTS language (code TEXT)")
 }
 
 const setupFilters = async () => {

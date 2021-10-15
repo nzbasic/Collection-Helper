@@ -2,5 +2,5 @@
   <button (click)="pageUpdate(-1)" [ngClass]="pageNumber==1 ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber==1" class="button">⟵</button>
   <span class="ml-4">{{(pageNumber*rowsPerPage)-(rowsPerPage-1) + "-" + pageNumber*rowsPerPage}}</span>
   <button (click)="pageUpdate(1)" [ngClass]="pageNumber*rowsPerPage >= numberResults ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber*rowsPerPage >= numberResults" class="ml-4 button">⟶</button>
-  <span *ngIf="showNumberResults" class="ml-4">{{"Found: " + numberResults + " Result(s)"}}</span>
+  <span *ngIf="showNumberResults" class="ml-4">{{'PAGINATION.TEXT' | translate:({value: numberResults})}}</span>
 </div>

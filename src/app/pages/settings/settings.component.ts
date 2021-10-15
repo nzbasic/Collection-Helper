@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import axios from "axios";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
@@ -19,11 +20,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
   public darkModeSubscription: Subscription;
   public darkMode = false
 
-  constructor(private titleService: TitleService, private loadingService: LoadingService, private toastr: ToastrService) {
-    this.titleService.changeTitle({
-      title: "Settings",
-      subtitle: "Application settings",
-    });
+  constructor(private titleService: TitleService,
+    private loadingService: LoadingService,
+    private toastr: ToastrService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.SETTINGS');
   }
 
   ngOnInit(): void {

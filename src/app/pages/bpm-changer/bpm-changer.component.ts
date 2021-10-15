@@ -5,6 +5,7 @@ import { CollectionsService } from '../../services/collections.service';
 import bytes from 'bytes';
 import { Subscription } from 'rxjs';
 import { TitleService } from '../../services/title.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bpm-changer',
@@ -31,11 +32,11 @@ export class BpmChangerComponent implements OnInit {
     "A new collection has been created, you will need to launch/relaunch osu! (possibly multiple times) for it to load properly.",
   ];
 
-  constructor(private collectionsService: CollectionsService, private toastr: ToastrService, private titleService: TitleService) {
-    this.titleService.changeTitle({
-      title: "Mass Difficulty Changer",
-      subtitle: "Alter the difficulty settings of every map in a collection",
-    });
+  constructor(private collectionsService: CollectionsService,
+    private toastr: ToastrService,
+    private titleService: TitleService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.DIFF_CHANGER');
   }
 
   ngOnInit(): void {

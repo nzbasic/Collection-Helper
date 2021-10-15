@@ -8,6 +8,7 @@ import { CollectionsService } from "../../services/collections.service";
 import { TitleService } from "../../services/title.service";
 import { UtilService } from "../../services/util.service";
 import bytes from 'bytes';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-importexport",
@@ -36,12 +37,9 @@ export class ImportexportComponent implements OnInit, OnDestroy {
   constructor(private titleService: TitleService,
     private collectionService: CollectionsService,
     private toastr: ToastrService,
-    private utilService: UtilService) {
-
-    this.titleService.changeTitle({
-      title: "Import / Export",
-      subtitle: "Import and export collections",
-    });
+    private utilService: UtilService,
+    private translateService: TranslateService) {
+    this.titleService.changeTitle('PAGES.IMPORT_EXPORT');
     this.collections = this.collectionService.getCollections()
   }
 

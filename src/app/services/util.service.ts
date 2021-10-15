@@ -9,4 +9,9 @@ export class UtilService {
   openUrl(url: string) {
     axios.post(fullIp + "/openUrl", { url: url })
   }
+
+  setLanguage(code: string) {
+    axios.post(fullIp + "/setLanguage", { code })
+  }
+
 }

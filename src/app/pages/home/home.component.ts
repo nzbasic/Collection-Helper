@@ -8,6 +8,7 @@ import baseConfig from "../../util/baseConfig";
 import { SelectedService } from "../../services/selected.service";
 import { ComponentService, Display } from "../../services/component.service";
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: "app-home",
@@ -40,12 +41,10 @@ export class HomeComponent implements OnInit {
     private collectionsService: CollectionsService,
     private selectedService: SelectedService,
     private componentService: ComponentService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translateService: TranslateService,
   ) {
-    this.titleService.changeTitle({
-      title: "Collections",
-      subtitle: "Your collections",
-    });
+    this.titleService.changeTitle('PAGES.HOME');
   }
 
   ngOnInit() {
@@ -54,6 +53,13 @@ export class HomeComponent implements OnInit {
       { key: "NumberMaps", title: "Number of Maps", searchEnabled: false },
       { key: "action", title: "Action", cellTemplate: this.actionTpl, searchEnabled: false, }
     ];
+
+    const translateCols = ['Name', 'NumberMaps', 'action']
+    this.translateService.get('TABLES').subscribe(res => {
+      for (const col of translateCols) {
+        this.columns.find(c => c.key === col).title = res[col.toUpperCase()]
+      }
+    })
 
     this.configuration.orderEnabled = false
     this.setCollections()

@@ -1,7 +1,7 @@
 import * as express from "express";
 import { loadFiles } from "../util/load";
 import { dialog, shell } from 'electron'
-import { getDarkMode, getOsuPath, setDarkMode, setOsuPath, verifyOsuPath } from "../util/database/settings";
+import { getDarkMode, getLanguage, getOsuPath, setDarkMode, setLanguage, setOsuPath, verifyOsuPath } from "../util/database/settings";
 import { win } from '../main'
 import * as log from 'electron-log'
 import { writeCollections } from "../util/parsing/collections";
@@ -17,7 +17,8 @@ router.route("/loadSettings").get(async (req, res) => {
   //log.info("[API] /loadSettings called")
   const path = await getOsuPath()
   const darkMode = await getDarkMode()
-  res.json({ path: path, darkMode: darkMode })
+  const language = await getLanguage()
+  res.json({ path: path, darkMode: darkMode, code: language })
 })
 
 router.route("/setPath").post(async (req, res) => {
@@ -59,6 +60,12 @@ router.route("/createBackup").post(async (req, res) => {
   //log.info("[API] POST /createBackup called")
   const dateTime = await writeCollections(false, true)
   res.json(dateTime)
+})
+
+router.route("/setLanguage").post(async (req, res) => {
+  //log.info("[API] POST /setLanguage called " + JSON.stringify(req.body))
+  const body: { code: string } = req.body
+  res.json(await setLanguage(body.code))
 })
 
 export default router

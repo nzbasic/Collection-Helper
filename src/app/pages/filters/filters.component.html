@@ -1,18 +1,18 @@
 <div class="flex flex-col shadow-md">
 
   <div class="ml-4 my-4 flex flex-col text-lg">
-    <span class="">These custom filters allow for more advanced beatmap filtering. You can create your own by clicking the new filter button.</span>
-    <span class="font-semibold">Before you can use a filter to find maps, you need to generate its cache.</span>
-    <span class="">The stream filter may take minutes to run as it needs to read the hit objects of every map, while the farm filter takes seconds.</span>
-    <span>You only need to generate the cache once. It will be saved and instantly applied whenever you use it in the app.</span>
+    <span translate class="">PAGES.FILTERS.TIPS.ONE</span>
+    <span translate class="font-semibold">PAGES.FILTERS.TIPS.TWO</span>
+    <span translate class="">PAGES.FILTERS.TIPS.THREE</span>
+    <span translate>PAGES.FILTERS.TIPS.FOUR</span>
   </div>
 
   <div class="w-full z-10 mb-2">
     <div class="flex flex-row items-center h-full text-xl ml-4">
-      <button (click)="generateCache(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">Generate Cache</button>
-      <button (click)="showRemoveModal(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button" >Remove</button>
-      <button value="add" class="button button-blue-enabled" (click)="addFilter()">+ New filter</button>
-      <span class="ml-4 text-lg">{{selected.size + " Selected"}}</span>
+      <button translate (click)="generateCache(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">BUTTONS.GENERATE_CACHE</button>
+      <button translate (click)="showRemoveModal(null)" [disabled]="selected.size == 0" [ngClass]="selected.size == 0 ? 'button-red-disabled' : 'button-red-enabled'" class="mx-4 button">BUTTONS.REMOVE</button>
+      <button translate value="add" class="button button-blue-enabled" (click)="addFilter()">BUTTONS.ADD_FILTER</button>
+      <span class="ml-4 text-lg">{{ 'MISC.SELECTED' | translate:({value: selected.size}) }}</span>
     </div>
   </div>
 
@@ -40,16 +40,16 @@
         {{limitTextLength(row.name, 30)}}
       </td>
       <td>
-        {{row.isCached ? "Yes" : "No"}}
+        {{row.isCached ? ('BUTTONS.YES' | translate) : ('BUTTONS.NO' | translate)}}
       </td>
       <td>
         {{row.description}}
       </td>
       <td>
         <div class="flex flex-row">
-          <button class="button button-blue-enabled" (click)="edit(row)">Edit</button>
-          <button class="button button-blue-enabled ml-4" (click)="generateCache(row)">Generate Cache</button>
-          <button class="button button-red-enabled mx-4 text-sm" (click)="showRemoveModal(row)">Remove</button>
+          <button translate class="button button-blue-enabled" (click)="edit(row)">BUTTONS.EDIT</button>
+          <button translate class="button button-blue-enabled ml-4" (click)="generateCache(row)">BUTTONS.GENERATE_CACHE</button>
+          <button translate class="button button-red-enabled mx-4 text-sm" (click)="showRemoveModal(row)">BUTTONS.REMOVE</button>
         </div>
       </td>
     </ng-template>
@@ -59,5 +59,5 @@
 
 </div>
 
-<app-loading-bar *ngIf="generatingModal" text="Generating Cache..." mode="determinate" [percentage]="percentage"></app-loading-bar>
-<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" title="Remove Filter" text="Are you sure you want to remove the filter(s)?" confirmText="Remove"></app-confirm-modal>
+<app-loading-bar *ngIf="generatingModal" [text]="'PAGES.FILTERS.LOADING' | translate" mode="determinate" [percentage]="percentage"></app-loading-bar>
+<app-confirm-modal *ngIf="removeModal" (response)="removeResponse($event)" [title]="'PAGES.FILTERS.MODALS.REMOVE.TITLE' | translate" [text]="'PAGES.FILTERS.MODALS.REMOVE.TEXT' | translate" [confirmText]="'BUTTONS.REMOVE' | translate"></app-confirm-modal>

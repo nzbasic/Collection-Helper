@@ -1,18 +1,25 @@
 <div class="flex flex-col shadow-md">
   <div class="w-full p-4 text-xl border-b border-gray-300 dark:border-black">
-    <span class="">Settings</span>
+    <span translate class="">PAGES.SETTINGS.TITLE</span>
   </div>
   <div class="p-4 flex flex-row items-center">
-    <span>Path: {{osuPath}}</span>
-    <button (click)="changePath()" class="button button-green-enabled ml-4">Change Path</button>
+    <span>{{'MISC.PATH' | translate}} {{osuPath}}</span>
+    <button translate (click)="changePath()" class="button button-green-enabled ml-4">BUTTONS.CHANGE_PATH</button>
   </div>
   <div class="p-4 flex flex-row items-center">
-    <span>Dark Mode:</span>
+    <span translate>PAGES.SETTINGS.DARK</span>
     <ui-switch class="ml-4" (ngModelChange)="changeStyle($event)" [(ngModel)]="darkMode"></ui-switch>
   </div>
   <div class="p-4 flex flex-row items-center">
-    <span>Backup Collections:</span>
-    <button (click)="backup()" class="button button-green-enabled ml-4">Create Backup</button>
+    <span translate>PAGES.SETTINGS.BACKUP</span>
+    <button translate (click)="backup()" class="button button-green-enabled ml-4">BUTTONS.CREATE_BACKUP</button>
+  </div>
+  <div class="p-4 flex flex-row items-center">
+    <span translate class="mr-4">PAGES.SETTINGS.LANGUAGE</span>
+    <div class="w-72">
+      <app-language-dropdown></app-language-dropdown>
+    </div>
+
   </div>
 </div>
 

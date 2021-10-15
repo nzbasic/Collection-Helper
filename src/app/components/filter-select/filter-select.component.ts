@@ -16,7 +16,7 @@ export class FilterSelectComponent implements OnInit {
 
   @Output() emitter = new EventEmitter<string[]>()
   public filters: SelectFilter[] = []
-  public placeHolder = "Custom Filters"
+  public placeHolder = ""
 
   constructor(private filterService: FilterService) { }
 
@@ -28,13 +28,7 @@ export class FilterSelectComponent implements OnInit {
 
   onChange() {
     let selected = this.filters.filter(item => item.selected).map(filter => filter.value)
-
-    if (selected.length) {
-      this.placeHolder = limitTextLength(selected.toString(), 15)
-    } else {
-      this.placeHolder = "Custom Filters"
-    }
-
+    this.placeHolder = limitTextLength(selected.toString(), 15)
     this.emitter.emit(selected)
   }
 
