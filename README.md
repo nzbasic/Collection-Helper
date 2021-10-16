@@ -71,6 +71,7 @@ Collection Helper is a tool you can use to manage your collections in osu!. It a
 
 The key features of **Collection Helper**:
 
+- Available in English and Russian (thanks Maks220v for Russian translation)
 - Add/remove/merge collections
 - Edit collections
 - Apply ingame filters to select maps
