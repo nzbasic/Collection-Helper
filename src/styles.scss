@@ -209,6 +209,10 @@ app-pagination {
   //   background-color: $dark;
   // }
 
+  &-infinite-scroll-viewport {
+    height: calc(100vh - 24rem) !important;
+  }
+
   &-table {
     @apply dark:bg-dark1 dark:text-white;
 

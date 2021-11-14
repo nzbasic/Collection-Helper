@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
   }
 
   pageUpdate(change: number): void {
-    this.pageNumber = this.pageNumber + change;
+    this.pageNumber = change;
     this.collections = this.collectionsService.getCollections(this.inputValue, this.pageNumber)
   }
 

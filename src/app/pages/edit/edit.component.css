@@ -1,0 +1,26 @@
+#beatmap-checkbox {
+    width: 3.75%;
+}
+
+#beatmap-song {
+    width: 18.9%;
+}
+
+#beatmap-artist, #beatmap-creator {
+    width: 11.5%;
+}
+
+#beatmap-difficulty {
+    width: 11.25%
+}
+
+#beatmap-sr, #beatmap-bpm, #beatmap-hp, #beatmap-od, #beatmap-ar, #beatmap-cs {
+    width: 6.3%
+}
+
+cdk-virtual-scroll-viewport {
+    height: 35rem !important;
+}
+
+
+

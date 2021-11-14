@@ -1,6 +1,11 @@
 <div class="m-4 flex flex-row items-center">
-  <button (click)="pageUpdate(-1)" [ngClass]="pageNumber==1 ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber==1" class="button">⟵</button>
-  <span class="ml-4">{{(pageNumber*rowsPerPage)-(rowsPerPage-1) + "-" + pageNumber*rowsPerPage}}</span>
-  <button (click)="pageUpdate(1)" [ngClass]="pageNumber*rowsPerPage >= numberResults ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber*rowsPerPage >= numberResults" class="ml-4 button">⟶</button>
-  <span *ngIf="showNumberResults" class="ml-4">{{'PAGINATION.TEXT' | translate:({value: numberResults})}}</span>
+  <div *ngIf="!infiniteScroll" class="flex items-center">
+    <button (click)="pageUpdate(-1)" [ngClass]="pageNumber==1 ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber==1" class="button">⟵</button>
+    <span class="ml-4">{{(pageNumber*rowsPerPage)-(rowsPerPage-1) + "-" + pageNumber*rowsPerPage}}</span>
+    <button (click)="pageUpdate(1)" [ngClass]="pageNumber*rowsPerPage >= numberResults ? 'button-blue-disabled' : 'button-blue-enabled'" [disabled]="pageNumber*rowsPerPage >= numberResults" class="ml-4 button">⟶</button>
+    <span class="ml-4">Page: </span>
+    <input class="w-16 rounded border border-gray-400 ml-2" (keypress)="inputValidator($event)" [(ngModel)]="pageNumber" (ngModelChange)="debouncedValidate()" type="number" min="1" [max]="ceil(numberResults/rowsPerPage)"/>
+    <span class="ml-2">/ {{ceil(numberResults / rowsPerPage)}}</span>
+  </div>
+  <span *ngIf="showNumberResults" [ngClass]="!infiniteScroll && 'ml-4'" >{{'PAGINATION.TEXT' | translate:({value: numberResults})}}</span>
 </div>

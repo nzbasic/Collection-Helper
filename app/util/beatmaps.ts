@@ -68,10 +68,12 @@ const yearData = [
 
   response.numberResults = beatmapList.length
 
+  const pageSize = request.infiniteScroll ? 25 : 10
+
   if (beatmapList.length) {
 
-    const lower = (request.page-1) * 10
-    const higher = (request.page) * 10
+    const lower = (request.page-1) * pageSize
+    const higher = (request.page) * pageSize
 
     response.beatmaps = beatmapList.slice(lower, higher)
   }

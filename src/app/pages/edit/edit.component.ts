@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Columns, Config } from "ngx-easy-table";
 import { Subscription } from "rxjs";
 import { Sorting } from "../../../../models/beatmaps";
@@ -21,6 +21,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-edit",
   templateUrl: "./edit.component.html",
+  styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit, OnDestroy {
   @ViewChild('actionTpl', { static: true }) actionTpl!: TemplateRef<any>;
@@ -58,7 +59,8 @@ export class EditComponent implements OnInit, OnDestroy {
     private beatmapService: BeatmapService,
     private collectionsService: CollectionsService,
     private utilService: UtilService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService, 
+    private cdr: ChangeDetectorRef) {
     this.titleService.changeTitle('PAGES.EDIT');
   }
 
@@ -146,6 +148,8 @@ export class EditComponent implements OnInit, OnDestroy {
       this.ordering.order = $event.value.order
       this.pageNumber = 1
       this.updateCurrentlyShown(true)
+    } else if ($event.event == "onInfiniteScrollEnd") {
+      this.pageUpdate(1)
     }
   }
 
@@ -178,17 +182,29 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   pageUpdate(change: number): void {
-    this.pageNumber = this.pageNumber + change
+    this.pageNumber = change
+    this.updateCurrentlyShown(false)
+  }
+
+  infiniteScroll() {
+    this.configuration.infiniteScroll = !this.configuration.infiniteScroll
+    this.shownMaps = []
+    this.pageNumber = 1
     this.updateCurrentlyShown(false)
   }
 
   updateCurrentlyShown(force: boolean) {
     this.configuration.isLoading = true
     let collectionName = this.selectedCollection.name
-    this.beatmapService.getBeatmaps(this.pageNumber, this.searchTerm, collectionName, force, this.ordering, this.isCollectionShown, this.selectedFilters).then(res => {
-      this.shownMaps = res.beatmaps
+    this.beatmapService.getBeatmaps(this.pageNumber, this.searchTerm, collectionName, force, this.ordering, this.isCollectionShown, this.selectedFilters, this.configuration.infiniteScroll).then(res => {
+      if (this.configuration.infiniteScroll) {
+        this.shownMaps = [...this.shownMaps, ...res.beatmaps]
+      } else {
+        this.shownMaps = res.beatmaps
+      }
       this.numberResults = res.numberResults
       this.configuration.isLoading = false
+      this.cdr.detectChanges()
     })
   }
 

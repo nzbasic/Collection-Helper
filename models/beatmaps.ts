@@ -38,6 +38,7 @@ export interface GetBeatmapsReq {
   order: Sorting
   getCollection: boolean
   customFilters?: string[]
+  infiniteScroll?: boolean
 }
 
 export interface GetSelectedReq {

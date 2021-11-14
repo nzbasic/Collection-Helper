@@ -9,9 +9,9 @@ import { fullIp } from '../app.component';
 })
 export class BeatmapService {
 
-  async getBeatmaps(page: number, search: string, name: string, force: boolean, order: Sorting, getCollection: boolean, customFilters?: string[]): Promise<PageResponse> {
+  async getBeatmaps(page: number, search: string, name: string, force: boolean, order: Sorting, getCollection: boolean, customFilters?: string[], infiniteScroll?: boolean,): Promise<PageResponse> {
     let filter = this.parseFilter(search)
-    let req: GetBeatmapsReq = { page: page, filter: filter, name: name, force: force, order: order, getCollection: getCollection }
+    let req: GetBeatmapsReq = { page: page, filter: filter, name: name, force: force, order: order, getCollection: getCollection, infiniteScroll: !!infiniteScroll }
 
     if (customFilters.length) {
       req.customFilters = customFilters

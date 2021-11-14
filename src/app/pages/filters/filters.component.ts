@@ -99,7 +99,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   }
 
   pageUpdate(change: number): void {
-    this.pageNumber = this.pageNumber + change;
+    this.pageNumber = change;
     this.filters = this.filterService.getFilters(this.inputValue, this.pageNumber)
   }
 
