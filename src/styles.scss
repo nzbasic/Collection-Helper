@@ -204,6 +204,18 @@ app-pagination {
   @apply dark:border-black border-t;
 }
 
+cdk-virtual-scroll-viewport {
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: black; 
+    border-radius: 5px;
+  }
+}
+
 .ngx {
   // &-container--dark {
   //   background-color: $dark;
@@ -222,6 +234,10 @@ app-pagination {
 
     th {
       @apply border-t-0;
+    }
+
+    &__table--normal > thead > tr > th {
+      @apply border-b border-black #{!important};
     }
 
     &__table-row--selected,
