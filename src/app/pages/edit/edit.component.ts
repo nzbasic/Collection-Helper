@@ -149,7 +149,7 @@ export class EditComponent implements OnInit, OnDestroy {
       this.pageNumber = 1
       this.updateCurrentlyShown(true)
     } else if ($event.event == "onInfiniteScrollEnd") {
-      this.pageUpdate(1)
+      this.pageUpdate(this.pageNumber + 1)
     }
   }
 
