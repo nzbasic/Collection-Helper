@@ -1,5 +1,9 @@
 <div class="flex flex-col shadow-md">
 
+  <div class="border-yellow-400 rounded p-2 m-4 mb-0 text-lg border">
+    22/11/2021 Note: The stream filter has been greatly improved. If you have not made changes to the existing filter, then the code will be updated and you should generate the cache again. If you have modified it, you can find the new code <a href="https://pastebin.com/K1fSpKpQ" class="text-blue-400 hover:underline">here</a>.
+  </div>
+
   <div class="w-full z-10 h-16">
     <div class="flex flex-row items-center h-full text-xl pl-4 pt-2 ">
       <button (click)="showMergeModal()" [disabled]="selected.size < 2" [ngClass]="selected.size < 2 ? 'button-blue-disabled' : 'button-blue-enabled'" class="button">{{ 'BUTTONS.MERGE' | translate }}</button>
