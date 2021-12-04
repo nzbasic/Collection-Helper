@@ -58,9 +58,11 @@
 
   <div *ngIf="!configuration.isLoading" class="flex justify-between items-center">
     <app-pagination [infiniteScroll]="configuration.infiniteScroll" [pageNumber]="pageNumber" (emitter)="pageUpdate($event)" [showNumberResults]="true" [numberResults]="numberResults" [rowsPerPage]="10"></app-pagination>
-    <button class="button button-green-enabled mr-4" (click)="infiniteScroll()">{{configuration.infiniteScroll ? "Disable" : "Enable"}} Infinite Scroll</button>
+    <button class="button button-green-enabled mr-4" (click)="infiniteScroll()">
+      {{configuration.infiniteScroll ? ('MISC.DISABLE_INFINITE' | translate) : ('MISC.ENABLE_INFINITE' | translate)}}
+    </button>
   </div>
-  
+
 </div>
 
 <ng-template #loadingTemplate>

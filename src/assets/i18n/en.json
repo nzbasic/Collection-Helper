@@ -73,6 +73,10 @@
     "NAME": "Name:",
     "FILTER": "Filter:",
     "SET": "Set",
+    "PAGE": "Page",
+    "STREAM_FILTER_UPDATE": "22/11/2021 Note: The stream filter has been greatly improved. If you have not made changes to the existing filter, then the code will be updated and you should generate the cache again. If you have modified it, you can find the new code here.",
+    "ENABLE_INFINITE": "Enable Infinite Scroll",
+    "DISABLE_INFINITE": "Disable Infinite Scroll",
     "SETTINGS_MODAL": {
       "PATH": "Path:",
       "HELP_TEXT": "Enter the path to your osu! instllation",

@@ -59,6 +59,7 @@ e2e
 electron-builder.yml
 
 *.json
+!src/assets/i18n/*.json
 snipetool.ts
 
 !tailwind.config.js
