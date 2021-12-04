@@ -33,10 +33,17 @@ export class LoadingService {
 
   async loadData() {
     this.componentService.changeComponent(Display.LOADING);
-    await axios.post(fullIp + "/loadFiles")
+    const res = await axios.post<number>(fullIp + "/loadFiles")
+
+    if (res.data === -1) {
+      return false
+    }
+
     this.collectionsService.setCollections((await axios.get<Collections>(fullIp + "/collections")).data)
     this.filterService.setFilters((await axios.get<CustomFilter[]>(fullIp + "/filters")).data)
     this.componentService.changeComponent(Display.COLLECTIONS);
+
+    return true
   }
 
   async loadSettings() {
@@ -52,7 +59,10 @@ export class LoadingService {
 
     if (settings.path) {
       this.settingsSource.next(settings.path);
-      await this.loadData()
+      const validPath = await this.loadData();
+      if (!validPath) {
+        this.componentService.changeComponent(Display.SETUP);
+      }
     } else {
       this.componentService.changeComponent(Display.SETUP);
     }

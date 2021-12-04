@@ -10,12 +10,17 @@ export let externalStorage: string
 
 export const loadFiles = async () => {
   const path = await getOsuPath();
+
+  if (!fs.existsSync(path + "/collection.db")) {
+    return -1
+  }
+
   externalStorage = await findExternalBeatmapStorage(path)
   await readCollections(path);
   await writeCollections(true);
   await readCache(path);
 
-  //await exportIds()
+  return 0
 };
 
 const findExternalBeatmapStorage = async (path: string): Promise<string> => {

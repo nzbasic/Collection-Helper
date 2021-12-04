@@ -9,8 +9,8 @@ import { writeCollections } from "../util/parsing/collections";
 const router = express.Router();
 router.route("/loadFiles").post(async (req, res) => {
   //log.info("[API] /loadFiles called " + JSON.stringify(req.body))
-  await loadFiles()
-  res.json(true);
+  const result = await loadFiles()
+  res.json(result);
 });
 
 router.route("/loadSettings").get(async (req, res) => {

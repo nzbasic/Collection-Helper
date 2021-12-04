@@ -7,6 +7,16 @@ export const getOsuPath = async (): Promise<string> => {
   return row?.path??""
 };
 
+export const addOrUpdateOsuPath = async (path: string): Promise<void> => {
+  const database = await getDb();
+  const row = await database.get("SELECT * FROM osupath");
+  if (row) {
+    await changeOsuPath(path);
+  } else {
+    await setOsuPath(path)
+  }
+}
+
 export const setOsuPath = async (path: string): Promise<void> => {
   const database = await getDb();
   await database.run("INSERT INTO osupath (path) VALUES (:path)", {
@@ -23,11 +33,7 @@ const changeOsuPath = async (path: string): Promise<void> => {
 
 export const verifyOsuPath = async (path: string, mode: string): Promise<boolean> => {
   if (fs.existsSync(path + "/osu!.db")) {
-    if (mode == "new") {
-      await setOsuPath(path)
-    } else if (mode == "edit") {
-      await changeOsuPath(path)
-    }
+    await addOrUpdateOsuPath(path)
     return true
   } else {
     return false

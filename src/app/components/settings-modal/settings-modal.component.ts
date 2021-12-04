@@ -15,7 +15,7 @@ export class SettingsModalComponent {
   @Output() emitter = new EventEmitter<boolean>()
   public invalid = false
 
-  constructor(private loadingService: LoadingService, private selectedService: SelectedService) { }
+  constructor(private loadingService: LoadingService, private selectedService: SelectedService) {}
 
   async confirm() {
 
