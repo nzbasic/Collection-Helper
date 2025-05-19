@@ -1,3 +1,10 @@
+<div align="center">
+  Archived, use <a href="https://github.com/Piotrekol/CollectionManager">Collection Manager</a> instead
+
+  <br><br>
+</div>
+
+
 <h1 align="center">
   <a href="https://github.com/nzbasic/Collection-Helper">
     <img src="https://user-images.githubusercontent.com/54062686/125156185-54ed4500-e1b8-11eb-8051-2f4b981eb542.png" alt="Logo" width="256" height="256">
